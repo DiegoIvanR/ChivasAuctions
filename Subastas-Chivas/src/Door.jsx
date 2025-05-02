@@ -13,11 +13,18 @@ const Door = ({ door, onClick, isSelected }) => {
         className="door-image" 
         alt={`Door ${door.id}`} 
       />
-      {door.team && (
-        <div className="door-label">
-          {door.team}
-        </div>
-      )}
+      <div className='door-info'>
+        {door.team && (
+          <div className="door-label">
+            {door.team}
+          </div>
+        )}
+        {door.team && (
+          <div className="door-date">
+            {door.date}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

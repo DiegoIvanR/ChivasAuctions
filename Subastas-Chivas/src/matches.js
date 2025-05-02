@@ -4,7 +4,7 @@ export const matches = {
     america_15_05_2025: {
         id: 1,
         date: "15-05-2025",
-        team: "America",
+        team: "AMÉRICA",
         local: true,
         league: "Liga MX",
         season: "25/25",
@@ -18,7 +18,7 @@ export const matches = {
     pumas_16_05_2025: {
         id: 2,
         date: "16-05-2025",
-        team: "Pumas",
+        team: "PUMAS",
         local: false,
         league: "Liguilla",
         season: "25/26",
@@ -28,7 +28,7 @@ export const matches = {
     rayados_17_05_2025: {
         id: 3,
         date: "17-05-2025",
-        team: "Rayados",
+        team: "RAYADOS",
         local: true,
         league: "Liga MX",
         season: "25/27",
