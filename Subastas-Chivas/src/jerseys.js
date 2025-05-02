@@ -1,5 +1,6 @@
 export const jerseys = {
     javier_hernandez_15_05_2025 : {
+    id: 1,
     signed: true,
     used: true,
     player: "Javier Hernandez",
@@ -8,6 +9,7 @@ export const jerseys = {
 },
 
  mateo_chavez_15_05_2025 : {
+    id: 2,
     signed: true,
     used: false,
     player: "Mateo Chavez",
@@ -16,6 +18,7 @@ export const jerseys = {
 },
 
  fernando_gonzalez_15_05_2025 : {
+    id: 3,
     signed: false,
     used: true,
     player: "Fernando Gonzalez",
@@ -23,6 +26,7 @@ export const jerseys = {
     match: "america_15_05_2025",
 },
  fernando_beltran_15_05_2025 : {
+    id: 4,
     signed: true,
     used: true,
     player: "Fernando Beltran",
@@ -30,6 +34,7 @@ export const jerseys = {
     match: "america_15_05_2025",
 },
  roberto_alvarado_15_05_2025 : {
+    id: 5,
     signed: true,
     used: true,
     player: "Roberto Alvarado",

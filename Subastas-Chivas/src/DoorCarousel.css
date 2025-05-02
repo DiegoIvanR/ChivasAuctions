@@ -392,3 +392,265 @@
 	line-height: 0.5rem;
 	letter-spacing: 0px;
 }
+
+
+
+.locker-list {
+	display: flex;
+	position: relative;
+	z-index: 1;
+	transition: transform 0.5s ease-in-out;
+	align-items: center;
+	justify-content: flex-start;
+	margin: 0;
+	padding: 0;
+  }
+  
+  .locker-wrapper {
+	padding: 0 !important;
+	margin: 0 !important;
+	display: flex;
+	justify-content: center;
+	width: 341px;
+	height: 1307px;
+  }
+  
+  .locker-container {
+	position: relative;
+	width: 341px;
+	height: 1307px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	transition: transform 0.3s ease;
+	cursor: pointer;
+	padding: 0;
+	margin: 0;
+	flex-shrink: 0;
+  }
+  
+  .locker-container.selected {
+	transform: scale(1.05);
+	z-index: 3;
+  }
+  
+  .locker-image {
+	width: 341px;
+	height: 1307px;
+	position: relative;
+	z-index: 1;
+  }
+  
+  .locker-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	z-index: 2;
+  }
+  
+  .locker-label {
+	font-family: 'Rajdhani', sans-serif;
+	font-weight: 700;
+	font-size: 24px;
+	color: #D3D3D3;
+	text-shadow: 0px 10px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .locker-date {
+	font-family: 'Rajdhani', sans-serif;
+	font-weight: 400;
+	font-size: 18px;
+	color: #9E9E9E;
+	margin-top: 0.25rem;
+  }
+
+  .locker-list {
+	display: flex;
+  	justify-content: center;
+	align-items: center;
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	padding: 0;
+	gap: 0rem;
+	bottom: 0rem;
+	transition: transform 0.5s ease-in-out; /* Smooth transition for sliding */
+}
+  
+  .locker-image {
+	width: 341px;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1; /* Ensure the locker is above the frame */
+  }
+
+
+  .locker-wrapper {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: auto; /* or remove width entirely */
+	display: flex;
+	justify-content: center;
+  }
+  
+  .locker-wrapper.selected {
+	box-shadow: 0 0 0 4px #facc15;
+	border-radius: 0.5rem;
+  }
+
+  .locker-label {
+	position: absolute; /* Change from relative to absolute to place in front of locker */
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Center the label in the middle of the locker */
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	font-family: Rajdhani;
+	font-weight: 700;
+	font-size: 48px;
+	line-height: 100%;
+	letter-spacing: 3%;
+	text-align: center;
+	color: #D3D3D3;
+	text-shadow: 0px 20px 4px rgba(0, 0, 0, 0.5); /* Apply shadow to the text */
+	z-index: 2; /* Ensure the label appears above the locker, but below the arrows */
+  }
+
+  .locker-date {
+	position: absolute; /* Change from relative to absolute to place in front of locker */
+	top: 60%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Center the label in the middle of the locker */
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	font-family: Rajdhani;
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 100%;
+	letter-spacing: 3%;
+	text-align: center;
+	color: #D3D3D3;
+	text-shadow: 0px 20px 4px rgba(0, 0, 0, 0.6); /* Apply shadow to the text */
+	z-index: 2; /* Ensure the label appears above the locker, but below the arrows */
+  }
+
+  /*depurar por aqui*/
+  /* Updated Locker Room and Locker Component Styles */
+
+/* Main container for the locker room */
+.locker-room-container {
+	width: 100%;
+	background: black;
+	color: white;
+	position: relative;
+  }
+
+  /* Carousel container controls */
+  .carousel-container {
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+  }
+  
+  .carousel-controls {
+	position: relative;
+	height: 100%;
+	width: 100%;
+  }
+  
+  /* Locker list - the sliding track */
+  .locker-list {
+	display: flex;
+	position: relative;
+	transition: transform 0.5s ease-in-out;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	justify-content: center;
+  }
+  
+  /* Individual locker wrapper */
+  .locker-wrapper {
+	padding: 0;
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 341px;
+	transition: all 0.3s ease;
+  }
+  
+  .locker-wrapper.selected {
+	box-shadow: 0 0 15px 5px rgba(250, 204, 21, 0.7);
+	border-radius: 0.5rem;
+	transform: scale(1.05);
+	z-index: 10;
+  }
+  
+  /* Locker container */
+  .locker-container {
+	position: relative;
+	width: 341px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+	transition: transform 0.3s ease;
+  }
+  
+  /* Container to properly position the image and text */
+  .locker-image-container {
+	position: relative;
+	width: 341px;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+  
+  /* Make the image fill its container */
+  .locker-image {
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+	display: block;
+  }
+  
+  /* Text overlay styles */
+  .locker-label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-family: Rajdhani, sans-serif;
+	font-weight: 700;
+	font-size: 28px;
+	color: #D3D3D3;
+	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+	text-align: center;
+	z-index: 3;
+	pointer-events: none;
+  }
+  
+  .locker-date {
+	position: absolute;
+	top: 58%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-family: Rajdhani, sans-serif;
+	font-weight: 700;
+	font-size: 18px;
+	color: #D3D3D3;
+	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+	text-align: center;
+	z-index: 3;
+	pointer-events: none;
+  }
+  
+
+
