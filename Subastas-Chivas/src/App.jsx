@@ -1,10 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import Header from './Header.jsx';
 import DoorCarousel from './DoorCarousel.jsx';
+import Footer from './Footer.jsx';
 
 function App() {
-  return <DoorCarousel />;
+  return (
+    <div className="App">
+      <Header/>
+      <DoorCarousel />
+      <Footer/>
+    </div>
+  );
 }
 
 export default App;
