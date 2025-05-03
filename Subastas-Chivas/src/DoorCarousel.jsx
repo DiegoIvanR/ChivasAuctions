@@ -10,7 +10,7 @@ const DoorCarousel = () => {
     matches.america_15_05_2025,
     matches.pumas_16_05_2025,
     matches.rayados_17_05_2025,
-    { id: 4, team: 'Chivas' },
+    { id: 4, team: 'XOLOS', date: '06-21-2024' },
     { id: 5, team: '' }
   ]);
   
@@ -49,7 +49,7 @@ const DoorCarousel = () => {
         <div 
           className="door-list"
           style={{
-            transform: `translateX(calc(50% - ${startIndex * 510}px - 765px))`, // Center the doors and adjust for sliding
+            transform: `translateX(calc(50% - ${startIndex * 478}px - 720px))`, // Center the doors and adjust for sliding
           }}
         >
           {doors.map((door) => (

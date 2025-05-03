@@ -48,8 +48,8 @@
   }
   
   .circle-button {
-	width: 100px;
-	height: 100px;
+	width: 4.5rem;
+	height: 4.5rem;
 	border-radius: 50%;
 	border: none;
 	background-color: #E6272E;
@@ -77,18 +77,7 @@
 
 
 /* Arrow buttons wrapper */
-.arrow-buttons {
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	position: absolute;
-	top: 50%; /* Vertically center the arrows */
-	z-index: 4; /* Ensure arrows are on top */
-	padding: 0 20px;
-	transform: translateY(-50%); /* Fine-tune vertical centering */
-	gap: 40rem;
-	top: 21rem;
-}
+
 .arrow {
 	position: absolute;
 	width: 1rem;
@@ -101,11 +90,13 @@
   }
   
   .arrow.left {
+	left:1.6rem;
 	transform: rotate(135deg);
 	z-index: 3; /* Ensure the arrow is on top of everything */
   }
   
   .arrow.right {
+	right:1.6rem;
 	transform: rotate(-45deg);
 	z-index: 3; /* Ensure the arrow is on top of everything */
   }
@@ -185,7 +176,7 @@
   }
   .door-container {
 	position: relative;
-	width: 510px;
+	width: 478px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -241,7 +232,7 @@
 	right: 0;
 	display: flex;
 	justify-content: space-around;
-	gap: 80rem;
+	gap: 68rem;
 	padding: 0 0rem;
 	z-index: 20; /* Always on top */
 	transform: translateY(-50%);
@@ -250,6 +241,9 @@
   
   /* Los botones de flecha deben recibir clicks */
   .arrow-buttons button {
+	display: flex;
+	justify-content: space-around;
+	gap: 0;
 	pointer-events: auto;
   }
 
