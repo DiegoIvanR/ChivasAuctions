@@ -9,6 +9,7 @@
 .carousel-container {
 	text-align: center;
 	position: relative;
+	align-items: center;
   }
   
   .carousel-title {
@@ -48,8 +49,8 @@
   }
   
   .circle-button {
-	width: 4.5rem;
-	height: 4.5rem;
+	width: 72px;
+	height: 72px;
 	border-radius: 50%;
 	border: none;
 	background-color: #E6272E;
@@ -169,10 +170,9 @@
 	padding: 0;
   }
   .top-door-frame {
-	padding: 0;
-	margin: 0;
-	gap: 0;
-
+	margin: auto;
+	display: block;
+	width: 100%;
   }
   .door-container {
 	position: relative;
@@ -227,16 +227,14 @@
   /* Ajusta la apariencia de las flechas */
   .arrow-buttons {
 	position: absolute;
-	top: 50%;
-	left: 0;
-	right: 0;
 	display: flex;
-	justify-content: space-around;
-	gap: 68rem;
-	padding: 0 0rem;
+	justify-content: space-between;
+	padding: 0 2rem;
 	z-index: 20; /* Always on top */
-	transform: translateY(-50%);
 	pointer-events: none; /* Let clicks pass through to buttons */
+	width: 100%;
+	max-width: 1500px;
+  	margin: auto;
   }
   
   /* Los botones de flecha deben recibir clicks */
@@ -256,6 +254,9 @@
 	z-index: 100;
 	width: 100%;
 	backdrop-filter: blur(10px); /* Apply blur effect to the background */
+	width: 100%;
+	max-width: 100%;
+  	margin: auto;
   }
   .menu-selections{
 	align-items: center;
@@ -647,4 +648,31 @@
   }
   
 
-
+/*
+  @media (max-width: 768px) {
+	body{
+		width: 200%;
+	}
+	.header {
+	  flex-direction: column;
+	  align-items: flex-start;
+	  padding: 1rem;
+	  margin: auto;
+	}
+  
+	.menu-selections {
+	  width: 100%;
+	  gap: 1rem;
+	}
+  
+	.menu-right-bar {
+	  width: 100%;
+	  justify-content: center;
+	  padding-top: 1rem;
+	}
+  
+	.search-bar {
+	  width: 50%;
+	}
+  }*/
+  
