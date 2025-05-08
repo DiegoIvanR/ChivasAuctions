@@ -1,75 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 
-function Footer(){
-    return(
-        <footer className="footer">
-            
+function Footer() {
+  const [openIndex, setOpenIndex] = useState(null);
 
-            <div className="footer-bullshit">
-                <div className="drop-down-language">
-                    <img src="../public/globe.png" className="globe"></img>
-                    <h3 className="language">
-                        Español
-                    </h3>
-                    <img src="../public/drop-down.png" className="drop-down"></img>
-                </div>
-                <div className="footer-content">
-                    <h1 className="footer-title">
-                        SUBASTAS CHIVAS
-                    </h1>
-                    <p className="footer-text">
-                        C. Cto. JVC 2800
-                    </p>
-                    <p className="footer-text">
-                        El Bajío, Zapopan, Jal.
-                    </p>
-                    <p className="footer-text">
-                        C.P. 45019
-                    </p>
-                </div>
+  const handleToggle = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
-                <div className="footer-content">
-                    <h1 className="footer-title">
-                        LEGAL
-                    </h1>
-                    <p className="footer-text">
-                        Aviso de Privacidad
-                    </p>
-                    <p className="footer-text">
-                        Términos de Servicio
-                    </p>
-                    <p className="footer-text">
-                        Preferencias de Cookies
-                    </p>
-                    <p className="footer-text">
-                        Información Corporativa
-                    </p>
-                </div>
+  const sections = [
+    {
+      title: "SUBASTAS CHIVAS",
+      items: ["C. Cto. JVC 2800", "El Bajío, Zapopan, Jal.", "C.P. 45019"],
+    },
+    {
+      title: "LEGAL",
+      items: [
+        "Aviso de Privacidad",
+        "Términos de Servicio",
+        "Preferencias de Cookies",
+        "Información Corporativa",
+      ],
+    },
+    {
+      title: "NAVEGAR",
+      items: ["Envíos y Devoluciones", "Contáctanos", "Mapa del sitio"],
+    },
+    {
+      title: "SÍGUENOS",
+      isSocial: true,
+      image: "../public/Social.png",
+    },
+  ];
 
-                <div className="footer-content">
-                    <h1 className="footer-title">
-                        NAVEGAR
-                    </h1>
-                    <p className="footer-text">
-                        Envíos y Devoluciones
-                    </p>
-                    <p className="footer-text">
-                        Contáctanos
-                    </p>
-                    <p className="footer-text">
-                        Mapa del sitio
-                    </p>
-                </div>
-                <div className="footer-content">
-                    <h1 className="footer-title">
-                        SÍGUENOS
-                    </h1>
-                    <img src="../public/Social.png" className="social-logos"></img>
-                </div>
-            </div>
-            <h2 className="footer-text last-text">© 2025 Chivas F.C.</h2>
-        </footer>
-    );
+  return (
+    <footer className="footer">
+      <div className="footer-bullshit">
+        <div className="drop-down-language">
+          <img src="../public/globe.png" className="globe" alt="globe" />
+          <h3 className="language">Español</h3>
+          <img src="../public/drop-down.png" className="drop-down" alt="dropdown" />
+        </div>
 
+        {sections.map((section, index) => (
+          <div
+            key={index}
+            className={`footer-content ${openIndex === index ? "open" : ""}`}
+          >
+            <h1
+              className="footer-title"
+              onClick={() => handleToggle(index)}
+            >
+              {section.title}
+            </h1>
+            {!section.isSocial &&
+              section.items.map((text, i) => (
+                <p key={i} className="footer-text">{text}</p>
+              ))}
+            {section.isSocial && openIndex === index && (
+                <img src={section.image} className="social-logos footer-text" alt="social" />
+                )}
+          </div>
+        ))}
+      </div>
+      <h2 className="footer-text last-text">© 2025 Chivas F.C.</h2>
+    </footer>
+  );
 }
+
 export default Footer;

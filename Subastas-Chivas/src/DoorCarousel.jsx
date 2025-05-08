@@ -4,16 +4,25 @@ import { matches } from './matches.js'; // Import the matches data
 import ArrowButton from './ArrowButton'; // Import the ArrowButton component
 import Door from './Door'; // Import the Door component
 
+
 const DoorCarousel = () => {
-  const [doors, setDoors] = useState([
-    { id: 0, team: '' },
-    matches.america_15_05_2025,
-    matches.pumas_16_05_2025,
-    matches.rayados_17_05_2025,
-    { id: 4, team: 'XOLOS', date: '06-21-2024' },
-    { id: 5, team: '' }
-  ]);
   
+  const [doors, setDoors] = useState([]);
+
+  useEffect(() => {
+    // Step 1: Get an array of all the match values
+    const allMatches = Object.keys(matches).map(key => matches[key]);
+
+    // Step 2: Add empty items at the beginning and end
+    const withPadding = [
+      { id: 0, team: '' },    // empty at start
+      ...allMatches,          // real matches
+      { id: -1, team: '' }     // empty at end
+    ];
+
+    // Step 3: Save it in state
+    setDoors(withPadding);
+  }, []);
   const [startIndex, setStartIndex] = useState(0);
   const [selectedDoor, setSelectedDoor] = useState(null);
   

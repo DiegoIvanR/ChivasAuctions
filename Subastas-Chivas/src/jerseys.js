@@ -1,44 +1,54 @@
-export const jerseys = {
-    javier_hernandez_15_05_2025 : {
-    id: 1,
-    signed: true,
-    used: true,
-    player: "Javier Hernandez",
-    number: 14,
-    match: "america_15_05_2025",
-},
-
- mateo_chavez_15_05_2025 : {
-    id: 2,
-    signed: true,
-    used: false,
-    player: "Mateo Chavez",
-    number: 10,
-    match: "america_15_05_2025",
-},
-
- fernando_gonzalez_15_05_2025 : {
-    id: 3,
-    signed: false,
-    used: true,
-    player: "Fernando Gonzalez",
-    number: 9,
-    match: "america_15_05_2025",
-},
- fernando_beltran_15_05_2025 : {
-    id: 4,
-    signed: true,
-    used: true,
-    player: "Fernando Beltran",
-    number: 8,
-    match: "america_15_05_2025",
-},
- roberto_alvarado_15_05_2025 : {
-    id: 5,
-    signed: true,
-    used: true,
-    player: "Roberto Alvarado",
-    number: 8,
-    match: "america_15_05_2025",
-}
-}
+export const jerseys = [
+    {
+      id: 1,
+      signed: true,
+      used: true,
+      player: "Javier Hernandez",
+      number: 14,
+      match: "america_15_05_2025",
+      highest_bid: 1005,
+      starting_date: "2025-05-15T00:00:00Z",
+      end_date: "2025-05-08T20:30:00Z",
+    },
+    {
+      id: 2,
+      signed: true,
+      used: false,
+      player: "Mateo Chavez",
+      number: 10,
+      match: "america_15_05_2025",
+      starting_date: "2025-05-15T00:00:00Z",
+      end_date: "2025-05-20T00:00:00Z",
+    },
+    {
+      id: 3,
+      signed: false,
+      used: true,
+      player: "Fernando Gonzalez",
+      number: 9,
+      match: "america_15_05_2025",
+      starting_date: "2025-05-15T00:00:00Z",
+      end_date: "2025-05-20T00:00:00Z",
+    },
+    {
+      id: 4,
+      signed: true,
+      used: true,
+      player: "Fernando Beltran",
+      number: 8,
+      match: "america_15_05_2025",
+      starting_date: "2025-05-15T00:00:00Z",
+      end_date: "2025-05-20T00:00:00Z",
+    },
+    {
+      id: 5,
+      signed: true,
+      used: true,
+      player: "Roberto Alvarado",
+      number: 8,
+      match: "america_15_05_2025",
+      starting_date: "2025-05-15T00:00:00Z",
+      end_date: "2025-05-20T00:00:00Z",
+    }
+  ];
+  
