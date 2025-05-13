@@ -82,7 +82,7 @@ const LockerRoom = () => {
 
   return (
     <div className="locker-room-container">
-      <img src="../public/top-door-frame.png" className="top-door-frame" alt="Top door frame" />
+      <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top door frame" />
       
       <div className="carousel-container">
         <div className="carousel-controls">

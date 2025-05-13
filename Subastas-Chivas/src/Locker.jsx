@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import JerseyAttributes from './JerseyAttributes.jsx';
 // USES ZULU TIME, 20:00 UTC -> 14:00 CDMX
 
 const Locker = ({ locker, onClick, isSelected }) => {
@@ -11,7 +12,6 @@ const Locker = ({ locker, onClick, isSelected }) => {
       const now = new Date();
       const end = new Date(locker.end_date);
       const diffMs = end - now;
-
       if (diffMs <= 0) {
         setTimeLeft("Terminada");
         return;
@@ -55,18 +55,34 @@ const Locker = ({ locker, onClick, isSelected }) => {
             e.target.style.width = "auto";
           }}
         />
+        {locker.img_src && (
+          <img
+            className='locker-jersey-image'
+            src={locker.img_src}
+          />
+        )}
         {locker.player && (
           <div className="locker-label">
             {locker.player}
           </div>
         )}
         {locker.match && (
-          <div className="locker-date">
-            {locker.match}
+          <div className="locker-status">
+            {timeLeft === "Terminada" ? "PUJA FINAL" : "PUJA ACTUAL"}
           </div>
         )}
+        {locker.highest_bid && (
+          <div className="locker-bid-container">
+            <div className='locker-bid'>
+              ${locker.highest_bid}
+            </div>
+          </div>
+        )}
+        <div className="locker-attributes">
+          <JerseyAttributes jersey={locker} />
+        </div>
         {locker.end_date && (
-          <div className="locker-date">
+          <div className="locker-time-remaining">
             {timeLeft}
           </div>
         )}

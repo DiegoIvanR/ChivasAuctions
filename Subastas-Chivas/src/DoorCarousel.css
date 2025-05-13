@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Alatsi:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300&display=swap');
 
 :root{
 	background: black;
@@ -521,27 +522,9 @@
 	z-index: 2; /* Ensure the label appears above the locker, but below the arrows */
   }
 
-  .locker-date {
-	position: absolute; /* Change from relative to absolute to place in front of locker */
-	top: 60%;
-	left: 50%;
-	transform: translate(-50%, -50%); /* Center the label in the middle of the locker */
-	padding: 0.5rem;
-	border-radius: 0.5rem;
-	font-family: Rajdhani;
-	font-weight: 700;
-	font-size: 24px;
-	line-height: 100%;
-	letter-spacing: 3%;
-	text-align: center;
-	color: #D3D3D3;
-	text-shadow: 0px 20px 4px rgba(0, 0, 0, 0.6); /* Apply shadow to the text */
-	z-index: 2; /* Ensure the label appears above the locker, but below the arrows */
-  }
-
   /*depurar por aqui*/
   /* Updated Locker Room and Locker Component Styles */
-
+/*###########################################################################################################*/
 /* Main container for the locker room */
 .locker-room-container {
 	width: 100%;
@@ -623,11 +606,11 @@
 	object-fit: contain;
 	display: block;
   }
-  
+
   /* Text overlay styles */
   .locker-label {
 	position: absolute;
-	top: 50%;
+	top: 12%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-family: Rajdhani, sans-serif;
@@ -638,21 +621,95 @@
 	text-align: center;
 	z-index: 3;
 	pointer-events: none;
+	line-height: 40px;
+  }
+
+  .locker-jersey-image {
+	z-index: 2;
+	position: absolute;
+	width: 100%;
   }
   
-  .locker-date {
+  .locker-status {
 	position: absolute;
-	top: 58%;
+	width: 100%;
+	bottom: 17%;
+	left: 60%;
+	transform: translate(-50%, -50%);
+	font-family: Merriweather, sans-serif;
+	font-weight: 300;
+	font-size: 12px;
+	color: #D3D3D3;
+	text-align: left;
+	z-index: 3;
+	pointer-events: none;
+  }
+
+  .locker-bid-container{
+	position: absolute;
+	bottom: 12%;
+	right: 57%;
+	z-index: 4;
+	background-color:#07161D;
+	width: 70px;
+	height: 30px;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	border-radius: 9px;
+	display: flex;
+  }
+  .locker-bid{
+	position: relative;
+	font-family: Montserrat, sans-serif;
+	font-weight: 600;
+	font-size: 16px;
+  }
+
+  .locker-attributes{
+	position: absolute;
+	top: 80%;
+	right: 7%;
+	z-index: 4;
+  }
+  .locker-time-remaining {
+	position: absolute;
+	bottom: 7%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	font-family: Rajdhani, sans-serif;
-	font-weight: 700;
-	font-size: 18px;
+	font-family: Merriweather, sans-serif;
+	font-weight: 300;
+	font-size: 12px;
 	color: #D3D3D3;
-	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
 	text-align: center;
 	z-index: 3;
 	pointer-events: none;
+  }
+
+  .jersey-attributes {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+  }
+
+  .jersey-att-container {
+	display: flex;
+	position: relative;
+	z-index: 4;
+	background-color:#0F5977;
+	width: 70px;
+	height: 20px;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	border-radius: 4px;
+  }
+  .jersey-att{
+
+	font-family: Montserrat, sans-serif;
+	font-weight: 400;
+	font-size: 11px;
   }
   
 
