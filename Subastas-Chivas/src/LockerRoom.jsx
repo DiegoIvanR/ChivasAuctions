@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { jerseys } from './jerseys.js';
+import { useLocation } from 'react-router-dom'; // Import useLocation
 import ArrowButton from './ArrowButton';
 import Locker from './Locker.jsx';
 
 const LockerRoom = () => {
+  const location = useLocation(); // Get location state
+  const matchFilter = location.state?.match || ''; // Retrieve match from state
   const [lockers, setLockers] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [selectedLocker, setSelectedLocker] = useState(null);
   const [visibleLockers, setVisibleLockers] = useState(7);
-  
-  // Width of each locker viewport slot
+
+
   const lockerWidth = 200;
-  
+
   useEffect(() => {
-    // Step 1: Get an array of all the match values
-    const allJerseys = Object.keys(jerseys).map(key => jerseys[key]);
+    const filteredJerseys = jerseys.filter(jersey => jersey.match === matchFilter);
     
-    // Step 2: Add empty items at the beginning and end
     const withPadding = [
       { id: 0, player: "Empty Locker", match: "No Match", signed: false, used: false},    // empty at start
       { id: 321, player: "Empty Locker", match: "No Match", signed: false, used: false},
-      ...allJerseys,          // real matches
+      ...filteredJerseys,          // real matches
       { id: -1, player: "Empty Locker", match: "No Match", signed: false, used: false}     // empty at end
     ];
-    
-    // Step 3: Save it in state
     setLockers(withPadding);
-  }, []);
-  
-  // Effect to handle responsive visible lockers
+
+  }, [matchFilter]);
+
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -56,13 +55,13 @@ const LockerRoom = () => {
     // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
-  // Ensure startIndex stays valid when visible lockers change
+
   useEffect(() => {
     if (startIndex > lockers.length - visibleLockers && lockers.length > 0) {
       setStartIndex(Math.max(0, lockers.length - visibleLockers));
     }
   }, [visibleLockers, lockers.length, startIndex]);
+
 
   const handlePrev = () => {
     if (startIndex > 0) {
