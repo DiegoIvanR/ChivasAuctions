@@ -1,40 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { jerseys } from './jerseys.js';
 import { useLocation } from 'react-router-dom'; // Import useLocation
-import ArrowButton from './ArrowButton';
 import Locker from './Locker.jsx';
+import ArrowButton from './ArrowButton';
 
-const LockerRoom = () => {
-  const location = useLocation(); // Get location state
-  const matchFilter = location.state?.match || ''; // Retrieve match from state
-  const [lockers, setLockers] = useState([]);
+const LockerRoomSearch = () => {
+  const location = useLocation(); // Get the current location
+  const queryParams = new URLSearchParams(location.search); // Parse query parameters
+  const searchQuery = queryParams.get('query') || ''; // Get the 'query' parameter
+
+  const [filteredLockers, setFilteredLockers] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
-  const [selectedLocker, setSelectedLocker] = useState(null);
   const [visibleLockers, setVisibleLockers] = useState(7);
-
+  const [selectedLocker, setSelectedLocker] = useState(null);
 
   const lockerWidth = 200;
-
-  useEffect(() => {
-    const filteredJerseys = jerseys.filter(jersey => jersey.match === matchFilter);
-    
-    const nPaddingDoors = 7 - filteredJerseys.length;
-    const leftPaddingDoors = Math.floor(nPaddingDoors/2);
-    const rightPaddingDoors = nPaddingDoors - leftPaddingDoors;
-    let withPadding = [];
-    for (let i = 0;  i <leftPaddingDoors; i++){
-      withPadding.push({id: i + 1000, player: "", match: ""})
-
-    }
-    withPadding.push(...filteredJerseys)
-    for (let i = 0;  i <rightPaddingDoors; i++){
-      withPadding.push({id: i + 1000 + leftPaddingDoors, player: "", match: ""})
-
-    }
-
-    setLockers(withPadding);
-
-  }, [matchFilter]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,20 +36,44 @@ const LockerRoom = () => {
 
     // Initial call
     handleResize();
-    
+
     // Add event listener
     window.addEventListener('resize', handleResize);
-    
+
     // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    if (startIndex > lockers.length - visibleLockers && lockers.length > 0) {
-      setStartIndex(Math.max(0, lockers.length - visibleLockers));
+    if (startIndex > filteredLockers.length - visibleLockers && filteredLockers.length > 0) {
+      setStartIndex(Math.max(0, filteredLockers.length - visibleLockers));
     }
-  }, [visibleLockers, lockers.length, startIndex]);
+  }, [visibleLockers, filteredLockers.length, startIndex]);
 
+  useEffect(() => {
+    // Filter jerseys based on the search query
+    const regex = new RegExp(searchQuery, 'i'); // Case-insensitive regex
+    const filteredJerseys = jerseys.filter(
+      (jersey) =>
+        regex.test(jersey.player) || regex.test(jersey.match) || regex.test(jersey.number.toString())
+    );
+
+        
+    const nPaddingDoors = 7 - filteredJerseys.length;
+    const leftPaddingDoors = Math.floor(nPaddingDoors/2);
+    const rightPaddingDoors = nPaddingDoors - leftPaddingDoors;
+    let withPadding = [];
+    for (let i = 0;  i <leftPaddingDoors; i++){
+        withPadding.push({id: i + 1000, player: "", match: ""})
+    
+    }
+    withPadding.push(...filteredJerseys)
+    for (let i = 0;  i <rightPaddingDoors; i++){
+    withPadding.push({id: i + 1000 + leftPaddingDoors, player: "", match: ""})
+
+    }
+    setFilteredLockers(withPadding);
+  }, [searchQuery]);
 
   const handlePrev = () => {
     if (startIndex > 0) {
@@ -78,7 +82,7 @@ const LockerRoom = () => {
   };
 
   const handleNext = () => {
-    if (startIndex < lockers.length - visibleLockers) {
+    if (startIndex < filteredLockers.length - visibleLockers) {
       setStartIndex(startIndex + 1);
     }
   };
@@ -98,10 +102,10 @@ const LockerRoom = () => {
             className="locker-list"
             style={{
               transform: `translateX(calc(50% - ${lockerWidth * visibleLockers / 2}px + ${-startIndex * lockerWidth}px))`,
-              width: `${lockers.length * lockerWidth}px`, /* Set explicit width for all lockers */
+              width: `${filteredLockers.length * lockerWidth}px`, /* Set explicit width for all lockers */
             }}
           >
-            {lockers.map((locker) => (
+            {filteredLockers.map((locker) => (
               <div key={locker.id} className="locker-wrapper">
                 <Locker
                   locker={locker}
@@ -122,7 +126,7 @@ const LockerRoom = () => {
             <ArrowButton
               direction="right"
               onClick={handleNext}
-              disabled={startIndex >= lockers.length - visibleLockers}
+              disabled={startIndex >= filteredLockers.length - visibleLockers}
             />
           </div>
         </div>
@@ -136,4 +140,4 @@ const LockerRoom = () => {
   );
 };
 
-export default LockerRoom;
+export default LockerRoomSearch;
