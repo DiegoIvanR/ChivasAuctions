@@ -87,8 +87,9 @@ const LockerRoomSearch = () => {
     }
   };
 
-  const handleLockerClick = (lockerId) => {
-    setSelectedLocker(lockerId);
+  const handleLockerClick = (locker) => {
+    setSelectedLocker(locker.id);
+    navigate('/auction', { state: { id: locker.id } }); // Navigate to LockerRoom with match data
   };
 
   return (
@@ -109,7 +110,7 @@ const LockerRoomSearch = () => {
               <div key={locker.id} className="locker-wrapper">
                 <Locker
                   locker={locker}
-                  onClick={handleLockerClick}
+                  onClick={() => handleLockerClick(locker)}
                   isSelected={selectedLocker === locker.id}
                 />
               </div>

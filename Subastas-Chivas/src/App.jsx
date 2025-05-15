@@ -13,7 +13,8 @@ const App = () => {
       <Router>
         <Header /> {/* Move Header inside Router */}
         <Routes>
-          <Route path="/" element={<LockerAuction />} />
+          <Route path="/" element={<DoorCarousel/>} />
+          <Route path="/auction/:auctionID" element={<LockerAuction />} />
           <Route path="/locker-room" element={<LockerRoom />} />
           <Route path="/locker-room-search" element={<LockerRoomSearch />} />
         </Routes>

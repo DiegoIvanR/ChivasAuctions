@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './locker-auction.css';
 import { jerseys } from './jerseys';
+import { useLocation, useParams } from 'react-router-dom'; // Import useLocation
 import JerseyAttributes from './JerseyAttributes';
 
 export default function LockerAuction() {
+    let {auctionID} = useParams();
+    const jersey = jerseys.find(jersey => jersey.id === Number(auctionID));
+    console.log(jersey)
+    const [timeLeft, setTimeLeft] = useState('');
     const lockerImageRef = useRef(null); // Reference for the locker image
 
     function updateJerseyPosition() {
@@ -16,9 +21,6 @@ export default function LockerAuction() {
             jersey.style.top = `${offset}px`;
         }
     }
-
-    const jersey = jerseys[0];
-    const [timeLeft, setTimeLeft] = useState('');
 
     useEffect(() => {
         const updateTimeLeft = () => {
@@ -89,7 +91,7 @@ export default function LockerAuction() {
 
             <div className='locker-auction-jersey'>
                 <img src="../public/locker.png" className='locker-auction-jersey-locker-img' alt="Locker" />
-                <img src="../public/javier-hernandez.png" className='locker-auction-jersey-img' alt="Jersey" />
+                <img src={jersey.img_src} className='locker-auction-jersey-img' alt="Jersey" />
                 <img src="../public/locker-cabinet.png" className='locker-cabinet' alt="Locker Cabinet" />
                 <div className='locker-auction-auction'>
                     <div className='auction-info'>
