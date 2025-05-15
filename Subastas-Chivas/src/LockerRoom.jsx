@@ -1,3 +1,4 @@
+/*
 import React, { useState, useEffect } from 'react';
 import { jerseys } from './jerseys.js';
 import { useLocation } from 'react-router-dom'; // Import useLocation
@@ -93,12 +94,12 @@ const LockerRoom = () => {
       
       <div className="carousel-container">
         <div className="carousel-controls">
-          {/* Locker list with proper positioning */}
+          
           <div 
             className="locker-list"
             style={{
               transform: `translateX(calc(50% - ${lockerWidth * visibleLockers / 2}px + ${-startIndex * lockerWidth}px))`,
-              width: `${lockers.length * lockerWidth}px`, /* Set explicit width for all lockers */
+              width: `${lockers.length * lockerWidth}px`, // Set explicit width for all lockers
             }}
           >
             {lockers.map((locker) => (
@@ -112,7 +113,6 @@ const LockerRoom = () => {
             ))}
           </div>
           
-          {/* Navigation buttons */}
           <div className="arrow-buttons">
             <ArrowButton
               direction="left"
@@ -137,3 +137,4 @@ const LockerRoom = () => {
 };
 
 export default LockerRoom;
+*/

@@ -43,7 +43,9 @@ const Locker = ({ locker, isSelected }) => {
   const navigate = useNavigate();
 	
 	const handleClick = (e) => {
-    navigate(`/auction/${locker.id}`);
+    if(locker.player){
+      navigate(`/auction/${locker.id}`);
+    }
   };
 
   return (
