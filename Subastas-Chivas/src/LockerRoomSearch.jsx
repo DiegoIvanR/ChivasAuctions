@@ -87,11 +87,6 @@ const LockerRoomSearch = () => {
     }
   };
 
-  const handleLockerClick = (locker) => {
-    setSelectedLocker(locker.id);
-    navigate('/auction', { state: { id: locker.id } }); // Navigate to LockerRoom with match data
-  };
-
   return (
     <div className="locker-room-container">
       <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top door frame" />
@@ -110,7 +105,6 @@ const LockerRoomSearch = () => {
               <div key={locker.id} className="locker-wrapper">
                 <Locker
                   locker={locker}
-                  onClick={() => handleLockerClick(locker)}
                   isSelected={selectedLocker === locker.id}
                 />
               </div>
