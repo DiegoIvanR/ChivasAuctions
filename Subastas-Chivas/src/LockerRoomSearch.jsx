@@ -87,10 +87,6 @@ const LockerRoomSearch = () => {
     }
   };
 
-  const handleLockerClick = (lockerId) => {
-    setSelectedLocker(lockerId);
-  };
-
   return (
     <div className="locker-room-container">
       <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top door frame" />
@@ -109,7 +105,6 @@ const LockerRoomSearch = () => {
               <div key={locker.id} className="locker-wrapper">
                 <Locker
                   locker={locker}
-                  onClick={handleLockerClick}
                   isSelected={selectedLocker === locker.id}
                 />
               </div>

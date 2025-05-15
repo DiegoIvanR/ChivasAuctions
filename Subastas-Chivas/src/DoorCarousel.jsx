@@ -34,7 +34,7 @@ const DoorCarousel = () => {
 
   const handleDoorClick = (door) => {
     setSelectedDoor(door.id);
-    navigate('/locker-room', { state: { match: door.match } }); // Navigate to LockerRoom with match data
+    navigate(`/locker-room-search?query=${encodeURIComponent(door.match)}`)
   };
 
   return (

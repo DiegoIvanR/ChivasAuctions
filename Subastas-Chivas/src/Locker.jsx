@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import JerseyAttributes from './JerseyAttributes.jsx';
+import { useNavigate } from 'react-router-dom';
 // USES ZULU TIME, 20:00 UTC -> 14:00 CDMX
 
-const Locker = ({ locker, onClick, isSelected }) => {
+const Locker = ({ locker, isSelected }) => {
   const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
@@ -39,10 +40,18 @@ const Locker = ({ locker, onClick, isSelected }) => {
     return () => clearInterval(interval); // Cleanup when component unmounts
   }, [locker.end_date]);
 
+  const navigate = useNavigate();
+	
+	const handleClick = (e) => {
+    if(locker.player){
+      navigate(`/auction/${locker.id}`);
+    }
+  };
+
   return (
     <div 
       className={`locker-container ${isSelected ? 'selected' : ''}`}
-      onClick={() => onClick(locker.id)}
+      onClick={handleClick}
     >
       <div className="locker-image-container">
         <img 
