@@ -1,0 +1,218 @@
+/*
+return(
+        <div className='locker-auction'>
+            <img src="../public/locker-complete.png" className='locker-complete'/>
+            
+            <div className='locker-auction-jersey'>
+                <img src="../public/locker.png" className='locker-auction-jersey-locker-img'/>
+                <img src="../public/javier-hernandez.png" className='locker-auction-jersey-img'/>
+                <img src="../public/locker-cabinet.png" className='locker-cabinet'/>
+                <div className='locker-auction-auction'>
+                    <div className='auction-info'>
+                        <p className='auction-id'>ID: {jersey.id}</p>
+                            {jersey.player && (
+                              <div className="auction-label">
+                                {jersey.player}
+                              </div>
+                            )}
+                            {jersey.match && (
+                              <div className="auction-status">
+                                {timeLeft === "Terminada" ? "PUJA FINAL" : "PUJA ACTUAL"}
+                              </div>
+                            )}
+                            {jersey.highest_bid && (
+                              <div className="auction-bid-container">
+                                <div className='auction-bid'>
+                                  ${jersey.highest_bid}
+                                </div>
+                              </div>
+                            )}
+                            <div className="auction-attributes">
+                              <JerseyAttributes jersey={jersey} />
+                            </div>
+                            {jersey.end_date && (
+                              <div className="auction-time-remaining">
+                                {timeLeft}
+                              </div>
+                            )}
+                    </div>
+                    <img src="../public/locker.png" className='locker-auction-locker-img'/>
+                </div>
+            </div>
+        </div>
+    )
+*/
+*{
+	box-sizing: border-box;
+}
+
+.locker-auction{
+    position: relative;
+    height: auto;
+}
+.locker-complete {
+    position: relative;
+	margin: auto;
+	display: block;
+	width: 100%;
+    z-index: -1;
+}
+
+.locker-auction-jersey{
+    position: absolute;
+	margin: auto;
+	display: block;
+    z-index: 1;
+    width: 19.7%;
+}
+
+.locker-auction-jersey-locker-img{
+    position: relative;
+    z-index: 1;
+    left: 100%;
+    width: 100%;
+}
+.locker-auction-jersey-img{
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    top: 35%;
+
+}
+
+.locker-cabinet{
+    position: absolute;
+    bottom:0.35%;
+    left: 0%;
+    z-index: 2;
+    width: 200%;
+
+}
+
+.locker-auction-auction{
+    position: absolute;
+    z-index: 1;
+    width: 300%;
+    height: 100%;
+    top: -.25%;
+    left: 200%;
+}
+.locker-auction-locker-img{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.auction-info{
+    position: absolute;
+    z-index: 3;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.auction-id{
+    position: absolute;
+    top: 3%;
+	left: 10%;
+    font-family: Montserrat, sans-serif;
+	font-weight: 600;
+	font-size: 18px;
+    color: #D3D3D3;
+
+}
+/* Text overlay styles */
+.auction-label {
+	position: absolute;
+	top: 10%;
+	left: 10%;
+	font-family: Rajdhani, sans-serif;
+	font-weight: 700;
+	font-size: 64px;
+	color: #D3D3D3;
+	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+	text-align: center;
+	z-index: 3;
+	pointer-events: none;
+	line-height: 40px;
+  }
+  
+  .auction-status {
+	position: absolute;
+	width: 100%;
+	top: 33%;
+	left: 25%;
+	font-family: Merriweather, sans-serif;
+	font-weight: 300;
+	font-size: 23px;
+	color: #D3D3D3;
+	text-align: left;
+	z-index: 3;
+	pointer-events: none;
+  }
+
+  .auction-bid-container{
+	position: absolute;
+	top: 37%;
+	left: 25%;
+	z-index: 4;
+	justify-content: center;
+	align-items: center;
+	text-align: left;
+  }
+  .auction-bid{
+	position: absolute;
+	font-family: Montserrat, sans-serif;
+	font-weight: 600;
+	font-size: 30px;
+    color: #D3D3D3;
+  }
+
+  .auction-attributes{
+	position: absolute;
+	top: 34%;
+	right: 20%;
+	z-index: 4;
+  }
+  .auction-time-remaining {
+	position: absolute;
+	top: 42%;
+	left: 25%;
+	font-family: Merriweather, sans-serif;
+	font-weight: 300;
+	font-size: 18px;
+	color: #D3D3D3;
+	text-align: center;
+	z-index: 3;
+	pointer-events: none;
+  }
+
+  .auction-info .jersey-attributes {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+  }
+
+  .auction-info .jersey-att-container {
+	display: flex;
+	position: relative;
+	z-index: 4;
+	background-color:#0F5977;
+	width: 97px;
+	height: 30px;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	border-radius: 9px;
+  }
+  .auction-info .jersey-att{
+	font-family: Montserrat, sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+    color: #D3D3D3;
+  }
