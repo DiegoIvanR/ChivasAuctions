@@ -1,0 +1,24 @@
+.cancel-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.cancel-button {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cancel-button:hover {
+    background: #e53935;
+}
+
+.cancel-timer {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}

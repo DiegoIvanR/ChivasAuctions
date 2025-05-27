@@ -1,0 +1,43 @@
+.user-settings-popup {
+    position: absolute;
+    top: 60px; /* Adjust based on your header height */
+    right: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    z-index: 1000;
+    padding: 10px;
+}
+
+.popup-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.popup-menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+}
+
+.popup-menu-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.popup-menu-item:last-child {
+    border-bottom: none;
+}
+
+.popup-menu-item:hover {
+    background: #f9f9f9;
+}
