@@ -1,24 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './locker-auction.css';
 import { jerseys } from './jerseys';
-import { useLocation, useParams } from 'react-router-dom'; // Import useLocation
+import { useParams } from 'react-router-dom';
 import JerseyAttributes from './JerseyAttributes';
+import BidInput from './BidInput';
 
 export default function LockerAuction() {
-    let {auctionID} = useParams();
-    const jersey = jerseys.find(jersey => jersey.id === Number(auctionID));
-    console.log(jersey)
+    let { auctionID } = useParams();
+    const jerseyData = jerseys.find(jersey => jersey.id === Number(auctionID));
+    const [jersey, setJersey] = useState(jerseyData);
     const [timeLeft, setTimeLeft] = useState('');
-    const lockerImageRef = useRef(null); // Reference for the locker image
+    const lockerImageRef = useRef(null);
 
     function updateJerseyPosition() {
         const lockerImage = lockerImageRef.current;
-        const jersey = document.querySelector('.locker-auction-jersey');
+        const jerseyElement = document.querySelector('.locker-auction-jersey');
 
-        if (lockerImage && jersey) {
+        if (lockerImage && jerseyElement) {
             const height = lockerImage.offsetHeight;
-            const offset = height * 0.1; // adjust 0.65 to change vertical position
-            jersey.style.top = `${offset}px`;
+            const offset = height * 0.1;
+            jerseyElement.style.top = `${offset}px`;
         }
     }
 
@@ -49,36 +50,39 @@ export default function LockerAuction() {
                 setTimeLeft(`quedan ${seconds} segundos`);
             }
         };
-        updateTimeLeft(); // Run once immediately
-        const interval = setInterval(updateTimeLeft, 1000); // Update every second
+        updateTimeLeft();
+        const interval = setInterval(updateTimeLeft, 1000);
 
-        return () => clearInterval(interval); // Cleanup when component unmounts
+        return () => clearInterval(interval);
     }, [jersey.end_date]);
 
     useEffect(() => {
         const lockerImage = lockerImageRef.current;
 
         if (lockerImage) {
-            // Run updateJerseyPosition after the image has loaded
             lockerImage.addEventListener('load', updateJerseyPosition);
 
-            // Call updateJerseyPosition in case the image is already cached
             if (lockerImage.complete) {
                 updateJerseyPosition();
             }
         }
 
-        // Add event listener for resize
         window.addEventListener('resize', updateJerseyPosition);
 
-        // Cleanup event listeners on unmount
         return () => {
             if (lockerImage) {
                 lockerImage.removeEventListener('load', updateJerseyPosition);
             }
             window.removeEventListener('resize', updateJerseyPosition);
         };
-    }, []); // Empty dependency array ensures this runs only once after mount
+    }, []);
+
+    const handleBidUpdate = (newBid) => {
+        setJersey(prevJersey => ({
+            ...prevJersey,
+            highest_bid: newBid,
+        }));
+    };
 
     return (
         <div className='locker-auction'>
@@ -121,6 +125,7 @@ export default function LockerAuction() {
                                 {timeLeft}
                             </div>
                         )}
+                        <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
                     </div>
                     <img src="../public/locker.png" className='locker-auction-locker-img' alt="Locker" />
                 </div>
