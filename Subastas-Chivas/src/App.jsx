@@ -12,9 +12,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import DashboardForm from './DashboardForm';
 
-/*
-import LockerRoom from './LockerRoom';
-=======
+/*import LockerRoom from './LockerRoom';*/
 
 
 // Initialize Stripe with your publishable key
