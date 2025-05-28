@@ -1,0 +1,42 @@
+.payment-setup {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card-element-container {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f9f9f9;
+}
+
+.error-message {
+    color: red;
+    margin: 10px 0;
+}
+
+.payment-button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.payment-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.payment-button:hover:not(:disabled) {
+    background: #45a049;
+}
