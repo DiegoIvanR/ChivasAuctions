@@ -1,0 +1,107 @@
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background: black;
+}
+
+.calendar {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  width: 340px;
+  color: white;
+}
+
+.calendar-title {
+  font-size: 0.85rem;
+  color: #f43f5e;
+  margin-bottom: 0.2rem;
+}
+
+.calendar-date {
+  font-size: 1.8rem;
+  color: white;
+  margin: 0.5rem 0;
+}
+
+.calendar-divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 1rem 0;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.calendar-month {
+  font-weight: bold;
+  color: #f43f5e;
+}
+
+.calendar-nav .arrow {
+  color: #f43f5e;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 0.7rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: white;
+  transition: background 0.3s;
+}
+
+.calendar-day:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.calendar-day.selected {
+  background-color: #f43f5e;
+  color: white;
+}
+
+.calendar-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.cancel-button,
+.ok-button {
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
+  color: #f43f5e;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cancel-button:hover,
+.ok-button:hover {
+  text-decoration: underline;
+}
