@@ -1,100 +1,95 @@
 import React, { useEffect, useState } from 'react';
-import JerseyAttributes from './JerseyAttributes.jsx';
 import { useNavigate } from 'react-router-dom';
-// USES ZULU TIME, 20:00 UTC -> 14:00 CDMX
 
-const Locker = ({ locker, isSelected }) => {
+const Locker = ({ locker }) => {
   const [timeLeft, setTimeLeft] = useState('');
+  //const [timeStart, setTimeStart] = useState('');
+  const [status, setStatus] = useState(''); // State to store auction status
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const updateTimeLeft = () => {
-      if (!locker.end_date) return;
+    const updateStatusAndTimeLeft = () => {
+      if (!locker.auctions?.start_time || !locker.auctions?.end_time) return;
 
       const now = new Date();
-      const end = new Date(locker.end_date);
-      const diffMs = end - now;
-      if (diffMs <= 0) {
-        setTimeLeft("Terminada");
-        return;
-      }
+      const start = new Date(locker.auctions.start_time);
+      const end = new Date(locker.auctions.end_time);
 
+      const diffMs = end - now;
       const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
       const seconds = Math.floor((diffMs / 1000) % 60);
 
-      if (days > 0) {
-        setTimeLeft(`quedan ${days} días`);
-      } else if (hours > 0) {
-        setTimeLeft(`quedan ${hours} horas`);
-      } else if (minutes > 0) {
-        setTimeLeft(`quedan ${minutes} minutos`);
+
+      // Determine auction status
+      if (now < start) {
+        if (Math.abs(days) > 0) {
+          setTimeLeft(`faltan ${days} días`);
+        } else if (Math.abs(hours > 0)) {
+          setTimeLeft(`faltan ${hours} horas`);
+        } else if (Math.abs(minutes > 0)) {
+          setTimeLeft(`faltan ${minutes} minutos`);
+        } else {
+          setTimeLeft(`faltan ${seconds} segundos`);
+        }
+        setStatus('PUJA FUTURA');
+
+      } else if (now >= start && now <= end) {
+        if (diffMs <= 0) {
+          setTimeLeft("Terminada");
+          return;
+        }
+        setStatus('PUJA ACTUAL');
+
+        if (days > 0) {
+          setTimeLeft(`quedan ${days} días`);
+        } else if (hours > 0) {
+          setTimeLeft(`quedan ${hours} horas`);
+        } else if (minutes > 0) {
+          setTimeLeft(`quedan ${minutes} minutos`);
+        } else {
+          setTimeLeft(`quedan ${seconds} segundos`);
+        }
       } else {
-        setTimeLeft(`quedan ${seconds} segundos`);
+        setStatus('PUJA FINAL');
+        setTimeLeft('Terminada');
       }
     };
 
-    updateTimeLeft(); // Run once immediately
-    const interval = setInterval(updateTimeLeft, 1000); // Update every second
+    updateStatusAndTimeLeft();
+    const interval = setInterval(updateStatusAndTimeLeft, 1000);
 
-    return () => clearInterval(interval); // Cleanup when component unmounts
-  }, [locker.end_date]);
+    return () => clearInterval(interval);
+  }, [locker.auctions?.start_time, locker.auctions?.end_time]);
 
-  const navigate = useNavigate();
-	
-	const handleClick = (e) => {
-    if(locker.player){
-      navigate(`/auction/${locker.id}`);
+  const handleClick = () => {
+    if (locker.auctions?.auction_id) {
+      navigate(`/auction/${locker.auctions.auction_id}`); // Redirect to LockerAuction page
     }
   };
 
   return (
-    <div 
-      className={`locker-container ${isSelected ? 'selected' : ''}`}
-      onClick={handleClick}
-    >
+    <div className="locker-container" onClick={handleClick}>
       <div className="locker-image-container">
-        <img 
-          src="../public/locker.png" 
-          className="locker-image" 
-          alt={`locker ${locker.id}`}
+        <img
+          src="../public/locker.png"
+          className="locker-image"
+          alt={`locker ${locker.jersey_id}`}
           onError={(e) => {
-            console.error("Image failed to load:", e);
-            e.target.style.height = "100%";
-            e.target.style.width = "auto";
+            e.target.style.height = '100%';
+            e.target.style.width = 'auto';
           }}
         />
-        {locker.img_src && (
-          <img
-            className='locker-jersey-image'
-            src={locker.img_src}
-          />
-        )}
-        {locker.player && (
-          <div className="locker-label">
-            {locker.player}
-          </div>
-        )}
-        {locker.match && (
-          <div className="locker-status">
-            {timeLeft === "Terminada" ? "PUJA FINAL" : "PUJA ACTUAL"}
-          </div>
-        )}
-        {locker.highest_bid && (
+        {locker.image_url && <img className="locker-jersey-image" src={locker.image_url} />}
+        {locker.player_name && <div className="locker-label">{locker.player_name}</div>}
+        {locker.auctions?.starting_bid && (
           <div className="locker-bid-container">
-            <div className='locker-bid'>
-              ${locker.highest_bid}
-            </div>
+            <div className="locker-bid">${locker.auctions.starting_bid}</div>
           </div>
         )}
-        <div className="locker-attributes">
-          <JerseyAttributes jersey={locker} />
-        </div>
-        {locker.end_date && (
-          <div className="locker-time-remaining">
-            {timeLeft}
-          </div>
-        )}
+        {status && <div className={`locker-status locker-status-${status.toLowerCase()}`}>{status}</div>}
+        {timeLeft && <div className="locker-time-remaining">{timeLeft}</div>}
       </div>
     </div>
   );

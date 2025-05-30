@@ -317,3 +317,36 @@ entrypoint = "./functions/create-stripe-customer/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/create-stripe-customer/*.html" ]
+
+[functions.process-bid]
+enabled = true
+verify_jwt = true
+import_map = "./functions/process-bid/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/process-bid/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/process-bid/*.html" ]
+
+[functions.cancel-bid]
+enabled = true
+verify_jwt = true
+import_map = "./functions/cancel-bid/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/cancel-bid/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/cancel-bid/*.html" ]
+
+[functions.close-auction]
+enabled = true
+verify_jwt = true
+import_map = "./functions/close-auction/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/close-auction/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/close-auction/*.html" ]
