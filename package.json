@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
+    "jwt-decode": "^4.0.0",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.1"
   }
 }

@@ -11,7 +11,11 @@ import PaymentSetup from './PaymentSetup'; // Import the PaymentSetup component
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import DashboardForm from './DashboardForm';
-
+import Login from './Login'; // Import the Login component
+import { Provider } from 'react-redux';
+import store from './store';
+import SignUp from './SignUp'; // Import the SignUp component
+import Confirmation from './Confirmation';
 /*import LockerRoom from './LockerRoom';*/
 
 
@@ -21,6 +25,7 @@ const stripePromise = loadStripe('pk_test_51RTkCSBSXB0u2ceFU5ZzPmsrITQPFU3ALvjt2
 const App = () => {
   return (
     <div className="App">
+      <Provider store={store}>
       <Router>
         <Header /> {/* Move Header inside Router */}
         <Routes>
@@ -29,8 +34,13 @@ const App = () => {
           <Route path="/locker-room-search" element={<LockerRoomSearch />} />
           <Route path="/calendar" element={<CalendarSelector />} />
           <Route path="/dashboardUsuario" element={<DashboardUsuario />} />
+            
+          <Route path="/login" element={<Login />} /> {/* Add this line */}
+          <Route path="/signup" element={<SignUp />} /> {/* Add this line */}
+          <Route path="/confirmation" element={<Confirmation />} />
           <Route path="/dashboardForm" element={<DashboardForm />} />
           <Route path="/" element={<h1 style={{ color: 'white', textAlign: 'center', marginTop: '100px' }}>Bienvenido a Subastas Chivas</h1>} />
+            
           <Route
             path="/payment-setup"
             element={
@@ -43,6 +53,7 @@ const App = () => {
         </Routes>
         <Footer />
       </Router>
+      </Provider>
     </div>
   );
 };

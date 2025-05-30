@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { jerseys } from './jerseys.js';
-import { useLocation } from 'react-router-dom'; // Import useLocation
+import { useLocation } from 'react-router-dom';
 import Locker from './Locker.jsx';
 import ArrowButton from './ArrowButton';
+import { supabase } from './supabaseClient';
 
 const LockerRoomSearch = () => {
-  const location = useLocation(); // Get the current location
-  const queryParams = new URLSearchParams(location.search); // Parse query parameters
-  const searchQuery = queryParams.get('query') || ''; // Get the 'query' parameter
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const matchId = queryParams.get('match_id'); // Get match_id from URL
+  const searchQuery = queryParams.get('query') || ''; // Get query from URL
 
   const [filteredLockers, setFilteredLockers] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [visibleLockers, setVisibleLockers] = useState(7);
-  const [selectedLocker, setSelectedLocker] = useState(null);
 
   const lockerWidth = 200;
 
@@ -34,13 +34,8 @@ const LockerRoomSearch = () => {
       }
     };
 
-    // Initial call
     handleResize();
-
-    // Add event listener
     window.addEventListener('resize', handleResize);
-
-    // Cleanup
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -51,29 +46,77 @@ const LockerRoomSearch = () => {
   }, [visibleLockers, filteredLockers.length, startIndex]);
 
   useEffect(() => {
-    // Filter jerseys based on the search query
-    const regex = new RegExp(searchQuery, 'i'); // Case-insensitive regex
-    const filteredJerseys = jerseys.filter(
-      (jersey) =>
-        regex.test(jersey.player) || regex.test(jersey.match) || regex.test(jersey.number.toString())
-    );
+    const fetchLockers = async () => {
+      try {
+        let query = supabase
+          .from('jerseys')
+          .select(`
+            jersey_id,
+            match_id,
+            player_name,
+            jersey_number,
+            size,
+            image_url,
+            auctions (
+              auction_id,
+              auction_status,
+              start_time,
+              end_time,
+              starting_bid
+            ),
+            matches (
+              opponent,
+              venue,
+              competition
+            )
+          `);
 
-        
-    const nPaddingDoors = 7 - filteredJerseys.length;
-    const leftPaddingDoors = Math.floor(nPaddingDoors/2);
-    const rightPaddingDoors = nPaddingDoors - leftPaddingDoors;
-    let withPadding = [];
-    for (let i = 0;  i <leftPaddingDoors; i++){
-        withPadding.push({id: i + 1000, player: "", match: ""})
-    
-    }
-    withPadding.push(...filteredJerseys)
-    for (let i = 0;  i <rightPaddingDoors; i++){
-    withPadding.push({id: i + 1000 + leftPaddingDoors, player: "", match: ""})
+        // Filter by match_id if provided
+        if (matchId) {
+          query = query.eq('match_id', matchId);
+        }
 
-    }
-    setFilteredLockers(withPadding);
-  }, [searchQuery]);
+        // Filter by search query if provided
+        if (searchQuery) {
+          query = query.or(`player_name.ilike.%${searchQuery}%,matches.opponent.ilike.%${searchQuery}%`);
+        }
+
+        const { data: lockers, error } = await query;
+
+        if (error) {
+          console.error('Error fetching lockers:', error.message);
+          return;
+        }
+
+        // Process auctions array to ensure consistent data
+        const processedLockers = lockers.map((locker) => {
+          if (locker.auctions && locker.auctions.length > 0) {
+            locker.auctions = locker.auctions[0]; // Use the first auction in the array
+          } else {
+            locker.auctions = null; // Handle cases where auctions array is empty
+          }
+          return locker;
+        });
+
+        // Add padding doors to maintain carousel structure
+        const nPaddingDoors = Math.max(0, visibleLockers - processedLockers.length);
+        const leftPaddingDoors = Math.floor(nPaddingDoors / 2);
+        const rightPaddingDoors = nPaddingDoors - leftPaddingDoors;
+
+        const paddedLockers = [
+          ...Array(leftPaddingDoors).fill({ jersey_id: null, player_name: '', match: '' }),
+          ...processedLockers,
+          ...Array(rightPaddingDoors).fill({ jersey_id: null, player_name: '', match: '' }),
+        ];
+
+        setFilteredLockers(paddedLockers);
+      } catch (err) {
+        console.error('Unexpected error fetching lockers:', err);
+      }
+    };
+
+    fetchLockers();
+  }, [matchId, searchQuery, visibleLockers]);
 
   const handlePrev = () => {
     if (startIndex > 0) {
@@ -90,34 +133,23 @@ const LockerRoomSearch = () => {
   return (
     <div className="locker-room-container">
       <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top door frame" />
-      
       <div className="carousel-container">
         <div className="carousel-controls">
-          {/* Locker list with proper positioning */}
-          <div 
+          <div
             className="locker-list"
             style={{
               transform: `translateX(calc(50% - ${lockerWidth * visibleLockers / 2}px + ${-startIndex * lockerWidth}px))`,
-              width: `${filteredLockers.length * lockerWidth}px`, /* Set explicit width for all lockers */
+              width: `${filteredLockers.length * lockerWidth}px`,
             }}
           >
-            {filteredLockers.map((locker) => (
-              <div key={locker.id} className="locker-wrapper">
-                <Locker
-                  locker={locker}
-                  isSelected={selectedLocker === locker.id}
-                />
+            {filteredLockers.map((locker, index) => (
+              <div key={locker.jersey_id || `placeholder-${index}`} className="locker-wrapper">
+                <Locker locker={locker} />
               </div>
             ))}
           </div>
-          
-          {/* Navigation buttons */}
           <div className="arrow-buttons">
-            <ArrowButton
-              direction="left"
-              onClick={handlePrev}
-              disabled={startIndex === 0}
-            />
+            <ArrowButton direction="left" onClick={handlePrev} disabled={startIndex === 0} />
             <ArrowButton
               direction="right"
               onClick={handleNext}
@@ -126,11 +158,6 @@ const LockerRoomSearch = () => {
           </div>
         </div>
       </div>
-      
-      {selectedLocker && (
-        <div className="selected-locker-details">
-        </div>
-      )}
     </div>
   );
 };
