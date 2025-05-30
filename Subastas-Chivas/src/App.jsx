@@ -34,9 +34,13 @@ const App = () => {
           <Route path="/locker-room-search" element={<LockerRoomSearch />} />
           <Route path="/calendar" element={<CalendarSelector />} />
           <Route path="/dashboardUsuario" element={<DashboardUsuario />} />
+            
           <Route path="/login" element={<Login />} /> {/* Add this line */}
           <Route path="/signup" element={<SignUp />} /> {/* Add this line */}
           <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/dashboardForm" element={<DashboardForm />} />
+          <Route path="/" element={<h1 style={{ color: 'white', textAlign: 'center', marginTop: '100px' }}>Bienvenido a Subastas Chivas</h1>} />
+            
           <Route
             path="/payment-setup"
             element={
