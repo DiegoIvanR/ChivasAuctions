@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { login as loginAction } from './authSlice';
 import { supabase } from './supabaseClient';
 import './Login.css';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Welcome from './Welcome';
 import LoginForm from './LoginForm'; // Import the new LoginForm component
