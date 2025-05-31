@@ -181,6 +181,7 @@ export default function LockerAuction() {
         <img src={jersey.image_url} className="locker-auction-jersey-img" alt="Jersey" />
         <img src="../public/locker-cabinet.png" className="locker-cabinet" alt="Locker Cabinet" />
         <div className="locker-auction-auction">
+          <img src="../public/locker.png" className="locker-auction-locker-img"/>
           <div className="auction-info">
             <p className="auction-id">ID: {jersey.jersey_id}</p>
             {jersey.player_name && (
@@ -202,7 +203,9 @@ export default function LockerAuction() {
             {jersey.auctions?.end_time && (
               <div className="auction-time-remaining">{timeLeft}</div>
             )}
-            <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
+            {!timeLeft && (
+              <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
+            )}
           </div>
         </div>
       </div>
