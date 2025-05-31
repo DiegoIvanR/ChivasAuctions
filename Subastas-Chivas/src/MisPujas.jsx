@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { jerseys } from './jerseys';
+import './MisPujas.css';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import './DashboardUsuario.css';
 
-const DashboardUsuario = () => {
-  const [articulosGanados, setArticulosGanados] = useState(1);
-  const [pujasRealizadas, setPujasRealizadas] = useState(1);
-  const [articulosPujados, setArticulosPujados] = useState(1);
+const MisPujas = () => {
+  const pujasGanadas = jerseys.slice(0, 1); // temporal hasta que filtres las reales
   const user = useSelector((state) => state.auth.user); // Assuming user is stored in Redux state
 
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
-
       <div className="dashboard-content animate-fade-in">
         <header className="dashboard-header">
           <div className="dashboard-header-left">
@@ -25,9 +23,6 @@ const DashboardUsuario = () => {
           </div>
           <div className="dashboard-header-right">
             <input type="text" placeholder="Busca a un jugador o partido" className="dashboard-search" />
-            /*
-            <button className="dashboard-heart">❤️</button>
-            */
             <div className="dashboard-avatar"></div>
           </div>
         </header>
@@ -37,29 +32,44 @@ const DashboardUsuario = () => {
         <main className="dashboard-main">
           <h1 className="dashboard-title">{user.full_name}</h1>
           <hr className="dashboard-divider" />
+
+          <div className="mispujas-filters">
+            <button>EN VIVO</button>
+            <button>CERRADAS</button>
+            <button className="active">GANADAS</button>
+          </div>
+
           <div className="dashboard-body">
             <aside className="dashboard-aside">
               <ul>
                 <li><Link to="/dashboard/perfil">Mi Perfil</Link></li>
-                <li><Link to="/dashboard/MisPujas">Mis Pujas</Link></li>
+                <li><Link to="/dashboardUsuario/MisPujas">Mis Pujas</Link></li>
                 <li><Link to="/dashboard/pedidos">Mis Pedidos</Link></li>
                 <li><Link to="/dashboard/ajustes">Ajustes</Link></li>
                 <li><Link to="/logout">Cerrar sesión</Link></li>
               </ul>
             </aside>
+
             <section className="dashboard-section">
-              <div className="stat-card animate-pop-in">
-                <h2>{articulosGanados}</h2>
-                <p>Artículos Ganados</p>
-              </div>
-              <div className="stat-card animate-pop-in">
-                <h2>{pujasRealizadas}</h2>
-                <p>Total de Pujas Realizadas</p>
-              </div>
-              <div className="stat-card animate-pop-in">
-                <h2>{articulosPujados}</h2>
-                <p>Artículos Pujados</p>
-              </div>
+              {pujasGanadas.map(jersey => (
+                <div className="stat-card jersey-card animate-pop-in" key={jersey.id}>
+                  <img
+                    src={jersey.img_src.replace('../public', '')}
+                    alt={jersey.player}
+                    className="jersey-image"
+                  />
+                  <div className="jersey-info">
+                    <h3>{jersey.player}</h3>
+                    <p>PUJA GANADORA</p>
+                    <p className="price">${jersey.highest_bid}</p>
+                    <div className="tags">
+                      {jersey.used && <span className="tag">USADA</span>}
+                      {jersey.signed && <span className="tag">FIRMADA</span>}
+                    </div>
+                    <p className="estado">Terminado</p>
+                  </div>
+                </div>
+              ))}
             </section>
           </div>
         </main>
@@ -68,10 +78,4 @@ const DashboardUsuario = () => {
   );
 };
 
-export const Perfil = () => <h2 className="dashboard-subpage animate-fade-in">Perfil del Usuario</h2>;
-export const Pujas = () => <h2 className="dashboard-subpage animate-fade-in">Mis Pujas</h2>;
-export const Pedidos = () => <h2 className="dashboard-subpage animate-fade-in">Mis Pedidos</h2>;
-export const Ajustes = () => <h2 className="dashboard-subpage animate-fade-in">Ajustes</h2>;
-export const Logout = () => <h2 className="dashboard-subpage animate-fade-in">Sesión Cerrada</h2>;
-
-export default DashboardUsuario;
+export default MisPujas;
