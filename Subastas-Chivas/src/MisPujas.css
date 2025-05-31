@@ -1,0 +1,102 @@
+.mispujas-wrapper {
+  padding: 20px;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.mispujas-header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.mispujas-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.mispujas-filters button {
+  padding: 6px 20px;
+  border-radius: 30px;
+  border: none;
+  background-color: #b0b0b0;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mispujas-filters .active {
+  background-color: #0d3b4c;
+  color: white;
+}
+
+.mispujas-header hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.mispujas-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.jersey-card {
+  background-color: rgba(255, 255, 255, 0.07);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(8px);
+  width: 280px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.jersey-card img {
+  max-width: 180px;
+  margin-bottom: 20px;
+}
+
+.jersey-info {
+  text-align: center;
+}
+
+.jersey-info h3 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.jersey-info .price {
+  font-weight: bold;
+  background-color: #333;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.jersey-info .tags {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.jersey-info .tag {
+  background-color: #0077b6;
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.jersey-info .estado {
+  font-size: 0.75rem;
+  color: #ccc;
+}

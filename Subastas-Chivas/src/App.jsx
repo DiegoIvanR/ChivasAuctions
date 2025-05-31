@@ -16,6 +16,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import SignUp from './SignUp'; // Import the SignUp component
 import Confirmation from './Confirmation';
+import MisPujas from './MisPujas';
 /*import LockerRoom from './LockerRoom';*/
 
 
@@ -34,12 +35,12 @@ const App = () => {
           <Route path="/locker-room-search" element={<LockerRoomSearch />} />
           <Route path="/calendar" element={<CalendarSelector />} />
           <Route path="/dashboardUsuario" element={<DashboardUsuario />} />
+          <Route path="/dashboardUsuario/MisPujas" element={<MisPujas />} />
             
           <Route path="/login" element={<Login />} /> {/* Add this line */}
           <Route path="/signup" element={<SignUp />} /> {/* Add this line */}
           <Route path="/confirmation" element={<Confirmation />} />
           <Route path="/dashboardForm" element={<DashboardForm />} />
-          <Route path="/" element={<h1 style={{ color: 'white', textAlign: 'center', marginTop: '100px' }}>Bienvenido a Subastas Chivas</h1>} />
             
           <Route
             path="/payment-setup"
