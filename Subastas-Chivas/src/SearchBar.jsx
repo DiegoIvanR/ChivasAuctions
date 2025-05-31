@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function SearchBar() {
-  const [query, setQuery] = useState(""); // State to store the input value
+  const [query, setQuery] = useState(""); // State to store the search query
   const navigate = useNavigate(); // Initialize navigate
 
-  const handleInputChange = (event) => {
+  const handleQueryChange = (event) => {
     setQuery(event.target.value); // Update the query state as the user types
   };
 
   const handleSearch = () => {
+    const params = new URLSearchParams();
     if (query.trim()) {
-      navigate(`/locker-room-search?query=${encodeURIComponent(query)}`); // Navigate to LockerRoomSearch with query
+      params.append("query", query.trim());
     }
+    navigate(`/locker-room-search?${params.toString()}`); // Navigate to LockerRoomSearch with query
   };
 
   const handleKeyPress = (event) => {
@@ -25,10 +27,10 @@ function SearchBar() {
     <div className="search-bar">
       <input
         type="text"
-        placeholder="Buscar"
+        placeholder="Buscar por jugador o equipo"
         className="search-input"
         value={query}
-        onChange={handleInputChange}
+        onChange={handleQueryChange}
         onKeyDown={handleKeyPress} // Listen for Enter key press
       />
       <img
