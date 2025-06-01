@@ -1,4 +1,3 @@
-// src/LockerRoomSearch.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Locker from './Locker.jsx';
@@ -7,17 +6,13 @@ import { supabase } from './supabaseClient';
 
 export default function LockerRoomSearch() {
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const matchId     = queryParams.get('match_id');   // optional match filter
-  const searchQuery = queryParams.get('query') || ''; // optional search by name
-
   const [filteredLockers, setFilteredLockers] = useState([]);
-  const [startIndex, setStartIndex]           = useState(0);
-  const [visibleLockers, setVisibleLockers]   = useState(7);
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleLockers, setVisibleLockers] = useState(7);
+  const [noResults, setNoResults] = useState(false);
+  const lockerWidth = 200;
 
-  const lockerWidth = 200; // width in px of each locker
-
-  // Update visibleLockers based on window width
+  // Responsive behavior
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -34,7 +29,7 @@ export default function LockerRoomSearch() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Ensure startIndex is within bounds when visibleLockers or filteredLockers change
+  // Adjust scroll index when filtered lockers or visible count change
   useEffect(() => {
     if (filteredLockers.length === 0) {
       setStartIndex(0);
@@ -46,12 +41,15 @@ export default function LockerRoomSearch() {
     }
   }, [visibleLockers, filteredLockers.length, startIndex]);
 
+  // Fetch data when location.search changes (reacts to URL param updates)
   useEffect(() => {
     const fetchLockers = async () => {
       try {
+        const queryParams = new URLSearchParams(location.search);
+        const matchId = queryParams.get('match_id');
+        const searchQuery = queryParams.get('query') || '';
         let results = [];
 
-        // 1) If matchId is provided, do a single query filtered by match_id
         if (matchId) {
           const { data, error } = await supabase
             .from('jerseys')
@@ -77,18 +75,12 @@ export default function LockerRoomSearch() {
             `)
             .eq('match_id', matchId);
 
-          if (error) {
-            console.error('Error fetching by match_id:', error.message);
-            return;
-          }
+          if (error) throw error;
           results = data || [];
-        }
-        // 2) Else if searchQuery is provided, do two queries and merge
-        else if (searchQuery) {
+        } else if (searchQuery) {
           const pattern = `%${searchQuery}%`;
 
-          // Query A: filter by player_name
-          const { data: byPlayerName, error: err1 } = await supabase
+          const { data: byName, error: err1 } = await supabase
             .from('jerseys')
             .select(`
               jersey_id,
@@ -112,12 +104,8 @@ export default function LockerRoomSearch() {
             `)
             .ilike('player_name', pattern);
 
-          if (err1) {
-            console.error('Error fetching by player_name:', err1.message);
-            return;
-          }
+          if (err1) throw err1;
 
-          // Query B: filter by matches.opponent
           const { data: byOpponent, error: err2 } = await supabase
             .from('jerseys')
             .select(`
@@ -134,31 +122,25 @@ export default function LockerRoomSearch() {
                 end_time,
                 starting_bid
               ),
-              matches (
+              matches!inner (
                 opponent,
                 venue,
                 competition
               )
             `)
-            .filter('matches.opponent', 'ilike', pattern);
+            .ilike('matches.opponent', pattern);
 
-          if (err2) {
-            console.error('Error fetching by opponent:', err2.message);
-            return;
-          }
+          if (err2) throw err2;
 
-          // Combine & dedupe by jersey_id
-          const combined = [...(byPlayerName || []), ...(byOpponent || [])];
+          const combined = [...(byName || []), ...(byOpponent || [])];
           const dedupedMap = new Map();
-          combined.forEach((row) => {
+          combined.forEach(row => {
             if (!dedupedMap.has(row.jersey_id)) {
               dedupedMap.set(row.jersey_id, row);
             }
           });
           results = Array.from(dedupedMap.values());
-        }
-        // 3) If no filter provided, fetch all
-        else {
+        } else {
           const { data, error } = await supabase
             .from('jerseys')
             .select(`
@@ -181,27 +163,19 @@ export default function LockerRoomSearch() {
                 competition
               )
             `);
-
-          if (error) {
-            console.error('Error fetching all lockers:', error.message);
-            return;
-          }
+          if (error) throw error;
           results = data || [];
         }
 
-        // 4) Normalize auctions: pick the first from array or null
-        const processed = results.map((locker) => {
-          if (Array.isArray(locker.auctions) && locker.auctions.length > 0) {
-            locker.auctions = locker.auctions[0];
-          } else {
-            locker.auctions = null;
-          }
+        const processed = results.map(locker => {
+          locker.auctions = Array.isArray(locker.auctions) ? locker.auctions[0] || null : null;
           return locker;
         });
 
-        // 5) Add left/right padding placeholders so carousel stays centered
+        setNoResults(processed.length === 0);
+
         const nPadding = Math.max(0, visibleLockers - processed.length);
-        const leftPads  = Math.floor(nPadding / 2);
+        const leftPads = Math.floor(nPadding / 2);
         const rightPads = nPadding - leftPads;
 
         const paddedLockers = [
@@ -212,57 +186,50 @@ export default function LockerRoomSearch() {
 
         setFilteredLockers(paddedLockers);
       } catch (err) {
-        console.error('Unexpected error fetching lockers:', err);
+        console.error('Failed to fetch lockers:', err.message);
       }
     };
 
     fetchLockers();
-  }, [matchId, searchQuery, visibleLockers]);
+  }, [location.search, visibleLockers]);
 
+  // Carousel navigation
   const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
-    }
+    if (startIndex > 0) setStartIndex(startIndex - 1);
   };
 
   const handleNext = () => {
-    if (startIndex < filteredLockers.length - visibleLockers) {
-      setStartIndex(startIndex + 1);
-    }
+    if (startIndex < filteredLockers.length - visibleLockers) setStartIndex(startIndex + 1);
   };
 
   return (
     <div className="locker-room-container">
-      <img
-        src="../public/top-locker-frame.png"
-        className="top-door-frame"
-        alt="Top locker frame"
-      />
-      <div className="carousel-container">
-        <div className="carousel-controls">
-          <div
-            className="locker-list"
-            style={{
-              transform: `translateX(calc(50% - ${lockerWidth * visibleLockers / 2}px + ${-startIndex * lockerWidth}px))`,
-              width: `${filteredLockers.length * lockerWidth}px`,
-            }}
-          >
-            {filteredLockers.map((locker, index) => (
-              <div key={locker.jersey_id || `placeholder-${index}`} className="locker-wrapper">
-                <Locker locker={locker} />
-              </div>
-            ))}
-          </div>
-          <div className="arrow-buttons">
-            <ArrowButton direction="left" onClick={handlePrev} disabled={startIndex === 0} />
-            <ArrowButton
-              direction="right"
-              onClick={handleNext}
-              disabled={startIndex >= filteredLockers.length - visibleLockers}
-            />
+      <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top locker frame" />
+      {noResults ? (
+        <div className="no-results-banner">No results found</div>
+      ) : (
+        <div className="carousel-container">
+          <div className="carousel-controls">
+            <div
+              className="locker-list"
+              style={{
+                transform: `translateX(calc(50% - ${lockerWidth * visibleLockers / 2}px + ${-startIndex * lockerWidth}px))`,
+                width: `${filteredLockers.length * lockerWidth}px`,
+              }}
+            >
+              {filteredLockers.map((locker, index) => (
+                <div key={locker.jersey_id || `placeholder-${index}`} className="locker-wrapper">
+                  <Locker locker={locker} />
+                </div>
+              ))}
+            </div>
+            <div className="arrow-buttons">
+              <ArrowButton direction="left" onClick={handlePrev} disabled={startIndex === 0} />
+              <ArrowButton direction="right" onClick={handleNext} disabled={startIndex >= filteredLockers.length - visibleLockers} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
