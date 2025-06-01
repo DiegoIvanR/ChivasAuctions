@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import JerseyAttributes from './JerseyAttributes';
 const Locker = ({ locker }) => {
   const [timeLeft, setTimeLeft] = useState('');
   const [status, setStatus] = useState('');
   const navigate = useNavigate();
-
   useEffect(() => {
     const updateStatusAndTimeLeft = () => {
       if (!locker.auctions?.start_time || !locker.auctions?.end_time) {
@@ -80,11 +79,19 @@ const Locker = ({ locker }) => {
         />
         {locker.image_url && <img className="locker-jersey-image" src={locker.image_url} alt="Jersey" />}
         {locker.player_name && <div className="locker-label">{locker.player_name}</div>}
+        {locker.matches?.opponent && (
+          <div className="locker-match-info">
+            <span className="locker-extra-info">{locker.matches.opponent} - {locker.matches.match_date}</span>
+          </div>
+        )}
         {locker.auctions?.starting_bid && (
           <div className="locker-bid-container">
             <div className="locker-bid">${locker.auctions.starting_bid}</div>
           </div>
         )}
+        <div className="locker-attributes">
+          <JerseyAttributes jersey={locker} />
+        </div>
         {status && <div className={`locker-status locker-status-${status.toLowerCase()}`}>{status}</div>}
         {timeLeft && <div className="locker-time-remaining">{timeLeft}</div>}
       </div>

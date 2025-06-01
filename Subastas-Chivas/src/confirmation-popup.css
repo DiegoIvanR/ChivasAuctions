@@ -69,3 +69,23 @@
     background: #45a049;
 }
 
+/* Close button */
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: black;
+  }
+  
+  .popup-close-x {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .popup-close:hover .popup-close-x {
+    color: #ff0000;
+  }

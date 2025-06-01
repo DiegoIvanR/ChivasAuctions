@@ -216,3 +216,15 @@ return(
 	font-size: 16px;
     color: #D3D3D3;
   }
+
+  .auction-static-info{
+
+    position: absolute;
+    top: 60%;
+    margin: auto;
+    font-family: Montserrat, sans-serif;
+	  font-weight: 200;
+	  font-size: 16px;
+    color: #D3D3D3;
+    max-width: 55%;
+  }

@@ -46,6 +46,8 @@ export default function LockerAuction() {
               jersey_number,
               size,
               image_url,
+              used,
+              signed,
               matches (
                 opponent,
                 venue,
@@ -245,6 +247,10 @@ export default function LockerAuction() {
             {timeLeft!=='Terminada'&& (
               <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
             )}
+            <p className='auction-static-info'>Este producto fue recolectado directamente de la cancha. 
+Incluye un certificado digital personal que asegura y proteje
+la identidad del producto. Sólo debes de acercar el teléfono
+al chip NFC.</p>
               <BidHistory auctionID={auctionID} />
           </div>
             
