@@ -40,10 +40,10 @@ const DashboardUsuario = () => {
           <div className="dashboard-body">
             <aside className="dashboard-aside">
               <ul>
-                <li><Link to="/dashboard/perfil">Mi Perfil</Link></li>
-                <li><Link to="/dashboard/MisPujas">Mis Pujas</Link></li>
-                <li><Link to="/dashboard/pedidos">Mis Pedidos</Link></li>
-                <li><Link to="/dashboard/ajustes">Ajustes</Link></li>
+                <li><Link to="/dashboardUsuario">Mi Perfil</Link></li>
+                <li><Link to="/dashboardUsuario/MisPujas">Mis Pujas</Link></li>
+                <li><Link to="/dashboardUsuario/pedidos">Mis Pedidos</Link></li>
+                <li><Link to="/dashboardUsuario/ajustes">Ajustes</Link></li>
                 <li><Link to="/logout">Cerrar sesión</Link></li>
               </ul>
             </aside>
