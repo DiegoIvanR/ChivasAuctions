@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from './supabaseClient';
 import JerseyAttributes from './JerseyAttributes';
 import BidInput from './BidInput';
+import BidHistory from './BidHistory';
 
 export default function LockerAuction() {
   const { auctionID } = useParams();
@@ -31,72 +32,110 @@ export default function LockerAuction() {
     const fetchAuctionData = async () => {
       try {
         const { data: auctionData, error } = await supabase
-          .from('jerseys')
+          .from('auctions')
           .select(`
-            jersey_id,
-            match_id,
-            player_name,
-            jersey_number,
-            size,
-            image_url,
-            auctions (
-              auction_id,
-              auction_status,
-              start_time,
-              end_time,
-              starting_bid
-            ),
-            matches (
-              opponent,
-              venue,
-              competition
+            auction_id,
+            auction_status,
+            start_time,
+            end_time,
+            starting_bid,
+            jerseys (
+              jersey_id,
+              match_id,
+              player_name,
+              jersey_number,
+              size,
+              image_url,
+              matches (
+                opponent,
+                venue,
+                competition
+              )
             )
           `)
-          .eq('auctions.auction_id', auctionID)
-          .single();
-
+          .eq('auction_id', auctionID); // Filter by auction ID
+  
         if (error) {
           console.error('Error fetching auction data:', error.message);
           return;
         }
-
-        // Ensure auctions is an array and pick the first auction
-        if (auctionData.auctions && auctionData.auctions.length > 0) {
-          auctionData.auctions = auctionData.auctions[0];
-        } else {
+  
+        if (!auctionData || auctionData.length === 0) {
           console.warn('No auctions found for this jersey.');
-          auctionData.auctions = null;
+          setJersey(null);
+          return;
         }
-
-        setJersey(auctionData);
-        console.debug('Fetched Auction Data:', auctionData);
+  
+        // Merge auction-level data with nested jersey data
+        const selectedAuction = auctionData[0];
+        const mergedData = {
+          ...selectedAuction.jerseys,
+          auction_id: selectedAuction.auction_id,
+          auction_status: selectedAuction.auction_status,
+          start_time: selectedAuction.start_time,
+          end_time: selectedAuction.end_time,
+          starting_bid: selectedAuction.starting_bid,
+        };
+  
+        setJersey(mergedData); // Set the merged data
+        console.debug('Merged Auction Data:', mergedData);
       } catch (err) {
         console.error('Unexpected error fetching auction data:', err);
       }
     };
-
+  
     fetchAuctionData();
+  }, [auctionID]);
+  
+  // Remaining code for rendering the auction...
+  useEffect(() => {
+    const fetchStartingBid = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('auctions')
+          .select('starting_bid')
+          .eq('auction_id', auctionID)
+          .single(); // Fetch the latest starting_bid
+  
+        if (error) {
+          console.error('Error refreshing starting bid:', error.message);
+          return;
+        }
+  
+        if (data) {
+          setJersey((prevJersey) => ({
+            ...prevJersey,
+            starting_bid: data.starting_bid, // Update the starting_bid
+          }));        }
+      } catch (err) {
+        console.error('Unexpected error refreshing starting bid:', err);
+      }
+    };
+  
+    const interval = setInterval(fetchStartingBid, 1000); // Refresh every second
+  
+    return () => clearInterval(interval); // Clear interval on unmount
   }, [auctionID]);
 
   useEffect(() => {
     const updateStatusAndTimeLeft = () => {
-      if (!jersey || !jersey.auctions?.start_time || !jersey.auctions?.end_time) {
+      if (!jersey || !jersey.start_time || !jersey.end_time) {
         console.debug('Jersey is null or missing auction data:', jersey);
         return;
       }
-
+  
       const now = new Date();
-      const start = new Date(jersey.auctions.start_time);
-      const end = new Date(jersey.auctions.end_time);
-
+      const start = new Date(jersey.start_time);
+      const end = new Date(jersey.end_time);
+  
       const diffMs = end - now;
       const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
       const seconds = Math.floor((diffMs / 1000) % 60);
-
+  
       console.debug('Days:', days, 'Hours:', hours, 'Minutes:', minutes, 'Seconds:', seconds);
-
+  
       if (now < start) {
         setStatus('PUJA FUTURA');
         setTimeLeft(
@@ -124,10 +163,10 @@ export default function LockerAuction() {
         setTimeLeft('Terminada');
       }
     };
-
+  
     updateStatusAndTimeLeft();
     const interval = setInterval(updateStatusAndTimeLeft, 1000);
-
+  
     return () => clearInterval(interval);
   }, [jersey]);
 
@@ -175,7 +214,7 @@ export default function LockerAuction() {
         alt="Locker Complete"
         onLoad={updateJerseyPosition}
       />
-
+  
       <div className="locker-auction-jersey">
         <img src="../public/locker.png" className="locker-auction-jersey-locker-img" alt="Locker" />
         <img src={jersey.image_url} className="locker-auction-jersey-img" alt="Jersey" />
@@ -183,7 +222,7 @@ export default function LockerAuction() {
         <div className="locker-auction-auction">
           <img src="../public/locker.png" className="locker-auction-locker-img"/>
           <div className="auction-info">
-            <p className="auction-id">ID: {jersey.jersey_id}</p>
+            <p className="auction-id">ID: {jersey.auction_id}</p>
             {jersey.player_name && (
               <div className="auction-label">{jersey.player_name}</div>
             )}
@@ -192,21 +231,25 @@ export default function LockerAuction() {
                 {timeLeft === 'Terminada' ? 'PUJA FINAL' : 'PUJA ACTUAL'}
               </div>
             )}
-            {jersey.auctions?.starting_bid && (
+            {jersey.starting_bid && (
               <div className="auction-bid-container">
-                <div className="auction-bid">${jersey.auctions.starting_bid}</div>
+                <div className="auction-bid">${jersey.starting_bid}</div>
               </div>
             )}
             <div className="auction-attributes">
               <JerseyAttributes jersey={jersey} />
             </div>
-            {jersey.auctions?.end_time && (
+            {jersey.end_time && (
               <div className="auction-time-remaining">{timeLeft}</div>
             )}
-            {!timeLeft && (
+            {timeLeft!=='Terminada'&& (
               <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
             )}
+            <div className="locker-auction-bid-history">
+                <BidHistory auctionID={auctionID} />
+            </div>
           </div>
+            
         </div>
       </div>
     </div>
