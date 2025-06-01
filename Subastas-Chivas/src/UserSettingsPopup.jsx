@@ -25,6 +25,15 @@ export default function UserSettingsPopup({ onClose }) {
     navigate("/signup"); // Navigate to the signup page
   };
 
+  const handleUsuarioDashboard = () => {
+    onClose(); // Close the popup
+    navigate("/dashboardUsuario"); // Navigate to the user dashboard
+  }
+  const handleMisPujas = () => {
+    onClose(); // Close the popup
+    navigate("/dashboardUsuario/MisPujas"); // Navigate to the user dashboard
+  }
+
   return (
     <div className="user-settings-popup">
       <button className="popup-close" onClick={onClose}>
@@ -32,8 +41,8 @@ export default function UserSettingsPopup({ onClose }) {
       </button>
       {user && (
         <ul className="popup-menu">
-          <li className="popup-menu-item">Cuenta</li>
-          <li className="popup-menu-item">Mi Perfil</li>
+          <li className="popup-menu-item" onClick={handleUsuarioDashboard}>Mi Perfil</li>
+          <li className="popup-menu-item" onClick={handleMisPujas}>Mis Pujas</li>
           <li className="popup-menu-item">Mis Pedidos</li>
           <li className="popup-menu-item">Ajustes</li>
           <li className="popup-menu-item" onClick={handleLogout}>Cerrar Sesión</li>

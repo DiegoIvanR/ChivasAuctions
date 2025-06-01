@@ -245,9 +245,7 @@ export default function LockerAuction() {
             {timeLeft!=='Terminada'&& (
               <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
             )}
-            <div className="locker-auction-bid-history">
-                <BidHistory auctionID={auctionID} />
-            </div>
+              <BidHistory auctionID={auctionID} />
           </div>
             
         </div>

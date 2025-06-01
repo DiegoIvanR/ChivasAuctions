@@ -3,6 +3,7 @@ import { jerseys } from './jerseys';
 import './MisPujas.css';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import DashboardAside from './DashboardAside';
 
 const MisPujas = () => {
   const pujasGanadas = jerseys.slice(0, 1); // temporal hasta que filtres las reales
@@ -12,20 +13,6 @@ const MisPujas = () => {
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
       <div className="dashboard-content animate-fade-in">
-        <header className="dashboard-header">
-          <div className="dashboard-header-left">
-            <img src="/logo.png" alt="Logo" className="dashboard-logo" />
-            <nav className="dashboard-nav">
-              <Link to="/en-vivo">En Vivo</Link>
-              <Link to="/varonil">Varonil</Link>
-              <Link to="/femenil">Femenil</Link>
-            </nav>
-          </div>
-          <div className="dashboard-header-right">
-            <input type="text" placeholder="Busca a un jugador o partido" className="dashboard-search" />
-            <div className="dashboard-avatar"></div>
-          </div>
-        </header>
 
         <div className="dashboard-buffer" style={{ height: '80px' }}></div>
 
@@ -40,15 +27,7 @@ const MisPujas = () => {
           </div>
 
           <div className="dashboard-body">
-            <aside className="dashboard-aside">
-              <ul>
-                <li><Link to="/dashboardUsuario">Mi Perfil</Link></li>
-                <li><Link to="/dashboardUsuario/MisPujas">Mis Pujas</Link></li>
-                <li><Link to="/dashboardUsuario/pedidos">Mis Pedidos</Link></li>
-                <li><Link to="/dashboardUsuario/ajustes">Ajustes</Link></li>
-                <li><Link to="/logout">Cerrar sesión</Link></li>
-              </ul>
-            </aside>
+            <DashboardAside/>
 
             <section className="dashboard-section">
               {pujasGanadas.map(jersey => (

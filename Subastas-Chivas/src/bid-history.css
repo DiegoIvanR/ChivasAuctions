@@ -1,12 +1,14 @@
 .bid-history-container {
+    position: absolute;
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 400px;
+    max-width: 800px;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
-    background-color: #f9f9f9;
+    bottom: 70px;
+    color: azure;
 }
 
 .title {
@@ -17,7 +19,7 @@
 }
 
 .bid-list {
-    max-height: 150px; /* Limit height for scrolling */
+    max-height: 90px; /* Limit height for scrolling */
     overflow-y: auto; /* Enable scrolling */
     scroll-behavior: smooth; /* Smooth scrolling */
 }
