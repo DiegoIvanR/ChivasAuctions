@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@200&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Alatsi:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
 
 :root{
 	background: black;
@@ -610,7 +612,7 @@
   /* Text overlay styles */
   .locker-label {
 	position: absolute;
-	top: 12%;
+	top: 10%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-family: Rajdhani, sans-serif;
@@ -685,6 +687,25 @@
 	z-index: 3;
 	pointer-events: none;
   }
+
+  .locker-extra-info{
+
+	position: absolute;
+	top: 17%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-family: Rajdhani, sans-serif;
+	font-weight: 200;
+	font-size: 14px;
+	color: #D3D3D3;
+	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+	text-align: center;
+	z-index: 3;
+	pointer-events: none;
+	line-height: 40px;
+	width: 100%;
+  }
+
 
   .jersey-attributes {
 	position: relative;

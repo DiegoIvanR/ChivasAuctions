@@ -1,13 +1,13 @@
 import React from 'react';
 import { jerseys } from './jerseys';
 import './MisPujas.css';
-import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import DashboardAside from './DashboardAside';
+import JerseyCard from './JerseyCard'; // Import the JerseyCard component
 
 const MisPujas = () => {
-  const pujasGanadas = jerseys.slice(0, 1); // temporal hasta que filtres las reales
-  const user = useSelector((state) => state.auth.user); // Assuming user is stored in Redux state
+  const pujasGanadas = jerseys.slice(0, 1); // Temporal until you filter the real ones
+  const user = useSelector((state) => state.auth.user); // Assuming user is stored in Redux state
 
   return (
     <div className="dashboard-wrapper">
@@ -27,27 +27,11 @@ const MisPujas = () => {
           </div>
 
           <div className="dashboard-body">
-            <DashboardAside/>
+            <DashboardAside />
 
             <section className="dashboard-section">
               {pujasGanadas.map(jersey => (
-                <div className="stat-card jersey-card animate-pop-in" key={jersey.id}>
-                  <img
-                    src={jersey.img_src.replace('../public', '')}
-                    alt={jersey.player}
-                    className="jersey-image"
-                  />
-                  <div className="jersey-info">
-                    <h3>{jersey.player}</h3>
-                    <p>PUJA GANADORA</p>
-                    <p className="price">${jersey.highest_bid}</p>
-                    <div className="tags">
-                      {jersey.used && <span className="tag">USADA</span>}
-                      {jersey.signed && <span className="tag">FIRMADA</span>}
-                    </div>
-                    <p className="estado">Terminado</p>
-                  </div>
-                </div>
+                <JerseyCard key={jersey.id} jersey={jersey} />
               ))}
             </section>
           </div>

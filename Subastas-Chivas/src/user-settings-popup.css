@@ -53,6 +53,6 @@
 }
 
 .popup-menu-item:hover {
-    background: none; /* No color change on hover */
+    background: #D9D9D9; /* No color change on hover */
     cursor: pointer; /* Cursor changes to pointer */
 }

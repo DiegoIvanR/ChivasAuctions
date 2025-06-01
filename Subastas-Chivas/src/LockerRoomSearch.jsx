@@ -60,6 +60,8 @@ export default function LockerRoomSearch() {
               jersey_number,
               size,
               image_url,
+              signed,
+              used,
               auctions (
                 auction_id,
                 auction_status,
@@ -70,7 +72,8 @@ export default function LockerRoomSearch() {
               matches (
                 opponent,
                 venue,
-                competition
+                competition,
+                match_date
               )
             `)
             .eq('match_id', matchId);
@@ -89,6 +92,8 @@ export default function LockerRoomSearch() {
               jersey_number,
               size,
               image_url,
+              used,
+              signed,
               auctions (
                 auction_id,
                 auction_status,
@@ -99,7 +104,8 @@ export default function LockerRoomSearch() {
               matches (
                 opponent,
                 venue,
-                competition
+                competition,
+                match_date
               )
             `)
             .ilike('player_name', pattern);
@@ -115,6 +121,8 @@ export default function LockerRoomSearch() {
               jersey_number,
               size,
               image_url,
+              used,
+              signed,
               auctions (
                 auction_id,
                 auction_status,
@@ -125,7 +133,8 @@ export default function LockerRoomSearch() {
               matches!inner (
                 opponent,
                 venue,
-                competition
+                competition,
+                match_date
               )
             `)
             .ilike('matches.opponent', pattern);
@@ -150,6 +159,8 @@ export default function LockerRoomSearch() {
               jersey_number,
               size,
               image_url,
+              used,
+              signed,
               auctions (
                 auction_id,
                 auction_status,
@@ -160,7 +171,8 @@ export default function LockerRoomSearch() {
               matches (
                 opponent,
                 venue,
-                competition
+                competition,
+                match_date
               )
             `);
           if (error) throw error;
