@@ -108,7 +108,7 @@ export default function DoorCarousel() {
           ...transformedDoors,
           ...Array(rightPaddingDoors).fill({ match_id: 'padding-end', match_date: '', opponent: '', venue: '', competition: '', jersey_id: '', auction_id: '' }),
         ];
-
+        console.log(`data ${transformedDoors[0].match_id}`);
         setDoors(withPadding);
       } catch (err) {
         console.error('Unexpected error during fetchLiveAuctions():', err);

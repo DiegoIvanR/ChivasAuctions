@@ -1,0 +1,49 @@
+.bid-history-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.bid-list {
+    max-height: 150px; /* Limit height for scrolling */
+    overflow-y: auto; /* Enable scrolling */
+    scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.bid-row {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bid-row:last-child {
+    border-bottom: none;
+}
+
+.bidder {
+    font-weight: bold;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: #666;
+}
+
+.amount {
+    font-weight: bold;
+    color: #007bff;
+}

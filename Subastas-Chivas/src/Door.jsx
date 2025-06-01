@@ -14,14 +14,14 @@ const Door = ({ door, onClick, isSelected }) => {
         alt={`Door ${door.id}`} 
       />
       <div className='door-info'>
-        {door.team && (
+        {door.opponent && (
           <div className="door-label">
-            {door.team}
+            {door.opponent}
           </div>
         )}
-        {door.team && (
+        {door.opponent && (
           <div className="door-date">
-            {door.date}
+            {door.match_date}
           </div>
         )}
       </div>
