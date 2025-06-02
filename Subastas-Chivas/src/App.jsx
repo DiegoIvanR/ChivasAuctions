@@ -7,54 +7,75 @@ import LockerRoomSearch from './LockerRoomSearch';
 import LockerAuction from './LockerAuction';
 import CalendarSelector from './CalendarSelector';
 import DashboardUsuario from './DashboardUsuario';
-import PaymentSetup from './PaymentSetup'; // Import the PaymentSetup component
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import DashboardForm from './DashboardForm';
-import Login from './Login'; // Import the Login component
-import { Provider } from 'react-redux';
-import store from './store';
-import SignUp from './SignUp'; // Import the SignUp component
+import Login from './Login';
+import SignUp from './SignUp';
 import Confirmation from './Confirmation';
 import MisPujas from './MisPujas';
-/*import LockerRoom from './LockerRoom';*/
 
+import { StripeProvider } from "./stripeProvider";
+import AddCardForm from "./AddCardForm";
+import PaymentMethodGuard from "./PaymentMethodGuard";
 
-// Initialize Stripe with your publishable key
-const stripePromise = loadStripe('pk_test_51RTkCSBSXB0u2ceFU5ZzPmsrITQPFU3ALvjt2r1rN8ov7fcM5j4YKKqUh4RXFiB5p2UsPVfee9U40oFIaVTapInu0068ksRGdk'); // Replace with your Stripe publishable key
+import { Provider } from 'react-redux';
+import store from './store';
 
 const App = () => {
   return (
     <div className="App">
-      <Provider store={store}>
-      <Router>
-        <Header /> {/* Move Header inside Router */}
-        <Routes>
-          <Route path="/" element={<DoorCarousel />} />
-          <Route path="/auction/:auctionID" element={<LockerAuction />} />
-          <Route path="/locker-room-search" element={<LockerRoomSearch />} />
-          <Route path="/calendar" element={<CalendarSelector />} />
-          <Route path="/dashboardUsuario" element={<DashboardUsuario />} />
-          <Route path="/dashboardUsuario/MisPujas" element={<MisPujas />} />
-            
-          <Route path="/login" element={<Login />} /> {/* Add this line */}
-          <Route path="/signup" element={<SignUp />} /> {/* Add this line */}
-          <Route path="/confirmation" element={<Confirmation />} />
-          <Route path="/dashboardForm" element={<DashboardForm />} />
-            
-          <Route
-            path="/payment-setup"
-            element={
-              <Elements stripe={stripePromise}>
-                <PaymentSetup />
-              </Elements>
-            }
-          />
-          <Route path="/dashboard" element={<DashboardForm />} /> {/* Add this line */}
-        </Routes>
-        <Footer />
-      </Router>
-      </Provider>
+      <StripeProvider>
+        <Provider store={store}>
+          <Router>
+            <Header />
+            <Routes>
+              {/* Public routes - no payment method required */}
+              <Route path="/" element={<DoorCarousel />} />
+              <Route path="/locker-room-search" element={<LockerRoomSearch />} />
+              <Route path="/calendar" element={<CalendarSelector />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/confirmation" element={<Confirmation />} />
+              
+              {/* Payment setup route */}
+              <Route path="/add-card" element={<AddCardForm />} />
+              
+              {/* Protected routes - require payment method for bidding */}
+              <Route 
+                path="/auction/:auctionID" 
+                element={
+                  <PaymentMethodGuard requirePaymentMethod={true}>
+                    <LockerAuction />
+                  </PaymentMethodGuard>
+                } 
+              />
+              
+              {/* Dashboard routes - require payment method for bid management */}
+              <Route 
+                path="/dashboardUsuario" 
+                element={
+                  <PaymentMethodGuard requirePaymentMethod={true}>
+                    <DashboardUsuario />
+                  </PaymentMethodGuard>
+                } 
+              />
+              
+              <Route 
+                path="/dashboardUsuario/MisPujas" 
+                element={
+                  <PaymentMethodGuard requirePaymentMethod={true}>
+                    <MisPujas />
+                  </PaymentMethodGuard>
+                } 
+              />
+              
+              {/* Form routes - optional payment method */}
+              <Route path="/dashboardForm" element={<DashboardForm />} />
+              <Route path="/dashboard" element={<DashboardForm />} />
+            </Routes>
+            <Footer />
+          </Router>
+        </Provider>
+      </StripeProvider>
     </div>
   );
 };
