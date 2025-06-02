@@ -1,0 +1,103 @@
+/* 📁 src/AuctionConfirmation.css */
+
+.confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .confirmation-card {
+    background: #fff;
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-family: 'Helvetica', sans-serif;
+    position: relative;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  
+  .confirmation-title {
+    font-size: 1.7rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.8rem;
+    color: #c10000;
+  }
+  
+  .confirmation-player {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0.6rem 0;
+    color: #111;
+    text-align: center;
+  }
+  
+  .confirmation-subtitle {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+  }
+  
+  .confirmation-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .confirmation-table div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    padding: 0.4rem 0.6rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    color: #111; /* ✅ Hace el texto visible */
+  }
+  
+  
+  .confirmation-check {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .confirm-btn {
+    width: 100%;
+    background-color: #c10000;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #a30000;
+  }
+  
+  
