@@ -19,7 +19,12 @@ import PaymentMethodGuard from "./PaymentMethodGuard";
 
 import { Provider } from 'react-redux';
 import store from './store';
-
+/*
+guard:
+                  <PaymentMethodGuard requirePaymentMethod={true}>
+                    <LockerAuction />
+                  </PaymentMethodGuard>
+*/
 const App = () => {
   return (
     <div className="App">
@@ -42,11 +47,7 @@ const App = () => {
               {/* Protected routes - require payment method for bidding */}
               <Route 
                 path="/auction/:auctionID" 
-                element={
-                  <PaymentMethodGuard requirePaymentMethod={true}>
-                    <LockerAuction />
-                  </PaymentMethodGuard>
-                } 
+                element={<LockerAuction />} 
               />
               
               {/* Dashboard routes - require payment method for bid management */}
