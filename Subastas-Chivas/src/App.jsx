@@ -54,18 +54,14 @@ const App = () => {
               <Route 
                 path="/dashboardUsuario" 
                 element={
-                  <PaymentMethodGuard requirePaymentMethod={true}>
                     <DashboardUsuario />
-                  </PaymentMethodGuard>
                 } 
               />
               
               <Route 
                 path="/dashboardUsuario/MisPujas" 
                 element={
-                  <PaymentMethodGuard requirePaymentMethod={true}>
                     <MisPujas />
-                  </PaymentMethodGuard>
                 } 
               />
               

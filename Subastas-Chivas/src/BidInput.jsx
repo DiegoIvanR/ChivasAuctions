@@ -113,7 +113,7 @@ export default function BidInput({ jersey, onBidUpdate }) {
       {showPopup && !user && (
         <LoginPromptPopup onCancel={() => setShowPopup(false)} />
       )}
-      {!hasPaymentMethod && showPopup && user &&(
+      {showPopup && !hasPaymentMethod && user &&(
         <PaymentMethodRequiredPopup onCancel={() => setShowPopup(false)} />
       )}
     </div>
