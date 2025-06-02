@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './confirmation-popup.css';
 import ConfirmationPopup from './ConfirmationPopup';
 import LoginPromptPopup from './LoginPromptPopup'; // Import the new LoginPromptPopup component
 import { useSelector } from 'react-redux';
 import { supabase } from './supabaseClient'; // Import the Supabase client
 import './bidInput.css'; // Import the CSS for styling
+import PaymentMethodRequiredPopup from './PaymentMethodRequiredPopup'; // Import the new popup
 
 export default function BidInput({ jersey, onBidUpdate }) {
   const [bid, setBid] = useState(jersey.starting_bid + 100); // Use `starting_bid` from the updated `jersey` object
   const [warning, setWarning] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const [hasPaymentMethod, setHasPaymentMethod] = useState(false); // Track if user has a payment method
+
   const [termsAccepted, setTermsAccepted] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  useEffect(() => {
+    // Check if the user has a payment method when the component mounts
+    const checkPaymentMethod = async () => {
+      if (user) {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('default_payment_method_id')
+          .eq('id', user.id)
+          .single();
+
+        if (!error && profile?.default_payment_method_id) {
+          setHasPaymentMethod(true);
+        } else {
+          setHasPaymentMethod(false);
+        }
+      }
+    };
+
+    checkPaymentMethod();
+  }, [user]);
 
   const handleBidChange = (e) => {
     setBid(Number(e.target.value));
@@ -75,7 +98,7 @@ export default function BidInput({ jersey, onBidUpdate }) {
       {warning && <p className="bid-warning">{warning}</p>}
 
       {/* Popup for logged-in users */}
-      {showPopup && user && (
+      {showPopup && user && hasPaymentMethod && (
         <ConfirmationPopup
           bid={bid}
           jerseyId={jersey.jersey_id}
@@ -89,6 +112,9 @@ export default function BidInput({ jersey, onBidUpdate }) {
       {/* Popup for logged-out users */}
       {showPopup && !user && (
         <LoginPromptPopup onCancel={() => setShowPopup(false)} />
+      )}
+      {!hasPaymentMethod && showPopup && user &&(
+        <PaymentMethodRequiredPopup onCancel={() => setShowPopup(false)} />
       )}
     </div>
   );
