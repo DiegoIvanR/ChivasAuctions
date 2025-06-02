@@ -34,6 +34,7 @@ const App = () => {
             <Header />
             <Routes>
               {/* Public routes - no payment method required */}
+              <Route path="/dashboard" element={<DashboardForm />} />
               <Route path="/" element={<DoorCarousel />} />
               <Route path="/locker-room-search" element={<LockerRoomSearch />} />
               <Route path="/calendar" element={<CalendarSelector />} />
