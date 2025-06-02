@@ -1,122 +1,104 @@
-.dashboard-wrapper {
-  background-color: #1c1c1e;
-  color: white;
+.dashboard-form-wrapper {
+  background: url('/public/estadio-interior.png') no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
   padding: 2rem;
-  border-radius: 15px;
-  max-width: 1000px;
-  margin: auto;
-  font-family: 'Arial', sans-serif;
+  color: white;
 }
 
 .dashboard-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-.tag-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  font-size: 2rem;
+  text-align: center;
   margin-bottom: 2rem;
 }
 
-.tag {
-  background-color: #333;
-  padding: 0.5rem 1rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  color: #fff;
-}
-
-.new-auction-btn {
-  margin-left: auto;
-  background-color: #f2354e;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.form-body {
+.form-content {
+  max-width: 600px;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.2rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
 input[type="text"] {
+  padding: 1rem;
+  border-radius: 10px;
+  border: none;
   background-color: #2c2c2e;
   color: white;
-  border: none;
-  padding: 0.8rem;
-  border-radius: 10px;
-  width: 100%;
+  font-size: 1rem;
 }
 
-.checkboxes {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.9rem;
+input[type="text"]::placeholder {
+  color: #aaaaaa;
 }
 
-.calendar-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 2rem 0;
-  border-radius: 12px;
+/* CALENDARIO */
+
+.calendar-container {
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border-radius: 15px;
+  text-align: center;
 }
 
-/* ========== CALENDAR BLOCK ========== */
-.calendar {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  padding: 2rem;
-  border-radius: 1.5rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-  width: 340px;
-  color: white;
+.calendar-header {
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .calendar-title {
-  font-size: 0.85rem;
-  color: #f43f5e;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #ffffff;
   margin-bottom: 0.2rem;
 }
 
 .calendar-date {
-  font-size: 1.8rem;
-  color: white;
-  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
 }
 
-.calendar-divider {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 1rem 0;
-}
-
-.calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+/* Navegación del mes */
+.calendar-nav-container {
+  position: relative;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .calendar-month {
+  color: #f2354e;
   font-weight: bold;
-  color: #f43f5e;
+  font-size: 1rem;
+  text-transform: capitalize;
+  display: inline-block;
 }
 
-.calendar-nav .arrow {
-  color: #f43f5e;
-  margin-left: 0.5rem;
+.arrow {
+  position: absolute;
+  top: 0;
+  background: none;
+  border: none;
+  color: #f2354e;
+  font-size: 1.4rem;
   cursor: pointer;
 }
 
+.left-arrow {
+  left: 0;
+}
+
+.right-arrow {
+  right: 0;
+}
+
+/* Días */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -124,21 +106,15 @@ input[type="text"] {
   margin-bottom: 1rem;
 }
 
-.calendar-day-name {
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: white;
-}
-
+.day-name,
 .calendar-day {
-  text-align: center;
-  padding: 0.7rem;
+  padding: 0.6rem;
   border-radius: 50%;
-  cursor: pointer;
+  background-color: rgba(80, 80, 80, 0.3);
+  text-align: center;
   font-size: 0.9rem;
   color: white;
-  transition: background 0.3s;
+  transition: background-color 0.2s ease;
 }
 
 .calendar-day:hover {
@@ -146,45 +122,42 @@ input[type="text"] {
 }
 
 .calendar-day.selected {
-  background-color: #f43f5e;
+  background-color: #f2354e;
   color: white;
 }
 
+/* Botones dentro del calendario */
 .calendar-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 1rem;
 }
 
-.cancel-button,
-.ok-button {
-  background: transparent;
+.cancel-btn,
+.ok-btn {
+  background: none;
   border: none;
-  font-size: 0.9rem;
-  color: #f43f5e;
-  cursor: pointer;
+  color: #f2354e;
   font-weight: bold;
-}
-
-.cancel-button:hover,
-.ok-button:hover {
-  text-decoration: underline;
-}
-
-/* ========== END CALENDAR BLOCK ========== */
-
-.submit-btn {
-  background-color: #f2354e;
-  color: white;
-  padding: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
   font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Botón final */
+.confirm-btn {
+  margin-top: 2rem;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background-color: #f2354e;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submit-btn:hover {
-  background-color: #d02139;
+.confirm-btn:hover {
+  background-color: #c2183d;
 }
+
+
