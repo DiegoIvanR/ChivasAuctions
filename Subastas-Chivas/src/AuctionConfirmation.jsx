@@ -1,50 +1,45 @@
-// 📁 src/AuctionConfirmation.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Confirmation.css'; 
 
-import React from "react";
-import "./AuctionConfirmation.css";
-import { jerseys } from "./jerseys";
+const AuctionConfirmation = () => {
+  const navigate = useNavigate();
 
-const AuctionConfirmation = ({ jerseyId, onClose }) => {
-  const jersey = jerseys.find((j) => j.id === jerseyId);
-
-  console.log("📦 Jersey ID recibido:", jerseyId);
-  console.log("🧾 Jersey encontrada:", jersey);
-
-  if (!jersey) return null;
-
-  const formatDate = (date) => new Date(date).toLocaleDateString("es-MX");
+  const handleContinue = () => {
+    navigate('/dashboard-auction');
+  };
 
   return (
-    <div className="confirmation-overlay">
+    <div className="confirmation-container">
       <div className="confirmation-card">
-        <button className="close-btn" onClick={onClose}>×</button>
+        <h2 className="confirmation-title">CONFIRMACIÓN</h2>
+        <h3 className="confirmation-subtitle">#14 Javier Hernández</h3>
 
-        <h3 className="confirmation-title">CONFIRMACIÓN</h3>
-        <p>Estás por comenzar una subasta para la playera</p>
-        <h2 className="confirmation-player">#{jersey.number} {jersey.player}</h2>
+        <div className="confirmation-grid">
+          <div className="left">
+            <p><strong>Playera usada:</strong> Sí</p>
+            <p><strong>Monto inicial:</strong> $1000 MXN</p>
+            <p><strong>Fecha:</strong> 16/8/2025</p>
+            <p><strong>Liga:</strong> Liga MX</p>
+            <p><strong>Fase:</strong> Cuartos de final</p>
+            <p><strong>Fecha fin:</strong> 16/8/2025</p>
+          </div>
 
-        <p className="confirmation-subtitle">con las siguientes características:</p>
-
-        <div className="confirmation-table">
-          <div><strong>Playera usada:</strong><span>{jersey.used ? "Sí" : "No"}</span></div>
-          <div><strong>Playera firmada:</strong><span>{jersey.signed ? "Sí" : "No"}</span></div>
-          <div><strong>Monto inicial:</strong><span>${jersey.highest_bid} MXN</span></div>
-          <div><strong>Contrincante:</strong><span>{jersey.match}</span></div>
-          <div><strong>Fecha:</strong><span>{formatDate(jersey.starting_date)}</span></div>
-          <div><strong>Temporada:</strong><span>{jersey.season}</span></div>
-          <div><strong>Liga:</strong><span>{jersey.league}</span></div>
-          <div><strong>Posición:</strong><span>{jersey.position}</span></div>
-          <div><strong>Fase:</strong><span>{jersey.phase}</span></div>
-          <div><strong>Fecha inicio:</strong><span>{formatDate(jersey.starting_date)}</span></div>
-          <div><strong>Fecha fin:</strong><span>{formatDate(jersey.end_date)}</span></div>
+          <div className="right">
+            <p><strong>Playera firmada:</strong> Sí</p>
+            <p><strong>Contrincante:</strong> América</p>
+            <p><strong>Temporada:</strong> 24/25</p>
+            <p><strong>Posición:</strong> Delantero</p>
+            <p><strong>Fecha inicio:</strong> 16/8/2025</p>
+          </div>
         </div>
 
-        <label className="confirmation-check">
-          <input type="checkbox" />
-          He leído y acepto la información anterior
-        </label>
+        <div className="confirmation-check">
+          <input type="checkbox" id="accept" />
+          <label htmlFor="accept">Confirmo que la información de la subasta es la correcta</label>
+        </div>
 
-        <button className="confirm-btn" onClick={() => console.log("✅ Confirmar subasta")}>
+        <button className="continue-btn" onClick={handleContinue}>
           Continuar
         </button>
       </div>
@@ -53,6 +48,7 @@ const AuctionConfirmation = ({ jerseyId, onClose }) => {
 };
 
 export default AuctionConfirmation;
+
 
 
 
