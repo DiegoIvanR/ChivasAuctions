@@ -1,4 +1,5 @@
 // supabase/functions/close-auctions/index.ts
+
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@12.15.0";
@@ -9,63 +10,59 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, {
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-// Supabase client with service_role privileges
+// We need a Supabase client with service_role privileges
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 
-serve(async (req) => {
-  // Will accumulate debug messages to return in the HTTP response
-  const debugLogs: string[] = [];
+// Updated section for extracting charge ID from PaymentIntent
+function extractChargeId(paymentIntent: any): string | null {
+  // First check for latest_charge (most reliable)
+  if (paymentIntent.latest_charge) {
+    return paymentIntent.latest_charge;
+  }
+  
+  // Fallback to charges collection
+  if (paymentIntent.charges && paymentIntent.charges.data && paymentIntent.charges.data.length > 0) {
+    return paymentIntent.charges.data[0].id;
+  }
+  
+  return null;
+}
 
-  // Only accept POST
+serve(async (req) => {
+  // Only allow POST (cron-triggered). You can tighten this by requiring a secret header if desired.
   if (req.method !== "POST") {
-    debugLogs.push("🔴 Method not allowed: only POST is supported.");
-    return new Response(
-      JSON.stringify({ error: "Method Not Allowed", logs: debugLogs }),
-      { status: 405, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response("Method Not Allowed", { status: 405 });
   }
 
-  // 1. Fetch all auctions with status='live' and end_time <= now()
-  debugLogs.push("➡️ Fetching live auctions that have ended...");
+  // 1. Fetch all auctions with status 'live' and end_time <= now()
   const { data: liveAuctions, error: auctionsError } = await supabase
     .from("auctions")
     .select("auction_id")
     .eq("auction_status", "live")
-    .lte("end_time", "now()");
+    .lte("end_time", "now()"); // SQL: end_time <= now()
 
   if (auctionsError) {
-    debugLogs.push(`❌ Error fetching ended auctions: ${JSON.stringify(auctionsError)}`);
+    console.error("Error fetching ended auctions:", auctionsError);
     return new Response(
-      JSON.stringify({ error: "Error fetching ended auctions.", logs: debugLogs }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      JSON.stringify({ error: "Error fetching ended auctions." }),
+      { status: 500 }
     );
   }
 
+  // If no auctions to close, just return 200
   if (!liveAuctions || liveAuctions.length === 0) {
-    debugLogs.push("ℹ️ No auctions to close right now.");
-    return new Response(
-      JSON.stringify({ message: "No auctions to close.", logs: debugLogs }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ message: "No auctions to close." }), {
+      status: 200,
+    });
   }
 
-  debugLogs.push(`ℹ️ Found ${liveAuctions.length} auction(s) to process.`);
-
-  // 2. Loop over each ended auction
-  const overallResults: {
-    auction_id: string;
-    status: string;
-    payment?: { chargeId: string; supabaseRow?: any };
-    error?: string;
-  }[] = [];
-
+  // 2. Loop over each auction and process
   for (const auction of liveAuctions) {
     const auctionId = auction.auction_id;
-    debugLogs.push(`\n---\n🔄 Processing auction ${auctionId}`);
 
-    // 2a. Find the highest bid for this auction
+    // 2a. Find highest bid for this auction_id
     const { data: topBidArr, error: bidError } = await supabase
       .from("bids")
       .select("bid_id, bidder_id, amount, payment_intent_id")
@@ -74,169 +71,137 @@ serve(async (req) => {
       .limit(1);
 
     if (bidError) {
-      const msg = `❌ Error fetching top bid for auction ${auctionId}: ${JSON.stringify(bidError)}`;
-      debugLogs.push(msg);
-      overallResults.push({ auction_id: auctionId, status: "bidFetchError", error: msg });
-      continue; // Skip this auction
+      console.error(`Error fetching top bid for auction ${auctionId}:`, bidError);
+      // Skip to next auction
+      continue;
     }
 
     if (!topBidArr || topBidArr.length === 0) {
-      const msg = `ℹ️ Auction ${auctionId} has no bids → closing without payment.`;
-      debugLogs.push(msg);
-      // Close the auction
-      const { error: closeErr } = await supabase
+      // No bids → just close auction without payment record
+      const { error: closeError } = await supabase
         .from("auctions")
-        .update({
-          auction_status: "closed",
-          updated_at: new Date().toISOString(),
-        })
+        .update({ auction_status: "closed", updated_at: "now()" })
         .eq("auction_id", auctionId);
 
-      if (closeErr) {
-        const errMsg = `❌ Error closing auction ${auctionId}: ${JSON.stringify(closeErr)}`;
-        debugLogs.push(errMsg);
-        overallResults.push({ auction_id: auctionId, status: "closeError", error: errMsg });
-      } else {
-        debugLogs.push(`✅ Auction ${auctionId} closed.`);
-        overallResults.push({ auction_id: auctionId, status: "closedNoBids" });
+      if (closeError) {
+        console.error(`Error closing auction ${auctionId}:`, closeError);
       }
       continue;
     }
 
-    const { bidder_id, amount, payment_intent_id } = topBidArr[0];
-    debugLogs.push(`ℹ️ Top bid: bidder=${bidder_id}, amount=${amount}, pi=${payment_intent_id}`);
-
-    // 2b. Attempt to confirm and capture the PaymentIntent
+    const topBid = topBidArr[0];
+    const { bidder_id, amount, payment_intent_id } = topBid;
     let chargeId: string | null = null;
+
     try {
-      // Retrieve and expand to see charges array
-      const pi = await stripe.paymentIntents.retrieve(payment_intent_id, {
-        expand: ["charges.data"],
-      });
-      debugLogs.push(`🔍 PI status before anything: ${pi.status}`);
-      debugLogs.push(`🔍 PI.charges.data (pre‐capture): ${JSON.stringify(pi.charges.data)}`);
-
+      console.log(`Processing payment for auction ${auctionId}, PaymentIntent: ${payment_intent_id}`);
+      
+      // 1) Retrieve the current PaymentIntent
+      const pi = await stripe.paymentIntents.retrieve(payment_intent_id);
+      console.log(`PaymentIntent status: ${pi.status} for auction ${auctionId}`);
+    
       if (pi.status === "requires_confirmation") {
-        debugLogs.push(`➡️ Confirming PI ${payment_intent_id}...`);
+        console.log(`Confirming PaymentIntent ${payment_intent_id}`);
+        
+        // First, confirm the PaymentIntent - need to provide return_url for redirect-based payment methods
         const confirmed = await stripe.paymentIntents.confirm(payment_intent_id, {
-          expand: ["charges.data"],
-          // return_url: "https://your-domain.com/confirm-return" // only if needed
+          return_url: "https://www.google.com" // Required for redirect-based payment methods
         });
-        debugLogs.push(`✔️ Confirmed PI status: ${confirmed.status}`);
-        debugLogs.push(`✔️ Confirmed.charges.data: ${JSON.stringify(confirmed.charges.data)}`);
+        console.log(`PaymentIntent confirmed, new status: ${confirmed.status}`);
 
-        debugLogs.push(`➡️ Capturing PI ${payment_intent_id}...`);
-        const captured = await stripe.paymentIntents.capture(payment_intent_id, {
-          expand: ["charges.data"],
-        });
-        debugLogs.push(`✅ Captured PI status: ${captured.status}`);
-        debugLogs.push(`✅ Captured.charges.data: ${JSON.stringify(captured.charges.data)}`);
-
-        if (captured.charges.data.length > 0) {
-          chargeId = captured.charges.data[0].id;
-          debugLogs.push(`ℹ️ Retrieved chargeId after capture: ${chargeId}`);
+        // Wait a moment for the confirmation to process
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // After confirmation, it should be "requires_capture" or "succeeded"
+        if (confirmed.status === "requires_capture") {
+          console.log(`Capturing PaymentIntent ${payment_intent_id}`);
+          const captured = await stripe.paymentIntents.capture(payment_intent_id);
+          console.log(`PaymentIntent captured, status: ${captured.status}`);
+          
+          // Extract charge ID from captured payment
+          chargeId = extractChargeId(captured);
+          if (chargeId) {
+            console.log(`Charge ID obtained: ${chargeId}`);
+          } else {
+            console.warn(`No charge ID found in captured PaymentIntent ${payment_intent_id}`);
+          }
+        } else if (confirmed.status === "succeeded") {
+          // Payment was automatically captured
+          chargeId = extractChargeId(confirmed);
+          if (chargeId) {
+            console.log(`Charge ID from succeeded payment: ${chargeId}`);
+          } else {
+            console.warn(`No charge ID found in succeeded PaymentIntent ${payment_intent_id}`);
+          }
+        } else {
+          console.warn(`Unexpected status after confirmation: ${confirmed.status} for PaymentIntent ${payment_intent_id}`);
         }
-      } else if (pi.status === "requires_capture") {
-        debugLogs.push(`➡️ PI already “requires_capture,” so capturing now (${payment_intent_id})...`);
-        const captured = await stripe.paymentIntents.capture(payment_intent_id, {
-          expand: ["charges.data"],
-        });
-        debugLogs.push(`✅ Captured PI status: ${captured.status}`);
-        debugLogs.push(`✅ Captured.charges.data: ${JSON.stringify(captured.charges.data)}`);
-
-        if (captured.charges.data.length > 0) {
-          chargeId = captured.charges.data[0].id;
-          debugLogs.push(`ℹ️ Retrieved chargeId after capture: ${chargeId}`);
+      }
+      else if (pi.status === "requires_capture") {
+        console.log(`Capturing already-confirmed PaymentIntent ${payment_intent_id}`);
+        
+        // If it's already confirmed but not yet captured, just capture
+        const captured = await stripe.paymentIntents.capture(payment_intent_id);
+        console.log(`PaymentIntent captured, status: ${captured.status}`);
+        
+        chargeId = extractChargeId(captured);
+        if (chargeId) {
+          console.log(`Charge ID obtained: ${chargeId}`);
+        } else {
+          console.warn(`No charge ID found in captured PaymentIntent ${payment_intent_id}`);
         }
-      } else if (pi.status === "succeeded") {
-        debugLogs.push(`ℹ️ PI was already succeeded; charging was done earlier.`);
-        if (pi.charges.data.length > 0) {
-          chargeId = pi.charges.data[0].id;
-          debugLogs.push(`ℹ️ Retrieved existing chargeId: ${chargeId}`);
+      }
+      else if (pi.status === "succeeded") {
+        console.log(`PaymentIntent ${payment_intent_id} already succeeded`);
+        
+        // If it's already been captured earlier, just grab the existing Charge ID
+        chargeId = extractChargeId(pi);
+        if (chargeId) {
+          console.log(`Existing charge ID: ${chargeId}`);
+        } else {
+          console.warn(`No charge ID found in succeeded PaymentIntent ${payment_intent_id}`);
         }
       } else {
-        debugLogs.push(`⚠️ PI ${payment_intent_id} has unexpected status: ${pi.status}.`);
+        // Some other unexpected state—log it for debugging
+        console.warn(
+          `PaymentIntent ${payment_intent_id} for auction ${auctionId} is in unexpected status ${pi.status}`
+        );
       }
     } catch (stripeErr) {
-      const msg = `❌ Stripe error for PI ${payment_intent_id} (auction ${auctionId}): ${
-        (stripeErr as any).message ?? JSON.stringify(stripeErr)
-      }`;
-      debugLogs.push(msg);
-      overallResults.push({ auction_id: auctionId, status: "stripeError", error: msg });
-      // Skip to next auction, but first close the auction so we don't retry forever
-      await supabase
-        .from("auctions")
-        .update({
-          auction_status: "closed",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("auction_id", auctionId);
-      continue;
+      console.error(
+        `Stripe error when processing payment_intent ${payment_intent_id} for auction ${auctionId}:`,
+        stripeErr
+      );
+      // Log the full error object for debugging
+      console.error("Full Stripe error:", JSON.stringify(stripeErr, null, 2));
     }
 
-    // 2c. If chargeId is still null, log and skip inserting
-    if (!chargeId) {
-      const msg = `⚠️ chargeId is null for auction ${auctionId}, bidder ${bidder_id}; skipping insert.`;
-      debugLogs.push(msg);
-      // We still close the auction so it doesn’t re-run
-      const { error: closeErr2 } = await supabase
-        .from("auctions")
-        .update({
-          auction_status: "closed",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("auction_id", auctionId);
-
-      if (closeErr2) {
-        const errMsg = `❌ Error closing auction ${auctionId} after missing chargeId: ${JSON.stringify(closeErr2)}`;
-        debugLogs.push(errMsg);
-        overallResults.push({ auction_id: auctionId, status: "closeErrorNoCharge", error: errMsg });
-      } else {
-        debugLogs.push(`✅ Auction ${auctionId} closed (no payment recorded).`);
-        overallResults.push({ auction_id: auctionId, status: "closedNoCharge" });
-      }
-      continue;
-    }
-
-    // 2d. Now that we have a chargeId, insert into payments
-    debugLogs.push(`⬇️ Inserting into payments (chargeId=${chargeId}) for auction ${auctionId}...`);
-    const insertPayload = [
-      {
-        auction_id: auctionId,
-        bidder_id: bidder_id,
-        amount_charged: amount,
-        stripe_charge_id: chargeId,
-        created_at: new Date().toISOString(), // remove if your schema has DEFAULT now()
-      },
-    ];
-
-    debugLogs.push(`📝 insertPayload: ${JSON.stringify(insertPayload)}`);
+    // 2c. Insert into payments table
     const { data: paymentData, error: paymentInsertError } = await supabase
       .from("payments")
-      .insert(insertPayload)
+      .insert([
+        {
+          auction_id: auctionId,
+          bidder_id: bidder_id,
+          amount_charged: amount,
+          stripe_charge_id: chargeId,
+        },
+      ])
       .select();
 
+    console.log("Final values - Charge ID:", chargeId, "Auction ID:", auctionId, "Bidder ID:", bidder_id);
+    console.log("Payment data inserted:", paymentData);
+    
     if (paymentInsertError) {
-      const msg = `❌ Error inserting payment record for auction ${auctionId}, bidder ${bidder_id}: ${
-        JSON.stringify(paymentInsertError)
-      }`;
-      debugLogs.push(msg);
-      overallResults.push({
-        auction_id: auctionId,
-        status: "paymentInsertError",
-        error: msg,
-      });
-    } else {
-      debugLogs.push(`✅ Payment record inserted: ${JSON.stringify(paymentData)}`);
-      overallResults.push({
-        auction_id: auctionId,
-        status: "paymentInserted",
-        payment: { chargeId, supabaseRow: paymentData },
-      });
+      console.error(
+        `Error inserting payment record for auction ${auctionId}, bidder ${bidder_id}:`,
+        paymentInsertError
+      );
+      // Even if this fails, we still close the auction below
     }
 
-    // 2e. Finally, close the auction
-    const { error: closeErrorFinal } = await supabase
+    // 2d. Finally, close the auction
+    const { error: closeError2 } = await supabase
       .from("auctions")
       .update({
         auction_status: "closed",
@@ -244,25 +209,12 @@ serve(async (req) => {
       })
       .eq("auction_id", auctionId);
 
-    if (closeErrorFinal) {
-      const errMsg = `❌ Error updating auction ${auctionId} to closed: ${JSON.stringify(closeErrorFinal)}`;
-      debugLogs.push(errMsg);
-      overallResults.push({ auction_id: auctionId, status: "closeErrorAfterPayment", error: errMsg });
-    } else {
-      debugLogs.push(`✅ Auction ${auctionId} marked “closed.”`);
+    if (closeError2) {
+      console.error(`Error updating auction ${auctionId} to closed:`, closeError2);
     }
   }
 
-  // 3. Return final JSON with all debugLogs and overallResults
-  return new Response(
-    JSON.stringify({
-      message: "Auctions processed.",
-      results: overallResults,
-      logs: debugLogs,
-    }),
-    {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    }
-  );
+  return new Response(JSON.stringify({ message: "Auctions processed." }), {
+    status: 200,
+  });
 });
