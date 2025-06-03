@@ -1,0 +1,70 @@
+.mispedidos-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.mispedidos-filters button {
+  padding: 6px 20px;
+  border-radius: 30px;
+  border: none;
+  background-color: #b0b0b0;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mispedidos-filters .active {
+  background-color: #0d3b4c;
+  color: white;
+}
+
+.pedido-card-horizontal {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: start;
+}
+
+.resumen-envio {
+  background-color: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  border-radius: 15px;
+  min-width: 250px;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.resumen-title {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.resumen-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.resumen-line.total {
+  font-weight: bold;
+  border-top: 1px solid #888;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.continuar-btn {
+  margin-top: 15px;
+  background-color: #0d3b4c;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease;
+}

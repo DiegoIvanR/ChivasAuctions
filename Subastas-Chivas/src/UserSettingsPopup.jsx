@@ -33,6 +33,10 @@ export default function UserSettingsPopup({ onClose }) {
     onClose(); // Close the popup
     navigate("/dashboardUsuario/MisPujas"); // Navigate to the user dashboard
   }
+  const handleMisPedidos = () => {
+    onClose(); // Close the popup
+    navigate("/dashboardUsuario/MisPedidos"); // Navigate to the user dashboard
+  }
 
   return (
     <div className="user-settings-popup">
@@ -43,7 +47,7 @@ export default function UserSettingsPopup({ onClose }) {
         <ul className="popup-menu">
           <li className="popup-menu-item" onClick={handleUsuarioDashboard}>Mi Perfil</li>
           <li className="popup-menu-item" onClick={handleMisPujas}>Mis Pujas</li>
-          <li className="popup-menu-item">Mis Pedidos</li>
+          <li className="popup-menu-item" onClick={handleMisPedidos}>Mis Pedidos</li>
           <li className="popup-menu-item">Ajustes</li>
           <li className="popup-menu-item" onClick={handleLogout}>Cerrar Sesión</li>
         </ul>

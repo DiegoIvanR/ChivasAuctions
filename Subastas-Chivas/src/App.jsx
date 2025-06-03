@@ -17,6 +17,7 @@ import store from './store';
 import SignUp from './SignUp'; // Import the SignUp component
 import Confirmation from './Confirmation';
 import MisPujas from './MisPujas';
+import MisPedidos from './MisPedidos';
 /*import LockerRoom from './LockerRoom';*/
 
 
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/calendar" element={<CalendarSelector />} />
           <Route path="/dashboardUsuario" element={<DashboardUsuario />} />
           <Route path="/dashboardUsuario/MisPujas" element={<MisPujas />} />
+          <Route path="/dashboardUsuario/MisPedidos" element={<MisPedidos />} />
             
           <Route path="/login" element={<Login />} /> {/* Add this line */}
           <Route path="/signup" element={<SignUp />} /> {/* Add this line */}
