@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './DashboardForm.css';
+import { addJersey } from './jerseys';
+
 
 const DashboardForm = () => {
   const [formData, setFormData] = useState({
@@ -115,10 +117,29 @@ const DashboardForm = () => {
     );
   };
 
+
   const handleSubmit = () => {
-    console.log('Datos confirmados:', formData);
+    const newAuction = {
+      id: Date.now(),
+      player: formData.playerName,
+      number: Number(formData.jerseyNumber),
+      match: formData.rival,
+      used: formData.used,
+      signed: formData.signed,
+      highest_bid: Number(formData.amount),
+      league: formData.league || "",      // solo si hay input para esto
+      season: formData.season || "",      // solo si hay input para esto
+      position: formData.position || "",  // solo si hay input para esto
+      phase: formData.phase || "",        // solo si hay input para esto
+      starting_date: formData.auctionStart?.fullDate?.toISOString() || "",
+      end_date: formData.auctionEnd?.fullDate?.toISOString() || "",
+      img_src: formData.imgSrc || ""
+    };
+  
+    addJersey(newAuction);
   };
 
+  
   return (
     <div className="dashboard-form-wrapper">
       <h2 className="dashboard-title">DASHBOARD</h2>
