@@ -34,7 +34,7 @@ export const jerseys = [
   {
     id: 3,
     player: "Fernando González",
-    number: 9,
+    number: 28,
     match: "América",
     used: true,
     signed: false,
@@ -50,7 +50,7 @@ export const jerseys = [
   {
     id: 4,
     player: "Fernando Beltrán",
-    number: 8,
+    number: 20,
     match: "América",
     used: true,
     signed: true,
@@ -66,7 +66,7 @@ export const jerseys = [
   {
     id: 5,
     player: "Roberto Alvarado",
-    number: 8,
+    number: 25,
     match: "América",
     used: true,
     signed: true,
@@ -113,7 +113,7 @@ export const jerseys = [
   },
   {
     id: 8,
-    player: "Yael Sandoval",
+    player: "Yael Padilla",
     number: 31,
     match: "Pumas",
     used: true,

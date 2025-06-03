@@ -12,6 +12,7 @@ import Login from './Login';
 import SignUp from './SignUp';
 import Confirmation from './Confirmation';
 import MisPujas from './MisPujas';
+import MisPedidos from './MisPedidos';
 
 import { StripeProvider } from "./stripeProvider";
 import AddCardForm from "./AddCardForm";
@@ -65,6 +66,8 @@ const App = () => {
                     <MisPujas />
                 } 
               />
+                  
+              <Route path="/dashboardUsuario/MisPedidos" element={<MisPedidos />} />
               
               {/* Form routes - optional payment method */}
               <Route path="/dashboardForm" element={<DashboardForm />} />
