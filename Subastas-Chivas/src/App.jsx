@@ -13,6 +13,7 @@ import SignUp from './SignUp';
 import Confirmation from './Confirmation';
 import MisPujas from './MisPujas';
 import MisPedidos from './MisPedidos';
+import AdminDashboard from "./AdminDashboard";
 
 import { StripeProvider } from "./stripeProvider";
 import AddCardForm from "./AddCardForm";
@@ -42,6 +43,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/confirmation" element={<Confirmation />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
               
               {/* Payment setup route */}
               <Route path="/add-card" element={<AddCardForm />} />

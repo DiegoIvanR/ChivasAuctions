@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './DashboardForm.css';
+import { addJersey } from './jerseys';
 
 const DashboardForm = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,6 @@ const DashboardForm = () => {
   const handleDaySelect = (calendarKey, day) => {
     const baseDate = calendarState[calendarKey];
     const date = new Date(baseDate.getFullYear(), baseDate.getMonth(), day);
-
     const formatted = date.toLocaleDateString('es-MX', {
       weekday: 'long',
       day: 'numeric',
@@ -54,7 +54,6 @@ const DashboardForm = () => {
   const renderCalendar = (title, calendarKey) => {
     const selected = formData[calendarKey]?.fullDate;
     const currentMonth = calendarState[calendarKey];
-
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
@@ -116,8 +115,27 @@ const DashboardForm = () => {
   };
 
   const handleSubmit = () => {
-    console.log('Datos confirmados:', formData);
+    const newAuction = {
+      id: Date.now(),
+      player: formData.playerName,
+      number: Number(formData.jerseyNumber),
+      match: formData.rival,
+      highest_bid: Number(formData.amount),
+      starting_date: formData.auctionStart?.fullDate?.toISOString() || "",
+      end_date: formData.auctionEnd?.fullDate?.toISOString() || "",
+      img_src: "", // puedes agregar si luego lo piden
+    };
+  
+    // Obtener subastas existentes de localStorage
+    const existing = JSON.parse(localStorage.getItem("adminAuctions")) || [];
+  
+    // Guardar nueva lista
+    const updated = [...existing, newAuction];
+    localStorage.setItem("adminAuctions", JSON.stringify(updated));
+  
+    console.log("Nueva subasta guardada:", newAuction);
   };
+  
 
   return (
     <div className="dashboard-form-wrapper">
@@ -142,6 +160,7 @@ const DashboardForm = () => {
 };
 
 export default DashboardForm;
+
 
 
 
