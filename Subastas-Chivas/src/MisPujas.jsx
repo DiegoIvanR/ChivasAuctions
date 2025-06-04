@@ -39,6 +39,28 @@ const MisPujas = () => {
             .gte('auctions.end_time', now); // Use `lte` for `<=`
         } else if (filter === 'CERRADAS') {
           query = query.lt('auctions.end_time', now); // Use `lt` for `<`
+        } else if (filter === 'GANADAS') {
+          query = await supabase // Assuming there's a winner_id field in auctions
+            .from('payments')
+            .select(`
+              payment_id,
+              auction_id,
+              bidder_id,
+              auctions (
+                jersey_id,
+                start_time,
+                end_time,
+                starting_bid,
+                jerseys (
+                  player_name,
+                  jersey_number,
+                  image_url,
+                  used,
+                  signed
+                )
+              ) 
+            `)
+            .eq('bidder_id', user.id);
         }
 
         const { data, error } = await query;
