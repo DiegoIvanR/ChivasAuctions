@@ -1,25 +1,55 @@
+/*
+return (
+        <div className="bid-history-container">
+            <h3 className="title">HISTORIAL DE PUJAS</h3>
+            <div className="bid-list">
+                {bids.length === 0 ? (
+                    <p>No hay pujas disponibles.</p>
+                ) : (
+                    bids.map((bid, idx) => (
+                        <div key={idx} className="bid-row">
+                            <div className="bidder">Postor {bid.bidder_id}</div>
+                            <div className="timestamp">
+                                {new Date(bid.created_at).toLocaleDateString('es-MX', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric',
+                                })},{' '}
+                                {new Date(bid.created_at).toLocaleTimeString('es-MX')}
+                            </div>
+                            <div className="amount">{bid.amount} MXN</div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+*/
+
 .bid-history-container {
     position: absolute;
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 800px;
-    border: 1px solid #ccc;
+    width: 95%;
+    height: 14.3%;
     border-radius: 8px;
     padding: 10px;
 	bottom: 7%;
     color: azure;
+    justify-content: space-around;
 }
 
 .title {
     text-align: center;
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: bold;
+    margin: auto;
+    font-family: Montserrat, sans-serif; /* Apply the imported font */
+    font-weight: 400; /* Use the specified weight */
+    font-size: 23px;
 }
 
 .bid-list {
-    max-height: 90px; /* Limit height for scrolling */
+    margin:auto;
+    justify-content: space-around;
+    max-height: 100px; /* Limit height for scrolling */
     overflow-y: auto; /* Enable scrolling */
     scroll-behavior: smooth; /* Smooth scrolling */
 }
@@ -37,15 +67,19 @@
 }
 
 .bidder {
-    font-weight: bold;
+	font-family: Montserrat, sans-serif;
+	font-weight: 600;
+	font-size: 15px;
 }
 
 .timestamp {
-    font-size: 12px;
-    color: #666;
+	font-family: Montserrat, sans-serif;
+	font-weight: 300;
+	font-size: 15px;
 }
 
 .amount {
-    font-weight: bold;
-    color: #007bff;
+	font-family: Montserrat, sans-serif;
+	font-weight: 600;
+	font-size: 15px;
 }

@@ -154,7 +154,7 @@ export default function BidInput({ jersey, onBidUpdate }) {
         className="bid-button"
         disabled={isProcessingBid}
       >
-        {isProcessingBid ? 'Procesando...' : 'Puja'}
+        {isProcessingBid ? 'PROCESANDO...' : 'PUJA'}
       </button>
       {warning && <p className="bid-warning">{warning}</p>}
 
