@@ -40,7 +40,7 @@ export default function BidHistory({ auctionID }) {
                 ) : (
                     bids.map((bid, idx) => (
                         <div key={idx} className="bid-row">
-                            <div className="bidder">Postor {bid.bidder_id}</div>
+                            <div className="bidder">Postor {bid.bidder_id.slice(0, 8)}</div>
                             <div className="timestamp">
                                 {new Date(bid.created_at).toLocaleDateString('es-MX', {
                                     day: '2-digit',
@@ -49,7 +49,7 @@ export default function BidHistory({ auctionID }) {
                                 })},{' '}
                                 {new Date(bid.created_at).toLocaleTimeString('es-MX')}
                             </div>
-                            <div className="amount">{bid.amount} MXN</div>
+                            <div className="amount">{bid.amount} USD</div>
                         </div>
                     ))
                 )}

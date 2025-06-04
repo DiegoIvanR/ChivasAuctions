@@ -1,53 +1,84 @@
+/*
+return (
+        <div className="bid-history-container">
+            <h3 className="title">HISTORIAL DE PUJAS</h3>
+            <div className="bid-list">
+                {bids.length === 0 ? (
+                    <p>No hay pujas disponibles.</p>
+                ) : (
+                    bids.map((bid, idx) => (
+                        <div key={idx} className="bid-row">
+                            <div className="bidder">Postor {bid.bidder_id}</div>
+                            <div className="timestamp">
+                                {new Date(bid.created_at).toLocaleDateString('es-MX', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric',
+                                })},{' '}
+                                {new Date(bid.created_at).toLocaleTimeString('es-MX')}
+                            </div>
+                            <div className="amount">{bid.amount} MXN</div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+*/
 .bid-input-container {
+  position: relative;
+  margin: auto;
+  width: 60%;
+  height: 200px;
+  top: 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Add gap between elements */
+  border-radius: 8px;
+}
 
-	position: absolute;
-	top: 45%;
-	left: 25%;
+.bid-input {
+  height: 65px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: #000000;
+}
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.bid-input:focus {
+  outline: none;
+  border-color: #E6272E;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 
-  }
-  
-  .bid-input {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .bid-input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
-  
-  .bid-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .bid-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .bid-warning {
-    color: #ff0000;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-  }
+.bid-button {
+  height: 65px;
+  padding: 10px 20px;
+  font-family: Montserrat, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: #fff;
+  background-color: #07161D;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 150px;
+}
+
+.bid-button:hover {
+  background-color: #0F5977;
+}
+
+.bid-warning {
+  color: #ff0000;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}

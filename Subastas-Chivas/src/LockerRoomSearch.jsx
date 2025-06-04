@@ -11,6 +11,7 @@ export default function LockerRoomSearch() {
   const [visibleLockers, setVisibleLockers] = useState(7);
   const [noResults, setNoResults] = useState(false);
   const lockerWidth = 200;
+  const pattern = new URLSearchParams(location.search).get('query') || '';
 
   // Responsive behavior
   useEffect(() => {
@@ -218,7 +219,7 @@ export default function LockerRoomSearch() {
     <div className="locker-room-container">
       <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top locker frame" />
       {noResults ? (
-        <div className="no-results-banner">No results found</div>
+        <div className="no-results-banner">0 RESULTADOS PARA '{pattern}' </div>
       ) : (
         <div className="carousel-container">
           <div className="carousel-controls">
