@@ -17,27 +17,27 @@ const MisPedidos = () => {
 
       try {
         let query = supabase
-          .from('bids')
-          .select(`
-            auction_id,
-            auctions (
-              jersey_id,
-              start_time,
-              end_time,
-              starting_bid,
-              estado,
-              estado_envio,
-              jerseys (
-                player_name,
-                jersey_number,
-                image_url,
-                used,
-                signed
-              )
-            )
-          `)
-          .eq('bidder_id', user.id)
-          .eq('estado', 'ganada');
+        .from('payments')
+            .select(`
+              payment_id,
+              auction_id,
+              bidder_id,
+              delivered,
+              auctions (
+                jersey_id,
+                start_time,
+                end_time,
+                starting_bid,
+                jerseys (
+                  player_name,
+                  jersey_number,
+                  image_url,
+                  used,
+                  signed
+                )
+              ) 
+            `)
+            .eq('bidder_id', user.id);
 
         const { data, error } = await query;
 
@@ -48,18 +48,16 @@ const MisPedidos = () => {
 
         const enCamino = [];
         const entregados = [];
-
-        const uniqueAuctions = new Map();
-        data.forEach((bid) => {
-          if (bid.auctions && !uniqueAuctions.has(bid.auction_id)) {
-            uniqueAuctions.set(bid.auction_id, bid);
-            const estadoEnvio = bid.auctions.estado_envio;
-            if (estadoEnvio === 'en_camino') {
-              enCamino.push(bid);
-            } else if (estadoEnvio === 'entregado') {
-              entregados.push(bid);
+        data.forEach((row) => {
+          
+            if (row.delivered === false) {
+              console.log('Pedido en camino:', row);
+              enCamino.push(row);
+            } else if (row.delivered === true) {
+              console.log('Pedido entregado:', row);
+              entregados.push(row);
             }
-          }
+    
         });
 
         setPedidosEnCamino(enCamino);
