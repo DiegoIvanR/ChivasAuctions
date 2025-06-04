@@ -1,0 +1,12 @@
+.admin-dashboard-container {
+    padding: 2rem;
+    color: white;
+  }
+  
+  .auction-card {
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+  }
+  
