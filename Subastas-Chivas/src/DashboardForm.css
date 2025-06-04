@@ -161,3 +161,33 @@ input[type="text"]::placeholder {
 }
 
 
+
+
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-upload label {
+  font-size: 1rem;
+  color: white;
+}
+
+.image-upload input[type="file"] {
+  padding: 0.5rem;
+  background-color: #2c2c2e;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.image-preview {
+  margin-top: 1rem;
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid #f2354e;
+}

@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import './DashboardForm.css';
 import { addJersey } from './jerseys';
+import { supabase } from './supabaseClient'; // Ensure Supabase client is configured
+import { useDispatch, useSelector } from "react-redux";
 
 const DashboardForm = () => {
+    const { user } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({
     playerName: '',
     jerseyNumber: '',
@@ -11,7 +15,11 @@ const DashboardForm = () => {
     matchDate: null,
     auctionStart: null,
     auctionEnd: null,
+    image: null, // Store the actual File object
   });
+
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [calendarState, setCalendarState] = useState({
     matchDate: new Date(2025, 5),
@@ -22,6 +30,33 @@ const DashboardForm = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido.');
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('El archivo es demasiado grande. Por favor selecciona una imagen menor a 5MB.');
+        return;
+      }
+
+      // Store the file object
+      setFormData(prev => ({ ...prev, image: file }));
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDaySelect = (calendarKey, day) => {
@@ -114,45 +149,250 @@ const DashboardForm = () => {
     );
   };
 
-  const handleSubmit = () => {
-    const newAuction = {
-      id: Date.now(),
-      player: formData.playerName,
-      number: Number(formData.jerseyNumber),
-      match: formData.rival,
-      highest_bid: Number(formData.amount),
-      starting_date: formData.auctionStart?.fullDate?.toISOString() || "",
-      end_date: formData.auctionEnd?.fullDate?.toISOString() || "",
-      img_src: "", // puedes agregar si luego lo piden
-    };
-  
-    // Obtener subastas existentes de localStorage
-    const existing = JSON.parse(localStorage.getItem("adminAuctions")) || [];
-  
-    // Guardar nueva lista
-    const updated = [...existing, newAuction];
-    localStorage.setItem("adminAuctions", JSON.stringify(updated));
-  
-    console.log("Nueva subasta guardada:", newAuction);
+  const validateForm = () => {
+    if (!formData.playerName.trim()) {
+      alert('Por favor ingresa el nombre del jugador.');
+      return false;
+    }
+    if (!formData.jerseyNumber.trim()) {
+      alert('Por favor ingresa el número de la playera.');
+      return false;
+    }
+    if (!formData.rival.trim()) {
+      alert('Por favor ingresa el equipo rival.');
+      return false;
+    }
+    if (!formData.amount.trim() || isNaN(parseFloat(formData.amount))) {
+      alert('Por favor ingresa un monto inicial válido.');
+      return false;
+    }
+    if (!formData.matchDate?.fullDate) {
+      alert('Por favor selecciona la fecha del partido.');
+      return false;
+    }
+    if (!formData.auctionStart?.fullDate) {
+      alert('Por favor selecciona la fecha de inicio de la subasta.');
+      return false;
+    }
+    if (!formData.auctionEnd?.fullDate) {
+      alert('Por favor selecciona la fecha de fin de la subasta.');
+      return false;
+    }
+    if (!formData.image) {
+      alert('Por favor sube una imagen de la playera.');
+      return false;
+    }
+
+    // Validate date logic
+    const now = new Date();
+    const auctionStart = formData.auctionStart.fullDate;
+    const auctionEnd = formData.auctionEnd.fullDate;
+    const matchDate = formData.matchDate.fullDate;
+
+    if (auctionStart >= auctionEnd) {
+      alert('La fecha de inicio de la subasta debe ser anterior a la fecha de fin.');
+      return false;
+    }
+
+    if (auctionStart < matchDate) {
+      alert('La subasta debe iniciar después o el día del partido.');
+      return false;
+    }
+
+    return true;
   };
-  
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+
+    try {
+      
+
+      // Upload the image to Supabase storage
+      const fileExtension = formData.image.name.split('.').pop();
+      const imageFileName = `${formData.playerName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.${fileExtension}`;
+      
+      const { data: storageData, error: storageError } = await supabase.storage
+        .from('jersey-images')
+        .upload(`jerseys/${imageFileName}`, formData.image, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (storageError) {
+        console.error('Error uploading image:', storageError.message);
+        alert('Error al subir la imagen. Por favor intenta de nuevo.');
+        return;
+      }
+
+      // Get the public URL for the image
+      const { data: { publicUrl } } = supabase.storage
+        .from('jersey-images')
+        .getPublicUrl(`jerseys/${imageFileName}`);
+
+      // Check if the match already exists in the matches table
+      const { data: existingMatch, error: matchError } = await supabase
+        .from('matches')
+        .select('match_id')
+        .eq('opponent', formData.rival)
+        .eq('match_date', formData.matchDate.fullDate.toISOString().split('T')[0])
+        .single();
+
+      if (matchError && matchError.code !== 'PGRST116') {
+        console.error('Error checking match:', matchError.message);
+        alert('Error al verificar el partido. Por favor intenta de nuevo.');
+        return;
+      }
+
+      let matchId = existingMatch?.match_id;
+      
+      if (!matchId) {
+        // Insert a new match if it doesn't exist
+        const { data: newMatch, error: insertMatchError } = await supabase
+          .from('matches')
+          .insert({
+            opponent: formData.rival,
+            match_date: formData.matchDate.fullDate.toISOString().split('T')[0],
+          })
+          .select('match_id')
+          .single();
+
+        if (insertMatchError) {
+          console.error('Error inserting match:', insertMatchError.message);
+          alert('Error al crear el partido. Por favor intenta de nuevo.');
+          return;
+        }
+
+        matchId = newMatch.match_id;
+      }
+
+      // Insert the jersey into the jerseys table
+      const { data: newJersey, error: jerseyError } = await supabase
+        .from('jerseys')
+        .insert({
+          match_id: matchId,
+          player_name: formData.playerName,
+          jersey_number: parseInt(formData.jerseyNumber),
+          image_url: publicUrl,
+          used: false,
+          signed: false,
+        })
+        .select('jersey_id')
+        .single();
+
+      if (jerseyError) {
+        console.error('Error inserting jersey:', jerseyError.message);
+        alert('Error al crear la playera. Por favor intenta de nuevo.');
+        return;
+      }
+
+      const jerseyId = newJersey.jersey_id;
+
+      // Insert the auction
+      const { error: auctionError } = await supabase
+        .from('auctions')
+        .insert({
+          start_time: formData.auctionStart.fullDate.toISOString(),
+          end_time: formData.auctionEnd.fullDate.toISOString(),
+          starting_bid: parseFloat(formData.amount),
+          jersey_id: jerseyId,
+          admin_id: user.id,
+        });
+
+      if (auctionError) {
+        console.error('Error inserting auction:', auctionError.message);
+        alert('Error al crear la subasta. Por favor intenta de nuevo.');
+        return;
+      }
+
+      alert('¡Subasta creada exitosamente!');
+      
+      // Reset form
+      setFormData({
+        playerName: '',
+        jerseyNumber: '',
+        rival: '',
+        amount: '',
+        matchDate: null,
+        auctionStart: null,
+        auctionEnd: null,
+        image: null,
+      });
+      setImagePreview(null);
+
+    } catch (err) {
+      console.error('Unexpected error:', err.message);
+      alert('Error inesperado. Por favor intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="dashboard-form-wrapper">
       <h2 className="dashboard-title">DASHBOARD</h2>
 
       <div className="form-content">
-        <input type="text" name="playerName" placeholder="Nombre del jugador" onChange={handleInputChange} />
-        <input type="text" name="jerseyNumber" placeholder="Número de la playera" onChange={handleInputChange} />
-        <input type="text" name="rival" placeholder="Equipo rival" onChange={handleInputChange} />
-        <input type="text" name="amount" placeholder="Monto inicial" onChange={handleInputChange} />
+        <input 
+          type="text" 
+          name="playerName" 
+          placeholder="Nombre del jugador" 
+          value={formData.playerName}
+          onChange={handleInputChange} 
+        />
+        <input 
+          type="number" 
+          name="jerseyNumber" 
+          placeholder="Número de la playera" 
+          value={formData.jerseyNumber}
+          onChange={handleInputChange} 
+        />
+        <input 
+          type="text" 
+          name="rival" 
+          placeholder="Equipo rival" 
+          value={formData.rival}
+          onChange={handleInputChange} 
+        />
+        <input 
+          type="number" 
+          name="amount" 
+          placeholder="Monto inicial" 
+          step="0.01"
+          value={formData.amount}
+          onChange={handleInputChange} 
+        />
 
         {renderCalendar("📅 Fecha del partido", "matchDate")}
         {renderCalendar("⏱ Inicio de la subasta", "auctionStart")}
         {renderCalendar("🏁 Fin de la subasta", "auctionEnd")}
+        
+        <div className="image-upload">
+          <label htmlFor="imageUpload">Subir imagen de la playera:</label>
+          <input 
+            type="file" 
+            id="imageUpload" 
+            accept="image/*" 
+            onChange={handleImageUpload} 
+          />
+          {imagePreview && (
+            <img 
+              src={imagePreview} 
+              alt="Vista previa" 
+              className="image-preview" 
+              style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+            />
+          )}
+        </div>
 
-        <button className="confirm-btn" onClick={handleSubmit}>
-          Confirmar subasta
+        <button 
+          className="confirm-btn" 
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Creando subasta...' : 'Confirmar subasta'}
         </button>
       </div>
     </div>
@@ -160,12 +400,3 @@ const DashboardForm = () => {
 };
 
 export default DashboardForm;
-
-
-
-
-
-
-
-
-
