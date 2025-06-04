@@ -42,6 +42,17 @@ const DashboardUsuario = () => {
           const uniqueAuctionIds = new Set(bidsData.map(bid => bid.auction_id));
           setArticulosPujados(uniqueAuctionIds.size);
         }
+
+        const { data: wonItemsData, error: wonItemsError } = await supabase
+          .from('payments')
+          .select('bidder_id')
+          .eq('bidder_id', user.id);
+        if (wonItemsError) {
+          console.error('Error fetching won items:', wonItemsError.message);
+        } else {
+          // Count the number of won items
+          setArticulosGanados(wonItemsData.length);
+        }
       } catch (err) {
         console.error('Unexpected error fetching user stats:', err);
       }
