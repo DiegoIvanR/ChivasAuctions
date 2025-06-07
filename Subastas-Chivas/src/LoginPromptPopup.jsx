@@ -12,12 +12,12 @@ export default function LoginPromptPopup({ onCancel }) {
         <button className="popup-close" onClick={onCancel}>
           <p className="popup-close-x">✖</p>
         </button>
-        <p className="popup-message">No haz iniciado sesión</p>
+        <p className="popup-title">No haz iniciado sesión</p>
         <div className="popup-actions">
-          <button className="popup-login" onClick={() => navigate('/login')}>
+          <button className="popup-confirm" onClick={() => navigate('/login')}>
             Iniciar Sesión
           </button>
-          <button className="popup-signup" onClick={() => navigate('/signup')}>
+          <button className="popup-confirm" onClick={() => navigate('/signup')}>
             Registrarse
           </button>
         </div>

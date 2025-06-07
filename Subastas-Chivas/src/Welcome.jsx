@@ -10,11 +10,16 @@ export default function Welcome() {
     };
   
     return (
-      <div className="welcome-container">
-        <h1 className="welcome-title">Bienvenido {user?.full_name || 'Usuario'}</h1>
+
+    <div className='login-container-wrapper'>
+    <img src='../public/stadium-image.png' className='stadium-image' />
+    <div className="login-form-container">
+        <h1 className="welcome-title">Bienvenido, {user?.full_name || 'Usuario'}</h1>
         <button className="welcome-button" onClick={handleGoHome}>
           Ir a la página principal
         </button>
       </div>
+    </div>
+
     );
   }
