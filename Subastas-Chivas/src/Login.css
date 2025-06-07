@@ -4,8 +4,8 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #f9f9f9;
     font-family: Arial, sans-serif;
+    background: white;
 }
 
 .login-container h2 {
@@ -75,21 +75,101 @@ button:hover {
   }
   
   .welcome-title {
-    font-size: 24px;
+    font-family: Rajdhani, sans-serif;
+    font-weight: 700;
+    font-size: 35px;
     color: #333;
   }
   
   .welcome-button {
-    margin-top: 20px;
+    width: 20%;
+    height: 50px;
     padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
+    font-family: Montserrat, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    background-color: #07161D;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 150px;
   }
   
   .welcome-button:hover {
-    background-color: #0056b3;
+    background-color: #0F5977;
   }
+
+  .login-container-wrapper{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+  .stadium-image {
+    position: absolute;
+    width: 50%;
+    left: 0%;
+    bottom:0%;
+    height: auto;
+  }
+  .login-form-container{
+    position: relative;
+    left: 25%;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .login-title{
+    font-family: Rajdhani, sans-serif;
+    font-weight: 700;
+    font-size: 50px;
+  }
+
+  .login-form{
+    position: relative;
+    width: 90%;
+  }
+  .login-field input{
+
+    font-family: Montserrat, sans-serif; /* Apply the imported font */
+    font-weight: 400; /* Use the specified weight */
+    font-size: 14px;
+  }
+  .login-field:focus-within input {
+    border-color: #f2354e; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(242, 53, 78, 0.5); /* Add a subtle shadow */
+  }
+.login-error{
+    color: #f2354e; /* Use the specified error color */
+    font-family: Montserrat, sans-serif; /* Apply the imported font */
+    font-weight: 400; /* Use the specified weight */
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+
+.login-button {
+    height: 50px;
+    padding: 10px 20px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    background-color: #07161D;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 150px;
+  }
+  
+
+.login-button:hover {
+    background-color: #0F5977;
+  }
+  

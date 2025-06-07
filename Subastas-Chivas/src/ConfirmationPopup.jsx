@@ -3,7 +3,7 @@ import './confirmation-popup.css';
 
 export default function ConfirmationPopup({ 
   bid, 
-  jerseyId, 
+  jerseyName, 
   termsAccepted, 
   onCheckboxChange, 
   onConfirm, 
@@ -12,44 +12,40 @@ export default function ConfirmationPopup({
 }) {
   return (
     <div className="popup-overlay">
-      <div className="popup-content">
-        <h3>Confirmar Puja</h3>
-        <div className="popup-bid-info">
-          <p><strong>Monto de la puja:</strong> ${bid}</p>
-          <p><strong>Jersey ID:</strong> {jerseyId}</p>
-        </div>
-        
-        <div className="popup-warning">
-          <p>⚠️ <strong>Puja Vinculante:</strong></p>
-          <p>Al confirmar esta puja, aceptas que es legalmente vinculante. Si ganas la subasta, el pago de <strong>${bid}</strong> se procesará automáticamente usando tu método de pago registrado.</p>
+      <div className="popup-container">
+        <button className="popup-close" onClick={onCancel}>
+          <span className="popup-close-x">×</span>
+        </button>
+        <h3 className="popup-title">CONFIRMACIÓN</h3>
+        <div className="popup-message">Estás por realizar una puja por la suma de</div>
+        <div className="popup-title">${bid} USD
         </div>
 
+        <div className='popup-message'>Para el jersey del jugador {jerseyName}</div>
+        <hr className="popup-divider" />
+        <div className="popup-message warning">
+          <p>Al confirmar esta puja, aceptas que es legalmente vinculante. Si ganas la subasta, el pago de <strong>${bid} USD</strong> se procesará automáticamente usando tu método de pago registrado.</p>
+        </div>
+        <hr className="popup-divider" />
         <div className="popup-terms">
-          <label>
             <input
               type="checkbox"
               checked={termsAccepted}
               onChange={onCheckboxChange}
               disabled={isProcessing}
+              className='popup-checkbox'
             />
             Acepto que esta puja es vinculante y autorizo el cargo automático si gano la subasta
-          </label>
         </div>
-
-        <div className="popup-buttons">
-          <button 
-            onClick={onCancel} 
-            className="popup-cancel-btn"
-            disabled={isProcessing}
-          >
-            Cancelar
-          </button>
+        <hr className="popup-divider" />
+        <div className="popup-actions">
+          
           <button 
             onClick={onConfirm} 
-            className="popup-confirm-btn"
+            className="popup-confirm"
             disabled={!termsAccepted || isProcessing}
           >
-            {isProcessing ? 'Procesando...' : 'Confirmar Puja'}
+            {isProcessing ? 'Procesando...' : 'CONTINUAR'}
           </button>
         </div>
 

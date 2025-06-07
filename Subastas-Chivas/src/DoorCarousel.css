@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@200&display=swap');
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Alatsi:wght@400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200&display=swap');
@@ -85,27 +86,6 @@
 
 /* Arrow buttons wrapper */
 
-.arrow {
-	position: absolute;
-	width: 1rem;
-	height: 1rem;
-	border: solid #FFFFFF;
-	border-width: 0 6px 6px 0;
-	display: inline-block;
-	transition: transform 0.3s ease;
-	padding: 3px;
-  }
-  
-  .arrow.left {
-	transform: rotate(135deg);
-	z-index: 3; /* Ensure the arrow is on top of everything */
-  }
-  
-  .arrow.right {
-	transform: rotate(-45deg);
-	z-index: 3; /* Ensure the arrow is on top of everything */
-  }
-  
   
   .door-wrapper {
 	padding: 0 !important;
@@ -262,6 +242,7 @@
 	width: 100%;
 	max-width: 100%;
   	margin: auto;
+	height: 90px;
   }
   .menu-selections{
 	align-items: center;
@@ -282,6 +263,9 @@
 	gap: 1rem;
 	padding: 2rem;
 	justify-content: space-around;
+  }
+  .logo{
+	height: 70px;
   }
 
 .search-bar {
@@ -332,6 +316,7 @@
 	display:flex;
 	flex-direction: column;
 	color: white;
+	z-index: 1;
 }
 .footer-bullshit{
 	display: flex;

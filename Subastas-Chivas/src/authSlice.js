@@ -14,6 +14,7 @@ const authSlice = createSlice({
                 ...action.payload,
                 username: action.payload.username || 'default.username',
                 full_name: action.payload.full_name || 'default.full_name',
+                profile_role: action.payload.profile_role || 'bidder', // Include profile_role
             };
             state.isAuthenticated = true;
             localStorage.setItem('user', JSON.stringify(state.user)); // Save user to localStorage

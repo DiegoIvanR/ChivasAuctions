@@ -11,50 +11,51 @@ export default function LoginForm({
   handleLogin,
 }) {
   return (
-    <div className="login-form-container">
-      <h2 className="login-title">Sign In</h2>
+    <div className='login-container-wrapper'>
+      <img src='../public/stadium-image.png' className='stadium-image' />
+      <div className="login-form-container">
+        <h2 className="login-title">SUBASTAS CHIVAS</h2>
 
-      <form onSubmit={handleLogin} className="login-form">
-        {/* Email Field */}
-        <div className="login-field">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+        <form onSubmit={handleLogin} className="login-form">
+          {/* Email Field */}
+          <div className="login-field">
+            <input
+              id="email"
+              type="email"
+              placeholder="Correo Electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Password Field */}
+          <div className="login-field">
+            <input
+              id="password"
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+
+          {/* Error Message */}
+          {errorMessage && <div className="login-error">{errorMessage}</div>}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="login-button"
             disabled={loading}
-          />
-        </div>
-
-        {/* Password Field */}
-        <div className="login-field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-          />
-        </div>
-
-        {/* Error Message */}
-        {errorMessage && <div className="login-error">{errorMessage}</div>}
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="login-button"
-          disabled={loading}
-        >
-          {loading ? 'Signing In…' : 'Sign In'}
-        </button>
-      </form>
+          >
+            {loading ? 'INICIANDO SESIÓN...' : 'INICIAR SESIÓN'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

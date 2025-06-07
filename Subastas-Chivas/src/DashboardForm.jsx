@@ -3,6 +3,7 @@ import './DashboardForm.css';
 import { addJersey } from './jerseys';
 import { supabase } from './supabaseClient'; // Ensure Supabase client is configured
 import { useDispatch, useSelector } from "react-redux";
+import DashboardAside from './DashboardAside';
 
 const DashboardForm = () => {
     const { user } = useSelector((state) => state.auth);
@@ -332,6 +333,7 @@ const DashboardForm = () => {
 
   return (
     <div className="dashboard-form-wrapper">
+      <DashboardAside />
       <h2 className="dashboard-title">DASHBOARD</h2>
 
       <div className="form-content">

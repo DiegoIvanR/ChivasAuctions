@@ -28,15 +28,22 @@ export default function UserSettingsPopup({ onClose }) {
   const handleUsuarioDashboard = () => {
     onClose(); // Close the popup
     navigate("/dashboardUsuario"); // Navigate to the user dashboard
-  }
+  };
+
   const handleMisPujas = () => {
     onClose(); // Close the popup
-    navigate("/dashboardUsuario/MisPujas"); // Navigate to the user dashboard
-  }
+    navigate("/dashboardUsuario/MisPujas"); // Navigate to the user's bids
+  };
+
   const handleMisPedidos = () => {
     onClose(); // Close the popup
-    navigate("/dashboardUsuario/MisPedidos"); // Navigate to the user dashboard
-  }
+    navigate("/dashboardUsuario/MisPedidos"); // Navigate to the user's orders
+  };
+
+  const handleAdminDashboard = () => {
+    onClose(); // Close the popup
+    navigate("/dashboard"); // Navigate to the admin dashboard
+  };
 
   return (
     <div className="user-settings-popup">
@@ -48,6 +55,9 @@ export default function UserSettingsPopup({ onClose }) {
           <li className="popup-menu-item" onClick={handleUsuarioDashboard}>Mi Perfil</li>
           <li className="popup-menu-item" onClick={handleMisPujas}>Mis Pujas</li>
           <li className="popup-menu-item" onClick={handleMisPedidos}>Mis Pedidos</li>
+          {user.role === "admin" && (
+            <li className="popup-menu-item" onClick={handleAdminDashboard}>Admin Dashboard</li>
+          )}
           <li className="popup-menu-item">Ajustes</li>
           <li className="popup-menu-item" onClick={handleLogout}>Cerrar Sesión</li>
         </ul>

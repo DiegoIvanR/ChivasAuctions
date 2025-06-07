@@ -18,9 +18,10 @@ import AdminDashboard from "./AdminDashboard";
 import { StripeProvider } from "./stripeProvider";
 import AddCardForm from "./AddCardForm";
 import PaymentMethodGuard from "./PaymentMethodGuard";
-
+import Ajustes from "./Ajustes";
 import { Provider } from 'react-redux';
 import store from './store';
+
 /*
 guard:
                   <PaymentMethodGuard requirePaymentMethod={true}>
@@ -44,7 +45,7 @@ const App = () => {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/confirmation" element={<Confirmation />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              
+              <Route path="/dashboardUsuario/ajustes" element={<Ajustes />} />
               {/* Payment setup route */}
               <Route path="/add-card" element={<AddCardForm />} />
               

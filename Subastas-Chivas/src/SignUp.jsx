@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from './supabaseClient';
-import './SignUp.css';
+import './Login.css'; // Use Login.css for styling
 
 export default function SignUp() {
     const [email, setEmail] = useState('');
@@ -15,31 +15,29 @@ export default function SignUp() {
         e.preventDefault();
         setError(null);
         setSuccess(null);
-    
+
         if (password !== passwordRewrite) {
             setError('Passwords do not match.');
             return;
         }
-    
+
         try {
-            // Create user in Supabase authentication
             const { data: session, error: authError } = await supabase.auth.signUp({
                 email,
                 password,
             });
-    
+
             if (authError) {
                 setError(authError.message);
             } else {
-                // Update user profile in public.profiles table
                 const { error: profileError } = await supabase
                     .from('profiles')
                     .update({
                         full_name: fullName,
                         username: username,
                     })
-                    .eq('id', session.user.id); // Match the profile by user ID
-    
+                    .eq('id', session.user.id);
+
                 if (profileError) {
                     console.error('Error updating profile:', profileError.message);
                     setError('Failed to update user profile.');
@@ -54,58 +52,65 @@ export default function SignUp() {
     };
 
     return (
-        <div className="signup-container">
-            <h2>Sign Up</h2>
-            <form onSubmit={handleSignUp}>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Rewrite Password:</label>
-                    <input
-                        type="password"
-                        value={passwordRewrite}
-                        onChange={(e) => setPasswordRewrite(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Full Name:</label>
-                    <input
-                        type="text"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                {error && <p className="error-message">{error}</p>}
-                {success && <p className="success-message">{success}</p>}
-                <button type="submit">Sign Up</button>
-            </form>
+        <div className="login-container">
+        <div className="login-container-wrapper">
+            <img src="../public/stadium-image.png" className="stadium-image" />
+            <div className="login-form-container">
+                <h2 className="login-title">SUBASTAS CHIVAS</h2>
+                <form onSubmit={handleSignUp} className="login-form">
+                    <div className="login-field">
+                        <label>Correo Electrónico:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="login-field">
+                        <label>Contraseña:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="login-field">
+                        <label>Reescribe la Contraseña:</label>
+                        <input
+                            type="password"
+                            value={passwordRewrite}
+                            onChange={(e) => setPasswordRewrite(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="login-field">
+                        <label>Nombre Completo:</label>
+                        <input
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="login-field">
+                        <label>Username:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <p className="login-error">{error}</p>}
+                    {success && <p className="success-message">{success}</p>}
+                    <button type="submit" className="login-button">
+                        REGISTRARSE
+                    </button>
+                </form>
+            </div>
+        </div>
         </div>
     );
 }

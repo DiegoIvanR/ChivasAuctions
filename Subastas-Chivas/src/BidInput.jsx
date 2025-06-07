@@ -162,7 +162,7 @@ export default function BidInput({ jersey, onBidUpdate }) {
       {showPopup && user && hasPaymentMethod && (
         <ConfirmationPopup
           bid={bid}
-          jerseyId={jersey.jersey_id}
+          jerseyName={jersey.player_name}
           termsAccepted={termsAccepted}
           onCheckboxChange={(e) => setTermsAccepted(e.target.checked)}
           onConfirm={handleConfirm}

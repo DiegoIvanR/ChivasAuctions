@@ -7,7 +7,7 @@ export default function PaymentMethodRequiredPopup({ onCancel }) {
 
   const handleAddCard = () => {
     // Navigate only when the user clicks the button
-    navigate('/add-card');
+    navigate('/dashboardUsuario/ajustes');
   };
 
   return (
@@ -17,9 +17,9 @@ export default function PaymentMethodRequiredPopup({ onCancel }) {
           <span className="popup-close-x">×</span>
         </button>
 
-        <p className="popup-message">No tienes una tarjeta registrada</p>
+        <p className="popup-title">No tienes una tarjeta registrada</p>
         <div className="popup-actions">
-          <button className="popup-login" onClick={handleAddCard}>
+          <button className="popup-confirm" onClick={handleAddCard}>
             Añadir Tarjeta
           </button>
         </div>

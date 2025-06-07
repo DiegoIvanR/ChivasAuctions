@@ -7,7 +7,6 @@ import Welcome from './Welcome';
 import LoginForm from './LoginForm'; // Import the new LoginForm component
 
 export default function Login() {
-  // Local component state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
@@ -86,11 +85,11 @@ export default function Login() {
         id: authData.user.id,
         email: authData.user.email,
         email_confirmed: !!authData.user.confirmed_at,
-        role: authData.user.role,
+        role: profile.role,
         avatar_url: profile.avatar_url,
         full_name: profile.full_name,
         username: profile.username,
-        profile_role: profile.role,
+        profile_role: profile.role, // Include profile_role
         session: {
           access_token: authData.session.access_token,
           refresh_token: authData.session.refresh_token,
