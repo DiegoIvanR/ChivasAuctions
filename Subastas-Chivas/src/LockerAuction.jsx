@@ -209,6 +209,7 @@ export default function LockerAuction() {
 
   return (
     <div className="locker-auction">
+      <div className="locker-auction-overlay"/>
       <img
         ref={lockerImageRef}
         src="../public/locker-complete.png"
@@ -219,6 +220,7 @@ export default function LockerAuction() {
   
       <div className="locker-auction-jersey">
         <img src="../public/locker.png" className="locker-auction-jersey-locker-img" alt="Locker" />
+        <img src="../public/hanger.png" className="locker-auction-hanger" alt="Jersey Hanger" />
         <img src={jersey.image_url} className="locker-auction-jersey-img" alt="Jersey" />
         <img src="../public/locker-cabinet.png" className="locker-cabinet" alt="Locker Cabinet" />
         <div className="locker-auction-auction">

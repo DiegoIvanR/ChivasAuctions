@@ -1,3 +1,4 @@
+// filepath: [AddCardForm.jsx](http://_vscodecontentref_/2)
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "./supabaseClient";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -13,7 +14,6 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
   const [currentUser, setCurrentUser] = useState(null);
   const processingRef = useRef(false); // Prevent double submissions
 
-  // Check if user already has a payment method on component mount
   useEffect(() => {
     checkExistingPaymentMethod();
   }, []);
@@ -22,7 +22,7 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
     try {
       const { data: user, error: userError } = await supabase.auth.getUser();
       if (userError || !user?.user) return;
-      
+
       setCurrentUser(user.user);
 
       const { data: profile, error: profileError } = await supabase
@@ -42,24 +42,22 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Prevent double submissions
+
     if (processingRef.current) {
       return;
     }
-    
+
     setErrorMsg(null);
     setSuccessMsg(null);
-  
+
     if (!stripe || !elements) {
       return setErrorMsg("Stripe no está listo");
     }
-  
+
     processingRef.current = true;
     setIsProcessing(true);
 
     try {
-      // Get current session token
       const { data: session, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !session?.session?.access_token) {
         setErrorMsg("No se pudo autenticar. Por favor, inicia sesión nuevamente.");
@@ -68,7 +66,6 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         return;
       }
 
-      // Fetch client_secret from Edge Function
       const response = await fetch(
         "https://tlhejbmdwowbhcyviydm.functions.supabase.co/createOrUpdateStripeCustomer",
         {
@@ -88,7 +85,7 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         setIsProcessing(false);
         return;
       }
-    
+
       const { client_secret, customer_id } = data;
       if (!client_secret) {
         setErrorMsg("No se pudo obtener el client_secret del SetupIntent");
@@ -97,7 +94,6 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         return;
       }
 
-      // Get card element
       const cardElement = elements.getElement(CardElement);
       if (!cardElement) {
         setErrorMsg("No se encontró el elemento de tarjeta");
@@ -105,8 +101,7 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         setIsProcessing(false);
         return;
       }
-    
-      // Confirm SetupIntent with Stripe
+
       const confirmResult = await stripe.confirmCardSetup(client_secret, {
         payment_method: {
           card: cardElement,
@@ -116,7 +111,7 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
           },
         },
       });
-    
+
       if (confirmResult.error) {
         console.error("Error confirmando SetupIntent:", confirmResult.error);
         setErrorMsg(confirmResult.error.message);
@@ -124,8 +119,7 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         setIsProcessing(false);
         return;
       }
-    
-      // Get the payment method ID from the successful setup
+
       const paymentMethodId = confirmResult.setupIntent.payment_method;
       if (!paymentMethodId) {
         setErrorMsg("No se pudo obtener el método de pago");
@@ -133,15 +127,14 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         setIsProcessing(false);
         return;
       }
-    
-      // Save the payment method ID to the user's profile
+
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ 
+        .update({
           default_payment_method_id: paymentMethodId,
         })
         .eq("id", currentUser.id);
-    
+
       if (updateError) {
         console.error("Error guardando payment_method_id:", updateError);
         setErrorMsg("No se pudo guardar el método de pago en el perfil");
@@ -149,25 +142,21 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
         setIsProcessing(false);
         return;
       }
-    
-      // SUCCESS! 
-      setSuccessMsg("🎉 Método de pago configurado correctamente. Ya puedes participar en subastas vinculantes.");
-      
-      // Notify parent component if callback provided
+
+      setSuccessMsg("Método de pago configurado correctamente. Ya puedes participar en subastas vinculantes.");
+
       if (onPaymentMethodSaved) {
         onPaymentMethodSaved({
           paymentMethodId,
-          customerId: customer_id
+          customerId: customer_id,
         });
       }
 
-      // Update state after a brief delay to ensure all operations complete
       setTimeout(() => {
         setHasPaymentMethod(true);
         processingRef.current = false;
         setIsProcessing(false);
       }, 500);
-
     } catch (error) {
       console.error("Unexpected error:", error);
       setErrorMsg("Error inesperado. Por favor, intenta nuevamente.");
@@ -184,32 +173,11 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
 
   if (hasPaymentMethod) {
     return (
-      <div className="stripe-add" style={{ maxWidth: 500, margin: "0 auto" }}>
-        <div style={{ 
-          padding: 20, 
-          backgroundColor: "#f0f8f0", 
-          border: "1px solid #4caf50", 
-          borderRadius: 8,
-          textAlign: "center"
-        }}>
-          <h3 style={{ color: "#2e7d32", margin: "0 0 10px 0" }}>
-            ✅ Método de Pago Configurado
-          </h3>
-          <p style={{ color: "#2e7d32", margin: 0 }}>
-            Tu tarjeta está lista para participar en subastas vinculantes
-          </p>
-          <button
-            onClick={handleChangePaymentMethod}
-            style={{
-              marginTop: 15,
-              padding: "8px 16px",
-              backgroundColor: "transparent",
-              color: "#2e7d32",
-              border: "1px solid #2e7d32",
-              borderRadius: 4,
-              cursor: "pointer",
-            }}
-          >
+      <div className="stripe-add">
+        <div className="payment-method-configured">
+          <h3 className="binding-auctions-warning-title">Método de Pago Configurado</h3>
+          <p className="binding-auctions-warning-text success">Tu tarjeta está lista para participar en subastas vinculantes</p>
+          <button onClick={handleChangePaymentMethod} className="change-button">
             Cambiar Método de Pago
           </button>
         </div>
@@ -218,93 +186,40 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
   }
 
   return (
-    <div className="stripe-add" style={{ maxWidth: 500, margin: "0 auto" }}>
-      <div style={{ 
-        padding: 20, 
-        backgroundColor: "#fff3cd", 
-        border: "1px solid #ffc107", 
-        borderRadius: 8,
-        marginBottom: 20
-      }}>
-        <h3 style={{ color: "#856404", margin: "0 0 10px 0" }}>
-          ⚖️ Subastas Vinculantes
-        </h3>
-        <p style={{ color: "#856404", margin: 0, fontSize: "14px" }}>
-          Al configurar tu método de pago, aceptas que todas tus pujas serán 
-          <strong> legalmente vinculantes</strong>. Si ganas una subasta, 
-          el pago se procesará automáticamente.
+    <div className="stripe-add">
+      <div className="binding-auctions-warning">
+        <h3 className="binding-auctions-warning-title">Subastas Vinculantes</h3>
+        <p className="binding-auctions-warning-text">
+          Al configurar tu método de pago, aceptas que todas tus pujas serán <strong>legalmente vinculantes</strong>. Si ganas una subasta, el pago se procesará automáticamente.
         </p>
       </div>
 
       <h2 className="stripe-text">Configurar Método de Pago</h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ 
-          border: "1px solid #ccc", 
-          padding: 15, 
-          borderRadius: 8,
-          backgroundColor: "#fafafa"
-        }}>
-          <CardElement 
-            options={{ 
+        <div className="card-element-container">
+          <CardElement
+            options={{
               hidePostalCode: false,
               style: {
                 base: {
-                  fontSize: '16px',
-                  color: '#424770',
-                  '::placeholder': {
-                    color: '#aab7c4',
+                  fontSize: "16px",
+                  color: "#424770",
+                  "::placeholder": {
+                    color: "#aab7c4",
                   },
                 },
               },
-            }} 
+            }}
           />
         </div>
-        
-        <button
-          type="submit"
-          disabled={!stripe || isProcessing}
-          style={{
-            marginTop: 20,
-            width: "100%",
-            padding: "12px 20px",
-            backgroundColor: isProcessing ? "#ccc" : "#6772e5",
-            color: "white",
-            border: "none",
-            borderRadius: 8,
-            cursor: isProcessing ? "not-allowed" : "pointer",
-            fontSize: "16px",
-            fontWeight: "600",
-          }}
-        >
-          {isProcessing ? "Procesando..." : "💳 Configurar Método de Pago"}
+
+        <button type="submit" disabled={!stripe || isProcessing} className="submit-button">
+          {isProcessing ? "Procesando..." : "Configurar Método de Pago"}
         </button>
       </form>
 
-      {errorMsg && (
-        <div style={{ 
-          color: "#d32f2f", 
-          marginTop: 20, 
-          padding: 15,
-          backgroundColor: "#ffebee",
-          border: "1px solid #f8bbd9",
-          borderRadius: 8
-        }}>
-          ❌ {errorMsg}
-        </div>
-      )}
-      
-      {successMsg && (
-        <div style={{ 
-          color: "#2e7d32", 
-          marginTop: 20,
-          padding: 15,
-          backgroundColor: "#f0f8f0",
-          border: "1px solid #4caf50",
-          borderRadius: 8
-        }}>
-          {successMsg}
-        </div>
-      )}
+      {errorMsg && <div className="error-message">{errorMsg}</div>}
+      {successMsg && <div className="success-message">{successMsg}</div>}
     </div>
   );
 }

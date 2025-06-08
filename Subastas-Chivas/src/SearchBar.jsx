@@ -27,6 +27,8 @@ function SearchBar() {
     <div className="search-bar">
       <input
         type="text"
+        id="search-input" // Add id attribute
+        name="search" // Add name attribute
         placeholder="Buscar por jugador o equipo"
         className="search-input"
         value={query}

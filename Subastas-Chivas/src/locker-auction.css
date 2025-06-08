@@ -56,6 +56,8 @@ return(
 	display: block;
 	width: 100%;
     z-index: -1;
+    filter: brightness(0.7); /* Darken the image */
+
 }
 
 .locker-auction-jersey{
@@ -71,12 +73,22 @@ return(
     z-index: 1;
     left: 100%;
     width: 100%;
+    filter: brightness(0.7); /* Darken the image */
+
+}
+.locker-auction-hanger{
+  position: absolute;
+    z-index: 1;
+    width: 60%;
+    left: 122%;
+    top: 24%;
 }
 .locker-auction-jersey-img{
     position: absolute;
     z-index: 1;
     width: 100%;
-    top: 35%;
+    top: 30.5%;
+    left: 102%;
 
 }
 
@@ -86,6 +98,8 @@ return(
     left: 0%;
     z-index: 1;
     width: 200%;
+    filter: brightness(0.7); /* Darken the image */
+
 
 }
 
@@ -102,6 +116,8 @@ return(
     z-index: -100;
     width: 100%;
     height: 100%;
+    filter: brightness(0.7); /* Darken the image */
+
 }
 
 .auction-info{
@@ -134,7 +150,7 @@ return(
 	font-weight: 700;
 	font-size: 64px;
 	color: #D3D3D3;
-	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8);
+	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
 	text-align: center;
 	z-index: 3;
 	pointer-events: none;
