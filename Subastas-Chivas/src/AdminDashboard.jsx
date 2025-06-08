@@ -59,15 +59,25 @@ const AdminDashboard = () => {
         <p>No hay subastas registradas.</p>
       ) : (
         auctions.map((auction) => (
-          <div className="auction-card" key={auction.jersey_id}>
-            <p><strong>Jugador:</strong> {auction.player_name || "Desconocido"}</p>
-            <p><strong>Número:</strong> {auction.jersey_number || "N/A"}</p>
-            <p><strong>Equipo rival:</strong> {auction.matches?.opponent || "N/A"}</p>
-            <p><strong>Fecha del partido:</strong> {auction.matches?.match_date || "N/A"}</p>
-            <p><strong>Puja inicial:</strong> {auction.auctions?.starting_bid || "N/A"} MXN</p>
-            <p><strong>Inicio:</strong> {auction.auctions?.start_time || "N/A"}</p>
-            <p><strong>Fin:</strong> {auction.auctions?.end_time || "N/A"}</p>
-          </div>
+<div className="auction-card" key={auction.jersey_id}>
+  <div className="auction-info">
+    <p><strong>Jugador:</strong> {auction.player_name || "Desconocido"}</p>
+    <p><strong>Número:</strong> {auction.jersey_number || "N/A"}</p>
+    <p><strong>Equipo rival:</strong> {auction.matches?.opponent || "N/A"}</p>
+    <p><strong>Fecha del partido:</strong> {auction.matches?.match_date || "N/A"}</p>
+    <p><strong>Puja inicial:</strong> {auction.auctions?.starting_bid || "N/A"} MXN</p>
+    <p><strong>Inicio:</strong> {auction.auctions?.start_time || "N/A"}</p>
+    <p><strong>Fin:</strong> {auction.auctions?.end_time || "N/A"}</p>
+  </div>
+  {auction.image_url && (
+    <img
+      className="jersey-image"
+      src={auction.image_url}
+      alt={`Jersey de ${auction.player_name}`}
+    />
+  )}
+</div>
+
         ))
       )}
     </div>
