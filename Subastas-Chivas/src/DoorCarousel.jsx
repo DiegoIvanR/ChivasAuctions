@@ -53,20 +53,25 @@ useEffect(() => {
         return;
       }
 
-      const transformedDoors = data.map((row) => {
+      const uniqueMatches = new Map();
+      data.forEach((row) => {
         const { jerseys } = row;
         const { matches } = jerseys;
 
-        return {
-          match_id: matches.match_id,
-          match_date: matches.match_date,
-          opponent: matches.opponent,
-          venue: matches.venue,
-          competition: matches.competition,
-          jersey_id: jerseys.jersey_id,
-          auction_id: row.auction_id,
-        };
+        if (!uniqueMatches.has(matches.match_id)) {
+          uniqueMatches.set(matches.match_id, {
+            match_id: matches.match_id,
+            match_date: matches.match_date,
+            opponent: matches.opponent,
+            venue: matches.venue,
+            competition: matches.competition,
+            jersey_id: jerseys.jersey_id,
+            auction_id: row.auction_id,
+          });
+        }
       });
+
+      const transformedDoors = Array.from(uniqueMatches.values());
 
       const nPaddingDoors = Math.max(0, 3 - transformedDoors.length);
       const leftPaddingDoors = Math.floor(nPaddingDoors / 2);

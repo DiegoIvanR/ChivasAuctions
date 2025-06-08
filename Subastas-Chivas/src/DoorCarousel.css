@@ -282,16 +282,26 @@
 
 /* Input Field Style */
 .search-input {
-	width: 100%;
-	padding: 0.5rem 1rem; /* Padding inside the input */
+    width: 100%;
+    padding: 0.5rem 1rem; /* Padding inside the input */
     border: none; /* No border */
     border-radius: 30px; /* Smooth rounded corners */
     font-size: 1rem;
     outline: none; /* Remove default focus outline */
-    background-color: transparent; /* Transparent background for seamless look */
-    color: #49454F; /* Dark text color */
-	/*add focus???*/
+    color: #333 !important; /* Force text color to white */
+    background-color: #ECE6F0 !important; /* Force background color */
+    -webkit-appearance: none; /* Remove browser-specific styles */
+    appearance: none; /* Remove browser-specific styles */
 }
+
+/* Add focus styles to ensure consistent behavior */
+.search-input:focus {
+    color: #333 !important; /* Ensure text remains white on focus */
+    background-color: #ECE6F0 !important; /* Ensure background remains light on focus */
+    border: none; /* No border on focus */
+    outline: none; /* Remove default focus outline */
+}
+
 
 /* Search Icon Style */
 .search-icon {
@@ -610,11 +620,20 @@
 	pointer-events: none;
 	line-height: 40px;
   }
+.locker-hanger{
 
+	z-index: 2;
+	position: absolute;
+	width: 60%;
+	top: 24.3%;
+	left: 21.5%;
+}
   .locker-jersey-image {
 	z-index: 2;
 	position: absolute;
 	width: 100%;
+	top: 30%;
+	left: 2%;
   }
   
   .locker-status {
@@ -784,4 +803,3 @@
 		content: '−';
 	  }
   }
-  

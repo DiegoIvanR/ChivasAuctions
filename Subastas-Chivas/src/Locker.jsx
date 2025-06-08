@@ -77,6 +77,7 @@ const Locker = ({ locker }) => {
             e.target.style.width = 'auto';
           }}
         />
+        {locker.image_url && <img src='../public/hanger.png' className='locker-hanger' alt='hanger' />}
         {locker.image_url && <img className="locker-jersey-image" src={locker.image_url} alt="Jersey" />}
         {locker.player_name && <div className="locker-label">{locker.player_name}</div>}
         {locker.matches?.opponent && (
