@@ -1,53 +1,258 @@
-.admin-dashboard-container {
-  padding: 30px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+
+.admin-dashboard-wrapper {
+  padding: 2rem;
+  background-color: #000;
+  min-height: 100vh;
   color: white;
+  font-family: 'Inter', sans-serif;
 }
 
-.admin-dashboard-container h2 {
-  margin-bottom: 30px;
-  font-size: 2rem;
-  text-align: center;
+.dashboard-top-bar {
+  background: linear-gradient(to right, #111, #222);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 12px 12px;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  gap: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.dashboard-button {
+  background-color: #2d2d2d;
   color: white;
+  font-weight: 600;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-button.red {
+  background-color: #e63946;
+}
+
+.dashboard-button.active {
+  background-color: #444;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dashboard-tab {
+  background-color: transparent;
+  border: 1px solid white;
+  padding: 0.5rem 1.2rem;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboard-tab.active {
+  background-color: white;
+  color: black;
+}
+
+.admin-dashboard-board {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
 }
 
 .auction-card {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background: rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: 150px 1fr 1fr;
+  background-color: #1c1c1c;
   border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 25px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  gap: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  gap: 1.5rem;
+  align-items: flex-start;
 }
 
-.auction-card img {
-  width: 150px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
+.jersey-image {
+  width: 100%;
+  max-width: 130px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.bid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  min-width: 200px;
+  max-width: 260px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.bid-history-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow-y: auto;
+  max-height: 150px;
+  padding-right: 6px;
+  width: 100%;
+}
+
+.bid-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  font-size: 0.72rem;
+  color: white;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bid-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bid-row span:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.bid-history-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bid-history-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
 }
 
 .auction-info {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  flex: 1;
-  gap: 8px;
+  gap: 0.4rem;
+  font-size: 0.95rem;
 }
 
 .auction-info p {
   margin: 0;
-  font-size: 0.95rem;
-  color: white;
-  line-height: 1.5;
 }
 
-.auction-info p strong {
-  color: #ff5e57;
+.auction-info strong {
   font-weight: 600;
 }
+
+/* Corrige visualización del componente BidHistory solo en AdminDashboard */
+
+.bid-history-wrapper .bid-history-container {
+  position: static !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  justify-content: flex-start !important;
+  color: white !important;
+}
+
+.bid-history-wrapper .bid-list {
+  margin: 0 !important;
+  max-height: 150px !important;
+  overflow-y: auto !important;
+  padding-right: 6px;
+}
+
+.bid-history-wrapper .bid-row {
+  font-size: 0.72rem !important;
+  padding: 0.2rem 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1.5fr 1fr !important;
+  gap: 0.4rem !important;
+  color: white !important;
+  align-items: center !important;
+}
+
+.bid-history-wrapper .bidder,
+.bid-history-wrapper .timestamp,
+.bid-history-wrapper .amount {
+  font-size: 0.72rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.bid-history-wrapper .amount {
+  text-align: right !important;
+}
+
+/* Ocultar el título 'HISTORIAL DE PUJAS' solo en esta vista */
+.bid-history-wrapper .title {
+  display: none !important;
+}
+
+/* Mejorar manejo de texto largo en las pujas */
+.bid-history-wrapper .bidder,
+.bid-history-wrapper .timestamp,
+.bid-history-wrapper .amount {
+  font-size: 0.72rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.admin-dashboard-wrapper {
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
