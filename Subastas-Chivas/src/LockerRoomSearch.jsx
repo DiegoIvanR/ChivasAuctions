@@ -68,7 +68,7 @@ export default function LockerRoomSearch() {
                 auction_status,
                 start_time,
                 end_time,
-                starting_bid
+                highest_bid
               ),
               matches (
                 opponent,
@@ -100,7 +100,7 @@ export default function LockerRoomSearch() {
                 auction_status,
                 start_time,
                 end_time,
-                starting_bid
+                highest_bid
               ),
               matches (
                 opponent,
@@ -129,7 +129,7 @@ export default function LockerRoomSearch() {
                 auction_status,
                 start_time,
                 end_time,
-                starting_bid
+                highest_bid
               ),
               matches!inner (
                 opponent,
@@ -167,7 +167,7 @@ export default function LockerRoomSearch() {
                 auction_status,
                 start_time,
                 end_time,
-                starting_bid
+                highest_bid
               ),
               matches (
                 opponent,

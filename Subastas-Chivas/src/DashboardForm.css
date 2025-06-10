@@ -1,148 +1,249 @@
 .dashboard-form-wrapper {
-  background: url('/public/estadio-interior.png') no-repeat center center;
+  position: relative; /* Ensure the pseudo-element is positioned relative to this container */
+  background-image: url('/stadium-admin.png');
+  background-position: center;
   background-size: cover;
-  min-height: 100vh;
-  padding: 2rem;
+  width: 100%;
+  height: auto;
   color: white;
+  z-index: 1; /* Ensure content is above the overlay */
+  overflow: hidden; /* Prevent content from overflowing */
+  padding: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.dashboard-form-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Black overlay with 0.8 alpha */
+  z-index: -1; /* Place the overlay behind the content */
 }
 
 .dashboard-title {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 2rem;
+  margin-top: 5rem;
 }
 
 .form-content {
-  max-width: 600px;
+  width: 100%;
   margin: auto;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  background-color: rgba(0, 0, 0, 0.8);
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-input[type="text"] {
-  padding: 1rem;
-  border-radius: 10px;
-  border: none;
-  background-color: #2c2c2e;
+
+
+
+
+/* CHECKBOX STYLES */
+.checkbox-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.custom-checkbox {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #f2354e;
+  border-radius: 2px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.custom-checkbox:checked {
+  background-color: #f2354e;
+  border-color: #f2354e;
+}
+
+.custom-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: white;
-  font-size: 1rem;
+  font-size: 14px;
+  font-weight: bold;
 }
 
-input[type="text"]::placeholder {
-  color: #aaaaaa;
+.checkbox-text {
+  font-family: Rubik, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: white;
+  user-select: none;
 }
+.custom-calendar {
+  background: #ECE6F02E;
 
-/* CALENDARIO */
-
-.calendar-container {
-  background: rgba(30, 30, 30, 0.85);
+  border-radius: 8px; /* Reduced border radius */
+  padding: 0.8rem; /* Reduced padding */
+  margin: 0.5rem 0; /* Reduced margin */
   backdrop-filter: blur(8px);
-  padding: 1.5rem;
-  border-radius: 15px;
-  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 50%; /* Set width to 50% */
+  height: 80%;
+  font-size: 0.8rem; /* Reduced font size */
 }
 
 .calendar-header {
-  text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem; /* Reduced margin */
 }
 
-.calendar-title {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #ffffff;
-  margin-bottom: 0.2rem;
-}
-
-.calendar-date {
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-bottom: 0.8rem;
-}
-
-/* Navegación del mes */
-.calendar-nav-container {
-  position: relative;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.calendar-month {
+.select-date-text {
   color: #f2354e;
-  font-weight: bold;
-  font-size: 1rem;
-  text-transform: capitalize;
-  display: inline-block;
+  font-size: 0.7rem; /* Reduced font size */
+  margin-bottom: 0.3rem; /* Reduced margin */
+  display: block;
 }
 
-.arrow {
-  position: absolute;
-  top: 0;
+.selected-date-display {
+  color: white;
+  font-size: 0.9rem; /* Reduced font size */
+  font-weight: 300;
+  margin-bottom: 0.8rem; /* Reduced margin */
+}
+
+.calendar-body {
+  width: 100%;
+}
+
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem; /* Reduced margin */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem; /* Reduced padding */
+}
+
+.calendar-month-year {
+  color: #f2354e;
+  font-size: 0.8rem; /* Reduced font size */
+  font-weight: 500;
+}
+
+.nav-arrows {
+  display: flex;
+  gap: 0.5rem; /* Reduced gap */
+}
+
+.nav-arrow {
   background: none;
   border: none;
   color: #f2354e;
-  font-size: 1.4rem;
+  font-size: 1rem; /* Reduced font size */
   cursor: pointer;
-}
-
-.left-arrow {
-  left: 0;
-}
-
-.right-arrow {
-  right: 0;
-}
-
-/* Días */
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.3rem;
-  margin-bottom: 1rem;
-}
-
-.day-name,
-.calendar-day {
-  padding: 0.6rem;
-  border-radius: 50%;
-  background-color: rgba(80, 80, 80, 0.3);
-  text-align: center;
-  font-size: 0.9rem;
-  color: white;
+  padding: 0.2rem; /* Reduced padding */
+  border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
-.calendar-day:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.nav-arrow:hover {
+  background-color: rgba(242, 53, 78, 0.1);
+}
+
+.calendar-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem; /* Reduced gap */
+  margin-bottom: 0.3rem; /* Reduced margin */
+}
+
+.day-header {
+  text-align: center;
+  color: #999;
+  font-size: 0.7rem; /* Reduced font size */
+  padding: 0.3rem; /* Reduced padding */
+  font-weight: 500;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* Ensure 7 equal columns */
+  gap: 0.3rem; /* Adjust spacing between cells */
+}
+
+.calendar-day {
+  aspect-ratio: 1; /* Maintain square cells */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.7rem; /* Adjust font size to fit */
+  color: white;
+  transition: all 0.2s ease;
+  min-height: 25px; /* Ensure consistent size */
+  overflow: hidden; /* Prevent overflow */
+  text-align: center; /* Center-align text */
+}
+
+.calendar-day.clickable {
+  cursor: pointer;
+}
+
+.calendar-day.clickable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .calendar-day.selected {
   background-color: #f2354e;
   color: white;
+  font-weight: 600;
 }
 
-/* Botones dentro del calendario */
-.calendar-actions {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
+.time-picker {
+  margin-top: 0.8rem; /* Reduced margin */
+  padding-top: 0.5rem; /* Reduced padding */
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.cancel-btn,
-.ok-btn {
-  background: none;
-  border: none;
-  color: #f2354e;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
+.time-input {
+  width: 100%;
+  padding: 0.5rem; /* Reduced padding */
+  background-color: rgba(44, 44, 46, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px; /* Reduced border radius */
+  color: white;
+  font-size: 0.8rem; /* Reduced font size */
+  text-align: center;
 }
 
+.time-input:focus {
+  outline: none;
+  border-color: #f2354e;
+  box-shadow: 0 0 0 2px rgba(242, 53, 78, 0.2);
+}
 /* Botón final */
 .confirm-btn {
   margin-top: 2rem;
@@ -150,18 +251,29 @@ input[type="text"]::placeholder {
   font-size: 1.2rem;
   background-color: #f2354e;
   border: none;
-  border-radius: 12px;
+  border-radius: 50px;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  max-width: 530px;
+  margin: auto;
+
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 3%;
+
 }
 
 .confirm-btn:hover {
   background-color: #c2183d;
 }
 
-
-
+.confirm-btn:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
 
 .image-upload {
   display: flex;
@@ -190,4 +302,60 @@ input[type="text"]::placeholder {
   border-radius: 10px;
   object-fit: cover;
   border: 2px solid #f2354e;
+}
+
+.dashboard-body{
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-body{
+  display: flex;
+  justify-content: space-around;
+  padding: 0 100px;
+  gap: 100px;
+}
+
+.dashboard-input{
+  width: 100%;
+  height: 35px;
+  border-radius: 2.5px;
+  border: 1px solid #B8B8B8;
+  background: #FFFFFF1A;
+
+  font-family: Rubik, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: white;
+}
+
+.dashboard-input:focus {
+  outline: none;
+  border-color: #f2354e; /* Highlight border on focus */
+}
+
+.form-column{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 2 0rem;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.form-2columns{
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Remove number input spinner for Firefox */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Remove number input spinner for Chrome, Safari, Edge */
+  margin: 0;
 }
