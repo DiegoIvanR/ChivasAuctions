@@ -87,7 +87,7 @@ const MisPedidos = () => {
         <div className="dashboard-buffer" style={{ height: '80px' }}></div>
 
         <main className="dashboard-main">
-          <h1 className="dashboard-title">{user.full_name}</h1>
+          <h1 className="dashboard-title dashboard-title--pedidos">{user.full_name}</h1>
           <hr className="dashboard-divider" />
 
           <div className="mispedidos-filters">
@@ -95,10 +95,10 @@ const MisPedidos = () => {
             <button className={filter === 'ENTREGADOS' ? 'active' : ''} onClick={() => setFilter('ENTREGADOS')}>ENTREGADOS</button>
           </div>
 
-          <div className="dashboard-body">
+          <div className="dashboard-body dashboard-body--pedidos">
             <DashboardAside />
 
-            <section className="dashboard-section">
+            <section className="dashboard-section dashboard-section--pedidos">
               {pedidosToDisplay.length === 0 ? (
                 <p>No hay subastas {filter.toLowerCase()} disponibles.</p>
               ) : (
@@ -130,8 +130,8 @@ const MisPedidos = () => {
     </div>
   );
 };
-
 export default MisPedidos;
+
 
 
 

@@ -100,3 +100,27 @@
   font-size: 0.75rem;
   color: #ccc;
 }
+
+.dashboard-pujas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15px;
+  gap: 20px;
+}
+
+.dashboard-body--pujas {
+  display: flex;
+}
+
+.dashboard-section--pujas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-title--pujas {
+  text-align: left;
+  margin-left: 40px;
+}

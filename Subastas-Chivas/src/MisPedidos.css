@@ -68,3 +68,23 @@
   font-weight: bold;
   transition: 0.3s ease;
 }
+
+.dashboard-body--pedidos {
+  display: flex;
+}
+
+.dashboard-section--pedidos {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-aside {
+  flex: 0 0 200px;
+}
+
+.dashboard-title--pedidos {
+  text-align: left;
+  margin-left: 40px;
+}

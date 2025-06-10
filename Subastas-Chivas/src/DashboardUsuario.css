@@ -85,7 +85,9 @@ body {
 }
 
 .dashboard-divider {
-  margin-bottom: 20px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 2);
+  margin: 20px 0;
 }
 
 .dashboard-body {
@@ -160,8 +162,21 @@ body {
 .animate-pop-in {
   animation: popIn 0.5s ease-out;
 }
+
 .dashboard-logout:hover {
   cursor: pointer;
   font-weight: bold;
   text-decoration: underline;
+}
+
+.dashboard-title--perfil {
+  text-align: left;
+  align-self: flex-start;
+  margin-left: 40px;
+}
+
+.dashboard-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex;
 }
