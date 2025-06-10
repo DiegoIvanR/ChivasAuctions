@@ -19,6 +19,9 @@ const DashboardForm = () => {
     image: null, // Store the actual File object
     used: false, // New checkbox state
     signed: false, // New checkbox state
+    description: '',
+    venue: '',
+    competition: '',
   });
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -96,7 +99,7 @@ const DashboardForm = () => {
   };
 
   const formatSelectedDate = (date) => {
-    if (!date) return 'Select date';
+    if (!date) return 'Seleccione una fecha';
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',
@@ -164,8 +167,8 @@ const DashboardForm = () => {
 
     return (
       <div className="custom-calendar">
+        <div className='calendar-title'>{title}</div>
         <div className="calendar-header">
-          <span className="select-date-text">{title}</span>
           <div className="selected-date-display">
             {formatSelectedDate(selectedDate)}
           </div>
@@ -262,22 +265,34 @@ const DashboardForm = () => {
       alert('Por favor sube una imagen de la playera.');
       return false;
     }
-
+    if (!formData.description.trim()) {
+      alert('Por favor ingresa una descripción del partido.');
+      return false;
+    }
+    if (!formData.venue.trim()) {
+      alert('Por favor ingresa el lugar del partido.');
+      return false;
+    }
+    if (!formData.competition.trim()) {
+      alert('Por favor ingresa la competencia.');
+      return false;
+    }
+  
     // Validate date logic
     const auctionStart = formData.auctionStart;
     const auctionEnd = formData.auctionEnd;
     const matchDate = formData.matchDate;
-
+  
     if (auctionStart >= auctionEnd) {
       alert('La fecha de inicio de la subasta debe ser anterior a la fecha de fin.');
       return false;
     }
-
+  
     if (auctionStart < matchDate) {
       alert('La subasta debe iniciar después o el día del partido.');
       return false;
     }
-
+  
     return true;
   };
 
@@ -332,6 +347,8 @@ const DashboardForm = () => {
           .insert({
             opponent: formData.rival,
             match_date: formData.matchDate.toISOString().split('T')[0],
+            venue: formData.venue,
+            competition: formData.competition,
           })
           .select('match_id')
           .single();
@@ -355,6 +372,7 @@ const DashboardForm = () => {
           image_url: publicUrl,
           used: formData.used, // Use checkbox value
           signed: formData.signed, // Use checkbox value
+          description: formData.description,
         })
         .select('jersey_id')
         .single();
@@ -417,98 +435,143 @@ const DashboardForm = () => {
 
   return (
     <div className="dashboard-form-wrapper">
-      <DashboardAside />
       <h2 className="dashboard-title">DASHBOARD</h2>
-
-      <div className="form-content">
-        <input 
-          type="text" 
-          name="playerName" 
-          placeholder="Nombre del jugador" 
-          value={formData.playerName}
-          onChange={handleInputChange} 
-        />
-        <input 
-          type="number" 
-          name="jerseyNumber" 
-          placeholder="Número de la playera" 
-          value={formData.jerseyNumber}
-          onChange={handleInputChange} 
-        />
-        <input 
-          type="text" 
-          name="rival" 
-          placeholder="Equipo rival" 
-          value={formData.rival}
-          onChange={handleInputChange} 
-        />
-        <input 
-          type="number" 
-          name="amount" 
-          placeholder="Monto inicial" 
-          step="0.01"
-          value={formData.amount}
-          onChange={handleInputChange} 
-        />
-
-        {/* Checkbox section */}
-        <div className="checkbox-section">
-          <div className="checkbox-group">
-            <label className="checkbox-label">
-              <input 
-                type="checkbox" 
-                name="used" 
-                checked={formData.used}
-                onChange={handleInputChange}
-                className="custom-checkbox"
-              />
-              <span className="checkbox-text">Playera usada</span>
-            </label>
-          </div>
-          <div className="checkbox-group">
-            <label className="checkbox-label">
-              <input 
-                type="checkbox" 
-                name="signed" 
-                checked={formData.signed}
-                onChange={handleInputChange}
-                className="custom-checkbox"
-              />
-              <span className="checkbox-text">Playera firmada</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Custom Calendar Components */}
-        <CustomCalendar title="📅 Fecha del partido" calendarType="matchDate" />
-        <CustomCalendar title="⏱ Inicio de la subasta" calendarType="auctionStart" includeTime={true} />
-        <CustomCalendar title="🏁 Fin de la subasta" calendarType="auctionEnd" includeTime={true} />
+      <div className="dashboard-body">
+        <DashboardAside />
         
+        <div className='form-body'>
         <div className="image-upload">
-          <label htmlFor="imageUpload">Subir imagen de la playera:</label>
-          <input 
-            type="file" 
-            id="imageUpload" 
-            accept="image/*" 
-            onChange={handleImageUpload} 
-          />
-          {imagePreview && (
-            <img 
-              src={imagePreview} 
-              alt="Vista previa" 
-              className="image-preview" 
-              style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+            <label htmlFor="imageUpload">Subir imagen de la playera:</label>
+            <input 
+              type="file" 
+              id="imageUpload" 
+              accept="image/*" 
+              onChange={handleImageUpload} 
             />
-          )}
-        </div>
+            {imagePreview && (
+              <img 
+                src={imagePreview} 
+                alt="Vista previa" 
+                className="image-preview" 
+                style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+              />
+            )}
+          </div>
+        <div className="form-content">
+          <input 
+            type="text" 
+            name="playerName" 
+            placeholder="Nombre del jugador" 
+            value={formData.playerName}
+            onChange={handleInputChange}
+            className='dashboard-input'
+          />
+          <input 
+            type="number" 
+            name="jerseyNumber" 
+            placeholder="Número de la playera" 
+            value={formData.jerseyNumber}
+            onChange={handleInputChange}
+            className='dashboard-input'
+            min="0"
+          />
+          <input 
+            type="text" 
+            name="rival" 
+            placeholder="Equipo rival" 
+            value={formData.rival}
+            onChange={handleInputChange} 
+            className='dashboard-input'
+          />
 
-        <button 
-          className="confirm-btn" 
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Creando subasta...' : 'Confirmar subasta'}
-        </button>
+          <div className='form-2columns'>
+            <CustomCalendar title="Fecha del partido" calendarType="matchDate" />
+
+            <div className='form-column'>
+            <input 
+            type="number" 
+            name="amount" 
+            placeholder="Monto inicial" 
+            step="0.01"
+            value={formData.amount}
+            onChange={handleInputChange} 
+            className='dashboard-input'
+            min="0"
+          />
+          <input
+            type="text"
+            name="description" 
+            placeholder="Descripción del jersey" 
+            value={formData.description}
+            onChange={handleInputChange}
+            className='dashboard-input'
+          />
+          <input 
+            type="text" 
+            name="venue" 
+            placeholder="Lugar del partido" 
+            value={formData.venue}
+            onChange={handleInputChange} 
+            className='dashboard-input'
+          />
+          <input 
+            type="text" 
+            name="competition" 
+            placeholder="Competencia" 
+            value={formData.competition}
+            onChange={handleInputChange} 
+            className='dashboard-input'
+          />
+
+          {/* Checkbox section */}
+          <div className="checkbox-section">
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  name="used" 
+                  checked={formData.used}
+                  onChange={handleInputChange}
+                  className="custom-checkbox"
+                />
+                <span className="checkbox-text">Playera usada</span>
+              </label>
+            </div>
+            <div className="checkbox-group">
+              <label className="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  name="signed" 
+                  checked={formData.signed}
+                  onChange={handleInputChange}
+                  className="custom-checkbox"
+                />
+                <span className="checkbox-text">Playera firmada</span>
+              </label>
+            </div>
+            </div>
+            
+          </div>
+          </div>
+
+          {/* Custom Calendar Components */}
+          <div className='form-2columns'>
+            <CustomCalendar title="Inicio de la subasta" calendarType="auctionStart" includeTime={true} />
+            <CustomCalendar title="Fin de la subasta" calendarType="auctionEnd" includeTime={true} />
+          </div>
+          <button 
+            className="confirm-btn" 
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creando subasta...' : 'Confirmar subasta'}
+          </button>
+        </div>
+        
+        </div>
+          
+
+          
       </div>
     </div>
   );

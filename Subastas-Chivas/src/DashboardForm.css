@@ -1,52 +1,53 @@
 .dashboard-form-wrapper {
-  background: url('/public/estadio-interior.png') no-repeat center center;
+  position: relative; /* Ensure the pseudo-element is positioned relative to this container */
+  background-image: url('/stadium-admin.png');
+  background-position: center;
   background-size: cover;
-  min-height: 100vh;
-  padding: 2rem;
+  width: 100%;
+  height: auto;
   color: white;
+  z-index: 1; /* Ensure content is above the overlay */
+  overflow: hidden; /* Prevent content from overflowing */
+  padding: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.dashboard-form-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Black overlay with 0.8 alpha */
+  z-index: -1; /* Place the overlay behind the content */
 }
 
 .dashboard-title {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 2rem;
+  margin-top: 5rem;
 }
 
 .form-content {
-  max-width: 600px;
+  width: 100%;
   margin: auto;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  background-color: rgba(0, 0, 0, 0.8);
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-input[type="text"],
-input[type="number"] {
-  padding: 1rem;
-  border-radius: 10px;
-  border: none;
-  background-color: #2c2c2e;
-  color: white;
-  font-size: 1rem;
-}
 
-input[type="text"]::placeholder,
-input[type="number"]::placeholder {
-  color: #aaaaaa;
-}
+
+
 
 /* CHECKBOX STYLES */
 .checkbox-section {
   display: flex;
-  gap: 2rem;
-  padding: 1rem;
-  background-color: rgba(44, 44, 46, 0.7);
-  border-radius: 10px;
-  margin: 1rem 0;
+  flex-direction: column;
 }
 
 .checkbox-group {
@@ -63,10 +64,10 @@ input[type="number"]::placeholder {
 
 .custom-checkbox {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   border: 2px solid #f2354e;
-  border-radius: 4px;
+  border-radius: 2px;
   background-color: transparent;
   cursor: pointer;
   position: relative;
@@ -90,37 +91,41 @@ input[type="number"]::placeholder {
 }
 
 .checkbox-text {
+  font-family: Rubik, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
   color: white;
-  font-size: 1rem;
   user-select: none;
 }
-
-/* CUSTOM CALENDAR STYLES */
 .custom-calendar {
-  background: rgba(68, 68, 70, 0.95);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 1rem 0;
-  backdrop-filter: blur(10px);
+  background: #ECE6F02E;
+
+  border-radius: 8px; /* Reduced border radius */
+  padding: 0.8rem; /* Reduced padding */
+  margin: 0.5rem 0; /* Reduced margin */
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 50%; /* Set width to 50% */
+  height: 80%;
+  font-size: 0.8rem; /* Reduced font size */
 }
 
 .calendar-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem; /* Reduced margin */
 }
 
 .select-date-text {
   color: #f2354e;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.7rem; /* Reduced font size */
+  margin-bottom: 0.3rem; /* Reduced margin */
   display: block;
 }
 
 .selected-date-display {
   color: white;
-  font-size: 1.5rem;
+  font-size: 0.9rem; /* Reduced font size */
   font-weight: 300;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem; /* Reduced margin */
 }
 
 .calendar-body {
@@ -131,29 +136,29 @@ input[type="number"]::placeholder {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem; /* Reduced margin */
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem; /* Reduced padding */
 }
 
 .calendar-month-year {
   color: #f2354e;
-  font-size: 1rem;
+  font-size: 0.8rem; /* Reduced font size */
   font-weight: 500;
 }
 
 .nav-arrows {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem; /* Reduced gap */
 }
 
 .nav-arrow {
   background: none;
   border: none;
   color: #f2354e;
-  font-size: 1.5rem;
+  font-size: 1rem; /* Reduced font size */
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.2rem; /* Reduced padding */
   border-radius: 4px;
   transition: background-color 0.2s ease;
 }
@@ -171,34 +176,36 @@ input[type="number"]::placeholder {
 .day-headers {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.3rem; /* Reduced gap */
+  margin-bottom: 0.3rem; /* Reduced margin */
 }
 
 .day-header {
   text-align: center;
   color: #999;
-  font-size: 0.9rem;
-  padding: 0.5rem;
+  font-size: 0.7rem; /* Reduced font size */
+  padding: 0.3rem; /* Reduced padding */
   font-weight: 500;
 }
 
 .days-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(7, 1fr); /* Ensure 7 equal columns */
+  gap: 0.3rem; /* Adjust spacing between cells */
 }
 
 .calendar-day {
-  aspect-ratio: 1;
+  aspect-ratio: 1; /* Maintain square cells */
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 0.95rem;
+  font-size: 0.7rem; /* Adjust font size to fit */
   color: white;
   transition: all 0.2s ease;
-  min-height: 40px;
+  min-height: 25px; /* Ensure consistent size */
+  overflow: hidden; /* Prevent overflow */
+  text-align: center; /* Center-align text */
 }
 
 .calendar-day.clickable {
@@ -216,19 +223,19 @@ input[type="number"]::placeholder {
 }
 
 .time-picker {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
+  margin-top: 0.8rem; /* Reduced margin */
+  padding-top: 0.5rem; /* Reduced padding */
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .time-input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem; /* Reduced padding */
   background-color: rgba(44, 44, 46, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border-radius: 6px; /* Reduced border radius */
   color: white;
-  font-size: 1rem;
+  font-size: 0.8rem; /* Reduced font size */
   text-align: center;
 }
 
@@ -237,7 +244,6 @@ input[type="number"]::placeholder {
   border-color: #f2354e;
   box-shadow: 0 0 0 2px rgba(242, 53, 78, 0.2);
 }
-
 /* Botón final */
 .confirm-btn {
   margin-top: 2rem;
@@ -245,10 +251,19 @@ input[type="number"]::placeholder {
   font-size: 1.2rem;
   background-color: #f2354e;
   border: none;
-  border-radius: 12px;
+  border-radius: 50px;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  max-width: 530px;
+  margin: auto;
+
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 3%;
+
 }
 
 .confirm-btn:hover {
@@ -287,4 +302,60 @@ input[type="number"]::placeholder {
   border-radius: 10px;
   object-fit: cover;
   border: 2px solid #f2354e;
+}
+
+.dashboard-body{
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-body{
+  display: flex;
+  justify-content: space-around;
+  padding: 0 100px;
+  gap: 100px;
+}
+
+.dashboard-input{
+  width: 100%;
+  height: 35px;
+  border-radius: 2.5px;
+  border: 1px solid #B8B8B8;
+  background: #FFFFFF1A;
+
+  font-family: Rubik, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: white;
+}
+
+.dashboard-input:focus {
+  outline: none;
+  border-color: #f2354e; /* Highlight border on focus */
+}
+
+.form-column{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 2 0rem;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.form-2columns{
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Remove number input spinner for Firefox */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Remove number input spinner for Chrome, Safari, Edge */
+  margin: 0;
 }
