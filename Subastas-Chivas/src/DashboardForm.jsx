@@ -17,20 +17,26 @@ const DashboardForm = () => {
     auctionStart: null,
     auctionEnd: null,
     image: null, // Store the actual File object
+    used: false, // New checkbox state
+    signed: false, // New checkbox state
   });
 
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [calendarState, setCalendarState] = useState({
-    matchDate: new Date(2025, 5),
-    auctionStart: new Date(2025, 5),
-    auctionEnd: new Date(2025, 5),
+  // Calendar state for each date picker
+  const [calendarStates, setCalendarStates] = useState({
+    matchDate: { currentMonth: new Date(), selectedDate: null },
+    auctionStart: { currentMonth: new Date(), selectedDate: null },
+    auctionEnd: { currentMonth: new Date(), selectedDate: null }
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
   };
 
   const handleImageUpload = (e) => {
@@ -60,91 +66,164 @@ const DashboardForm = () => {
     }
   };
 
-  const handleDaySelect = (calendarKey, day) => {
-    const baseDate = calendarState[calendarKey];
-    const date = new Date(baseDate.getFullYear(), baseDate.getMonth(), day);
-    const formatted = date.toLocaleDateString('es-MX', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'short',
-    });
-
+  const handleDateSelect = (calendarType, date) => {
     setFormData(prev => ({
       ...prev,
-      [calendarKey]: {
-        raw: day,
-        text: formatted,
-        fullDate: date,
-      },
+      [calendarType]: date
+    }));
+    
+    setCalendarStates(prev => ({
+      ...prev,
+      [calendarType]: {
+        ...prev[calendarType],
+        selectedDate: date
+      }
     }));
   };
 
-  const changeMonth = (calendarKey, direction) => {
-    setCalendarState(prev => {
-      const current = prev[calendarKey];
+  const changeMonth = (calendarType, direction) => {
+    setCalendarStates(prev => {
+      const current = prev[calendarType].currentMonth;
       const newDate = new Date(current.getFullYear(), current.getMonth() + direction, 1);
-      return { ...prev, [calendarKey]: newDate };
+      return {
+        ...prev,
+        [calendarType]: {
+          ...prev[calendarType],
+          currentMonth: newDate
+        }
+      };
     });
   };
 
-  const renderCalendar = (title, calendarKey) => {
-    const selected = formData[calendarKey]?.fullDate;
-    const currentMonth = calendarState[calendarKey];
+  const formatSelectedDate = (date) => {
+    if (!date) return 'Select date';
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  const CustomCalendar = ({ title, calendarType, includeTime = false }) => {
+    const calendarState = calendarStates[calendarType];
+    const currentMonth = calendarState.currentMonth;
+    const selectedDate = calendarState.selectedDate;
+    
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // Generate calendar days
     const calendarDays = [];
-    for (let i = 0; i < firstDay; i++) calendarDays.push(null);
-    for (let day = 1; day <= daysInMonth; day++) calendarDays.push(day);
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < firstDay; i++) {
+      calendarDays.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      calendarDays.push(day);
+    }
 
-    const isSelected = (day) =>
-      selected &&
-      selected.getDate() === day &&
-      selected.getMonth() === month &&
-      selected.getFullYear() === year;
+    const isSelected = (day) => {
+      if (!selectedDate || !day) return false;
+      return selectedDate.getDate() === day &&
+             selectedDate.getMonth() === month &&
+             selectedDate.getFullYear() === year;
+    };
 
-    const monthName = currentMonth.toLocaleDateString('es-MX', {
-      month: 'long',
-      year: 'numeric',
-    });
+    const handleDayClick = (day) => {
+      if (!day) return;
+      
+      let newDate;
+      if (includeTime && selectedDate) {
+        // Preserve time if it's a datetime picker
+        newDate = new Date(year, month, day, selectedDate.getHours(), selectedDate.getMinutes());
+      } else {
+        newDate = new Date(year, month, day);
+      }
+      
+      handleDateSelect(calendarType, newDate);
+    };
+
+    const handleTimeChange = (e) => {
+      if (!selectedDate) return;
+      
+      const [hours, minutes] = e.target.value.split(':');
+      const newDate = new Date(selectedDate);
+      newDate.setHours(parseInt(hours), parseInt(minutes));
+      handleDateSelect(calendarType, newDate);
+    };
 
     return (
-      <div className="calendar-container">
+      <div className="custom-calendar">
         <div className="calendar-header">
-          <p className="calendar-title">{title}</p>
-          <p className="calendar-date">
-            {formData[calendarKey]?.text || 'Selecciona una fecha'}
-          </p>
+          <span className="select-date-text">{title}</span>
+          <div className="selected-date-display">
+            {formatSelectedDate(selectedDate)}
+          </div>
         </div>
-
-        <div className="calendar-box">
-          <div className="calendar-nav-container">
-            <button onClick={() => changeMonth(calendarKey, -1)} className="arrow left-arrow">{'\u276E'}</button>
-            <span className="calendar-month">{monthName}</span>
-            <button onClick={() => changeMonth(calendarKey, 1)} className="arrow right-arrow">{'\u276F'}</button>
-          </div>
-
-          <div className="calendar-grid">
-            {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((d, i) => (
-              <span key={i} className="day-name">{d}</span>
-            ))}
-            {calendarDays.map((day, index) => (
-              <span
-                key={index}
-                className={`calendar-day ${isSelected(day) ? 'selected' : ''}`}
-                onClick={() => day && handleDaySelect(calendarKey, day)}
+        
+        <div className="calendar-body">
+          <div className="calendar-nav">
+            <span className="calendar-month-year">
+              {monthNames[month]} {year}
+            </span>
+            <div className="nav-arrows">
+              <button 
+                type="button"
+                onClick={() => changeMonth(calendarType, -1)} 
+                className="nav-arrow"
               >
-                {day}
-              </span>
-            ))}
+                &#8249;
+              </button>
+              <button 
+                type="button"
+                onClick={() => changeMonth(calendarType, 1)} 
+                className="nav-arrow"
+              >
+                &#8250;
+              </button>
+            </div>
           </div>
-
-          <div className="calendar-actions">
-            <button className="cancel-btn">Cancelar</button>
-            <button className="ok-btn">OK</button>
+          
+          <div className="calendar-grid">
+            <div className="day-headers">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                <div key={index} className="day-header">{day}</div>
+              ))}
+            </div>
+            
+            <div className="days-grid">
+              {calendarDays.map((day, index) => (
+                <div
+                  key={index}
+                  className={`calendar-day ${day ? 'clickable' : ''} ${isSelected(day) ? 'selected' : ''}`}
+                  onClick={() => handleDayClick(day)}
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
           </div>
+          
+          {includeTime && selectedDate && (
+            <div className="time-picker">
+              <input
+                type="time"
+                value={`${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`}
+                onChange={handleTimeChange}
+                className="time-input"
+              />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -167,15 +246,15 @@ const DashboardForm = () => {
       alert('Por favor ingresa un monto inicial válido.');
       return false;
     }
-    if (!formData.matchDate?.fullDate) {
+    if (!formData.matchDate) {
       alert('Por favor selecciona la fecha del partido.');
       return false;
     }
-    if (!formData.auctionStart?.fullDate) {
+    if (!formData.auctionStart) {
       alert('Por favor selecciona la fecha de inicio de la subasta.');
       return false;
     }
-    if (!formData.auctionEnd?.fullDate) {
+    if (!formData.auctionEnd) {
       alert('Por favor selecciona la fecha de fin de la subasta.');
       return false;
     }
@@ -185,10 +264,9 @@ const DashboardForm = () => {
     }
 
     // Validate date logic
-    const now = new Date();
-    const auctionStart = formData.auctionStart.fullDate;
-    const auctionEnd = formData.auctionEnd.fullDate;
-    const matchDate = formData.matchDate.fullDate;
+    const auctionStart = formData.auctionStart;
+    const auctionEnd = formData.auctionEnd;
+    const matchDate = formData.matchDate;
 
     if (auctionStart >= auctionEnd) {
       alert('La fecha de inicio de la subasta debe ser anterior a la fecha de fin.');
@@ -209,8 +287,6 @@ const DashboardForm = () => {
     setIsSubmitting(true);
 
     try {
-      
-
       // Upload the image to Supabase storage
       const fileExtension = formData.image.name.split('.').pop();
       const imageFileName = `${formData.playerName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.${fileExtension}`;
@@ -238,7 +314,7 @@ const DashboardForm = () => {
         .from('matches')
         .select('match_id')
         .eq('opponent', formData.rival)
-        .eq('match_date', formData.matchDate.fullDate.toISOString().split('T')[0])
+        .eq('match_date', formData.matchDate.toISOString().split('T')[0])
         .single();
 
       if (matchError && matchError.code !== 'PGRST116') {
@@ -255,7 +331,7 @@ const DashboardForm = () => {
           .from('matches')
           .insert({
             opponent: formData.rival,
-            match_date: formData.matchDate.fullDate.toISOString().split('T')[0],
+            match_date: formData.matchDate.toISOString().split('T')[0],
           })
           .select('match_id')
           .single();
@@ -277,8 +353,8 @@ const DashboardForm = () => {
           player_name: formData.playerName,
           jersey_number: parseInt(formData.jerseyNumber),
           image_url: publicUrl,
-          used: false,
-          signed: false,
+          used: formData.used, // Use checkbox value
+          signed: formData.signed, // Use checkbox value
         })
         .select('jersey_id')
         .single();
@@ -295,8 +371,8 @@ const DashboardForm = () => {
       const { error: auctionError } = await supabase
         .from('auctions')
         .insert({
-          start_time: formData.auctionStart.fullDate.toISOString(),
-          end_time: formData.auctionEnd.fullDate.toISOString(),
+          start_time: formData.auctionStart.toISOString(),
+          end_time: formData.auctionEnd.toISOString(),
           highest_bid: parseFloat(formData.amount),
           starting_bid: parseFloat(formData.amount),
           jersey_id: jerseyId,
@@ -321,8 +397,15 @@ const DashboardForm = () => {
         auctionStart: null,
         auctionEnd: null,
         image: null,
+        used: false,
+        signed: false,
       });
       setImagePreview(null);
+      setCalendarStates({
+        matchDate: { currentMonth: new Date(), selectedDate: null },
+        auctionStart: { currentMonth: new Date(), selectedDate: null },
+        auctionEnd: { currentMonth: new Date(), selectedDate: null }
+      });
 
     } catch (err) {
       console.error('Unexpected error:', err.message);
@@ -368,9 +451,38 @@ const DashboardForm = () => {
           onChange={handleInputChange} 
         />
 
-        {renderCalendar("📅 Fecha del partido", "matchDate")}
-        {renderCalendar("⏱ Inicio de la subasta", "auctionStart")}
-        {renderCalendar("🏁 Fin de la subasta", "auctionEnd")}
+        {/* Checkbox section */}
+        <div className="checkbox-section">
+          <div className="checkbox-group">
+            <label className="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="used" 
+                checked={formData.used}
+                onChange={handleInputChange}
+                className="custom-checkbox"
+              />
+              <span className="checkbox-text">Playera usada</span>
+            </label>
+          </div>
+          <div className="checkbox-group">
+            <label className="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="signed" 
+                checked={formData.signed}
+                onChange={handleInputChange}
+                className="custom-checkbox"
+              />
+              <span className="checkbox-text">Playera firmada</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Custom Calendar Components */}
+        <CustomCalendar title="📅 Fecha del partido" calendarType="matchDate" />
+        <CustomCalendar title="⏱ Inicio de la subasta" calendarType="auctionStart" includeTime={true} />
+        <CustomCalendar title="🏁 Fin de la subasta" calendarType="auctionEnd" includeTime={true} />
         
         <div className="image-upload">
           <label htmlFor="imageUpload">Subir imagen de la playera:</label>

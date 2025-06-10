@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
-
 .admin-dashboard-wrapper {
   position: relative; /* Ensure the pseudo-element is positioned relative to this container */
   background-image: url('/stadium-admin.png');
@@ -11,6 +10,8 @@
   color: white;
   z-index: 1; /* Ensure content is above the overlay */
   overflow: hidden; /* Prevent content from overflowing */
+  padding: 20px;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .admin-dashboard-wrapper::before {
@@ -25,15 +26,15 @@
 }
 
 .dashboard-top-bar {
-  background: linear-gradient(to right, #111, #222);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 0 0 12px 12px;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-  gap: 2rem;
+ 
+  display: flex;
+  gap: 12px;
+  margin-top: 60px;
 }
 
 .button-group {
@@ -62,23 +63,33 @@
 
 .filter-group {
   display: flex;
-  gap: 0.5rem;
+  gap: 12px;
 }
 
+/* Updated filter buttons with MisPujas styling */
 .dashboard-tab {
-  background-color: transparent;
-  border: 1px solid white;
-  padding: 0.5rem 1.2rem;
-  color: white;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 6px 20px;
+  border-radius: 30px;
+  border: none;
+  background-color: #b0b0b0;
+  color: black;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .dashboard-tab.active {
-  background-color: white;
-  color: black;
+  background-color: #0d3b4c;
+  color: white;
 }
+
+.no-auctions {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-top: 3rem;
+}
+
 .admin-dashboard-board {
   display: flex;
   flex-direction: column;
@@ -94,6 +105,7 @@
   scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* For Firefox: scrollbar colors */
 }
 
+
 /* Custom scrollbar for WebKit browsers (Chrome, Edge, Safari) */
 .admin-dashboard-board::-webkit-scrollbar {
   width: 8px; /* Width of the scrollbar */
@@ -107,6 +119,7 @@
 .admin-dashboard-board::-webkit-scrollbar-track {
   background-color: transparent; /* Transparent track */
 }
+
 .dashboard-title {
   text-align: center;
   font-size: 2rem;
@@ -114,6 +127,7 @@
   font-weight: bold;
 }
 
+/* Updated auction card with MisPujas glass effect */
 .auction-card {
   display: flex;
   grid-template-columns: 150px 1fr 1fr;
@@ -125,8 +139,10 @@
   align-items: center;
   justify-content: space-around;
 
-  background: rgba(244, 244, 244, 0.1); /* Combine background color and opacity */
-
+  /* Updated with MisPujas glass effect */
+  background-color: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
 .jersey-image {
@@ -274,20 +290,18 @@
   display: inline-block;
 }
 
-.admin-dashboard-wrapper {
-  font-family: 'Montserrat', sans-serif;
-}
-
 .auction-dash-info{
   display: flex;
   flex-direction: column;
 }
+
 .auction-dash-player{
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
+
 .auction-dash-name{
   font-family: Rubik, sans-serif;
   font-weight: 700;
@@ -299,6 +313,7 @@
   font-weight: 400;
   font-size: 12px;
 }
+
 .auction-dash-id{
   font-family: Montserrat, sans-serif;
   font-weight: 400;
@@ -307,6 +322,7 @@
   position: relative;
   top: -17px;
 }
+
 .auction-dash-match{
   display: flex;
   justify-content: space-between;
@@ -314,6 +330,7 @@
   position: relative;
   top: -15px;  
 }
+
 .auction-dash-opponent{
   font-family: Rubik, sans-serif;
   font-weight: 700;
@@ -342,6 +359,7 @@
   position: relative;
   top: 10px;
 }
+
 .auction-dash-end{
   font-family: Montserrat, sans-serif;
   font-weight: 400;
@@ -349,8 +367,13 @@
   position: relative;
   top: -5px;
 }
+
 /* Target JerseyAttributes when inside admin-dashboard-board */
 .admin-dashboard-board .jersey-attributes {
   display: flex;
   flex-direction: row; /* Set to row */
+}
+
+.dashboard-buffer{
+  display: flex;
 }

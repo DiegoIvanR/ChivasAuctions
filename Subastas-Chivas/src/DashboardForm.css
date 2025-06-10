@@ -24,7 +24,8 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
   padding: 1rem;
   border-radius: 10px;
   border: none;
@@ -33,114 +34,208 @@ input[type="text"] {
   font-size: 1rem;
 }
 
-input[type="text"]::placeholder {
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
   color: #aaaaaa;
 }
 
-/* CALENDARIO */
+/* CHECKBOX STYLES */
+.checkbox-section {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: rgba(44, 44, 46, 0.7);
+  border-radius: 10px;
+  margin: 1rem 0;
+}
 
-.calendar-container {
-  background: rgba(30, 30, 30, 0.85);
-  backdrop-filter: blur(8px);
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.custom-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f2354e;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.custom-checkbox:checked {
+  background-color: #f2354e;
+  border-color: #f2354e;
+}
+
+.custom-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.checkbox-text {
+  color: white;
+  font-size: 1rem;
+  user-select: none;
+}
+
+/* CUSTOM CALENDAR STYLES */
+.custom-calendar {
+  background: rgba(68, 68, 70, 0.95);
+  border-radius: 12px;
   padding: 1.5rem;
-  border-radius: 15px;
-  text-align: center;
+  margin: 1rem 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .calendar-header {
-  text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.calendar-title {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #ffffff;
-  margin-bottom: 0.2rem;
-}
-
-.calendar-date {
-  font-size: 1.2rem;
-  color: #ffffff;
-  margin-bottom: 0.8rem;
-}
-
-/* Navegación del mes */
-.calendar-nav-container {
-  position: relative;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.calendar-month {
+.select-date-text {
   color: #f2354e;
-  font-weight: bold;
-  font-size: 1rem;
-  text-transform: capitalize;
-  display: inline-block;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
-.arrow {
-  position: absolute;
-  top: 0;
+.selected-date-display {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+}
+
+.calendar-body {
+  width: 100%;
+}
+
+.calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 1rem;
+}
+
+.calendar-month-year {
+  color: #f2354e;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.nav-arrows {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-arrow {
   background: none;
   border: none;
   color: #f2354e;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   cursor: pointer;
-}
-
-.left-arrow {
-  left: 0;
-}
-
-.right-arrow {
-  right: 0;
-}
-
-/* Días */
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.3rem;
-  margin-bottom: 1rem;
-}
-
-.day-name,
-.calendar-day {
-  padding: 0.6rem;
-  border-radius: 50%;
-  background-color: rgba(80, 80, 80, 0.3);
-  text-align: center;
-  font-size: 0.9rem;
-  color: white;
+  padding: 0.25rem;
+  border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
-.calendar-day:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.nav-arrow:hover {
+  background-color: rgba(242, 53, 78, 0.1);
+}
+
+.calendar-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.day-header {
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  font-weight: 500;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.95rem;
+  color: white;
+  transition: all 0.2s ease;
+  min-height: 40px;
+}
+
+.calendar-day.clickable {
+  cursor: pointer;
+}
+
+.calendar-day.clickable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .calendar-day.selected {
   background-color: #f2354e;
   color: white;
+  font-weight: 600;
 }
 
-/* Botones dentro del calendario */
-.calendar-actions {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
+.time-picker {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.cancel-btn,
-.ok-btn {
-  background: none;
-  border: none;
-  color: #f2354e;
-  font-weight: bold;
+.time-input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: rgba(44, 44, 46, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
   font-size: 1rem;
-  cursor: pointer;
+  text-align: center;
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: #f2354e;
+  box-shadow: 0 0 0 2px rgba(242, 53, 78, 0.2);
 }
 
 /* Botón final */
@@ -160,8 +255,10 @@ input[type="text"]::placeholder {
   background-color: #c2183d;
 }
 
-
-
+.confirm-btn:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
 
 .image-upload {
   display: flex;
