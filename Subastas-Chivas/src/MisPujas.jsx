@@ -96,7 +96,7 @@ const MisPujas = () => {
         <div className="dashboard-buffer" style={{ height: '80px' }}></div>
 
         <main className="dashboard-main">
-          <h1 className="dashboard-title">{user.full_name}</h1>
+          <h1 className="dashboard-title--pujas">{user.full_name}</h1>
           <hr className="dashboard-divider" />
 
           <div className="mispujas-filters">
@@ -120,16 +120,18 @@ const MisPujas = () => {
             </button>
           </div>
 
-          <div className="dashboard-body">
+          <div className="dashboard-body dashboard-body--pujas">
             <DashboardAside />
 
-            <section className="dashboard-section">
+            <section className="dashboard-section dashboard-section--pujas">
               {pujas.length === 0 ? (
                 <p>No hay pujas disponibles para este filtro.</p>
               ) : (
-                pujas.map((jersey) => (
-                  <JerseyCard key={jersey.auction_id} jersey={jersey} filter={filter} />
-                ))
+                <div className="dashboard-pujas">
+                  {pujas.map((jersey) => (
+                    <JerseyCard key={jersey.auction_id} jersey={jersey} filter={filter} />
+                  ))}
+                </div>
               )}
             </section>
           </div>

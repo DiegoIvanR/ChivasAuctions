@@ -74,7 +74,7 @@ const DashboardUsuario = () => {
         <div className="dashboard-buffer" style={{ height: '80px' }}></div>
 
         <main className="dashboard-main">
-          <h1 className="dashboard-title">{user?.full_name}</h1>
+          <h1 className="dashboard-title dashboard-title--perfil">{user?.full_name}</h1>
           <hr className="dashboard-divider" />
           <div className="dashboard-body">
             <DashboardAside />
