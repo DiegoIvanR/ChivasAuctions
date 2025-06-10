@@ -85,9 +85,9 @@ const Locker = ({ locker }) => {
             <span className="locker-extra-info">{locker.matches.opponent} - {locker.matches.match_date}</span>
           </div>
         )}
-        {locker.auctions?.starting_bid && (
+        {locker.auctions?.highest_bid && (
           <div className="locker-bid-container">
-            <div className="locker-bid">${locker.auctions.starting_bid}</div>
+            <div className="locker-bid">${locker.auctions.highest_bid}</div>
           </div>
         )}
         <div className="locker-attributes">

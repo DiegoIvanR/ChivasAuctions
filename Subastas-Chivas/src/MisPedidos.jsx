@@ -27,7 +27,7 @@ const MisPedidos = () => {
                 jersey_id,
                 start_time,
                 end_time,
-                starting_bid,
+                highest_bid,
                 jerseys (
                   player_name,
                   jersey_number,
@@ -109,15 +109,15 @@ const MisPedidos = () => {
                       <h4 className="resumen-title">RESUMEN DEL ENVÍO</h4>
                       <div className="resumen-line">
                         <span>SUBTOTAL: </span>
-                        <span>{formatCurrency(jersey.auctions.starting_bid)}</span>
+                        <span>{formatCurrency(jersey.auctions.highest_bid)}</span>
                       </div>
                       <div className="resumen-line">
                         <span>IVA: </span>
-                        <span>{formatCurrency(jersey.auctions.starting_bid * 0.16)}</span>
+                        <span>{formatCurrency(jersey.auctions.highest_bid * 0.16)}</span>
                       </div>
                       <div className="resumen-line total">
                         <span>TOTAL: </span>
-                        <span>{formatCurrency(jersey.auctions.starting_bid * 1.16)}</span>
+                        <span>{formatCurrency(jersey.auctions.highest_bid * 1.16)}</span>
                       </div>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ const MisPedidos = () => {
               jersey_id,
               start_time,
               end_time,
-              starting_bid,
+              highest_bid,
               estado,
               estado_envio,
               jerseys (

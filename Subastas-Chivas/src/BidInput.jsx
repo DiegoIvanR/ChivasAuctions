@@ -8,7 +8,7 @@ import './bidInput.css';
 import PaymentMethodRequiredPopup from './PaymentMethodRequiredPopup';
 
 export default function BidInput({ jersey, onBidUpdate }) {
-  const [bid, setBid] = useState(jersey.starting_bid + 100);
+  const [bid, setBid] = useState(jersey.highest_bid + 100);
   const [warning, setWarning] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [hasPaymentMethod, setHasPaymentMethod] = useState(false);
@@ -44,7 +44,7 @@ export default function BidInput({ jersey, onBidUpdate }) {
   };
 
   const handleBidSubmit = () => {
-    if (bid <= jersey.starting_bid) {
+    if (bid <= jersey.highest_bid) {
       setWarning('La puja debe ser mayor a la puja actual.');
       return;
     }
@@ -146,7 +146,7 @@ export default function BidInput({ jersey, onBidUpdate }) {
         value={bid}
         onChange={handleBidChange}
         className="bid-input"
-        min={jersey.starting_bid + 1}
+        min={jersey.highest_bid + 1}
         disabled={isProcessingBid}
       />
       <button 

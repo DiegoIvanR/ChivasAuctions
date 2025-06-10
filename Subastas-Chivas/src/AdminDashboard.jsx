@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 import "./AdminDashboard.css";
 import BidHistory from "./BidHistory";
-
+import JerseyAttributes from "./JerseyAttributes";
 const AdminDashboard = () => {
   const [auctions, setAuctions] = useState([]);
 
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
             auction_status,
             start_time,
             end_time,
-            starting_bid
+            highest_bid
           ),
           matches (
             opponent,
@@ -46,6 +46,16 @@ const AdminDashboard = () => {
     fetchAuctions();
   }, []);
 
+  // Helper function to format dates
+  const formatDate = (isoString) => {
+    if (!isoString) return "N/A";
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}/${month}/${day}`;
+  };
+
   return (
     <div className="admin-dashboard-wrapper">
       <div className="dashboard-top-bar">
@@ -61,8 +71,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <h2 className="dashboard-title">Subastas Creadas</h2>
-
       {auctions.length === 0 ? (
         <p className="no-auctions">No hay subastas registradas.</p>
       ) : (
@@ -74,22 +82,33 @@ const AdminDashboard = () => {
                 alt={`Jersey de ${auction.player_name}`}
                 className="jersey-image"
               />
+              <div className="auction-dash-info">
+                <div className="auction-dash-player">
+                  <p className="auction-dash-name">{auction.player_name || "Desconocido"}</p>
+                  <p className="auction-dash-jersey">#{auction.jersey_number || "N/A"}</p>
+                </div>
+                <p className="auction-dash-id">ID: {auction.auctions?.auction_id || "N/A"}</p>
+                <p className="auction-dash-stbid">Highest Bid: {auction.auctions?.highest_bid ? `${auction.auctions.highest_bid} USD` : "N/A"}</p>
+
+                <div className="auction-dash-match">
+                  <p className="auction-dash-opponent">VS {auction.matches?.opponent || "N/A"}</p>
+                  <p className="auction-dash-date">{auction.matches?.match_date || "N/A"}</p>
+                </div>
+                <JerseyAttributes jersey={auction} />
+                
+                <p className="auction-dash-start">
+                  Inicio: {formatDate(auction.auctions?.start_time)}
+                </p>
+                <p className="auction-dash-end">
+                  Fin: {formatDate(auction.auctions?.end_time)}
+                </p>
+              </div>
 
               <div className="bid-column">
-                <p className="section-title">Últimas Pujas</p>
+                <p className="section-title">Historial de Pujas</p>
                 <div className="bid-history-wrapper">
                   <BidHistory auctionID={auction.auctions?.auction_id} />
                 </div>
-              </div>
-
-              <div className="auction-info">
-                <p><strong>Jugador:</strong> {auction.player_name || "Desconocido"}</p>
-                <p><strong>Número:</strong> {auction.jersey_number || "N/A"}</p>
-                <p><strong>Equipo rival:</strong> {auction.matches?.opponent || "N/A"}</p>
-                <p><strong>Fecha del partido:</strong> {auction.matches?.match_date || "N/A"}</p>
-                <p><strong>Puja inicial:</strong> {auction.auctions?.starting_bid ? `${auction.auctions.starting_bid} MXN` : "N/A"}</p>
-                <p><strong>Inicio:</strong> {auction.auctions?.start_time || "N/A"}</p>
-                <p><strong>Fin:</strong> {auction.auctions?.end_time || "N/A"}</p>
               </div>
             </div>
           ))}
@@ -100,4 +119,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-

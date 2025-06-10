@@ -297,6 +297,7 @@ const DashboardForm = () => {
         .insert({
           start_time: formData.auctionStart.fullDate.toISOString(),
           end_time: formData.auctionEnd.fullDate.toISOString(),
+          highest_bid: parseFloat(formData.amount),
           starting_bid: parseFloat(formData.amount),
           jersey_id: jerseyId,
           admin_id: user.id,

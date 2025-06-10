@@ -2,11 +2,26 @@
 
 
 .admin-dashboard-wrapper {
-  padding: 2rem;
-  background-color: #000;
-  min-height: 100vh;
+  position: relative; /* Ensure the pseudo-element is positioned relative to this container */
+  background-image: url('/stadium-admin.png');
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: auto;
   color: white;
-  font-family: 'Inter', sans-serif;
+  z-index: 1; /* Ensure content is above the overlay */
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.admin-dashboard-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Black overlay with 0.8 alpha */
+  z-index: -1; /* Place the overlay behind the content */
 }
 
 .dashboard-top-bar {
@@ -64,7 +79,6 @@
   background-color: white;
   color: black;
 }
-
 .admin-dashboard-board {
   display: flex;
   flex-direction: column;
@@ -72,8 +86,27 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem;
+
+  /* Enable scrolling */
+  max-height: calc(100vh); /* Adjust height dynamically based on viewport */
+  overflow-y: auto; /* Add vertical scrolling */
+  scrollbar-width: thin; /* For Firefox: thin scrollbar */
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* For Firefox: scrollbar colors */
 }
 
+/* Custom scrollbar for WebKit browsers (Chrome, Edge, Safari) */
+.admin-dashboard-board::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.admin-dashboard-board::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2); /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+
+.admin-dashboard-board::-webkit-scrollbar-track {
+  background-color: transparent; /* Transparent track */
+}
 .dashboard-title {
   text-align: center;
   font-size: 2rem;
@@ -82,21 +115,23 @@
 }
 
 .auction-card {
-  display: grid;
+  display: flex;
   grid-template-columns: 150px 1fr 1fr;
-  background-color: #1c1c1c;
-  border-radius: 16px;
+  
+  border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   gap: 1.5rem;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-around;
+
+  background: rgba(244, 244, 244, 0.1); /* Combine background color and opacity */
+
 }
 
 .jersey-image {
   width: 100%;
-  max-width: 130px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  max-width: 200px;
 }
 
 .bid-column {
@@ -243,16 +278,79 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+.auction-dash-info{
+  display: flex;
+  flex-direction: column;
+}
+.auction-dash-player{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.auction-dash-name{
+  font-family: Rubik, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+}
 
+.auction-dash-jersey{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+.auction-dash-id{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888;
+  position: relative;
+  top: -17px;
+}
+.auction-dash-match{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: -15px;  
+}
+.auction-dash-opponent{
+  font-family: Rubik, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
 
+.auction-dash-date{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
 
+.auction-dash-stbid{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888;
+  position: relative;
+  top: -30px;
+}
 
-
-
-
-
-
-
-
-
-
+.auction-dash-start{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  position: relative;
+  top: 10px;
+}
+.auction-dash-end{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  position: relative;
+  top: -5px;
+}
+/* Target JerseyAttributes when inside admin-dashboard-board */
+.admin-dashboard-board .jersey-attributes {
+  display: flex;
+  flex-direction: row; /* Set to row */
+}
