@@ -38,7 +38,7 @@ export default function LockerAuction() {
             auction_status,
             start_time,
             end_time,
-            starting_bid,
+            highest_bid,
             jerseys (
               jersey_id,
               match_id,
@@ -76,7 +76,7 @@ export default function LockerAuction() {
           auction_status: selectedAuction.auction_status,
           start_time: selectedAuction.start_time,
           end_time: selectedAuction.end_time,
-          starting_bid: selectedAuction.starting_bid,
+          highest_bid: selectedAuction.highest_bid,
         };
   
         setJersey(mergedData); // Set the merged data
@@ -95,9 +95,9 @@ export default function LockerAuction() {
       try {
         const { data, error } = await supabase
           .from('auctions')
-          .select('starting_bid')
+          .select('highest_bid')
           .eq('auction_id', auctionID)
-          .single(); // Fetch the latest starting_bid
+          .single(); // Fetch the latest highest_bid
   
         if (error) {
           console.error('Error refreshing starting bid:', error.message);
@@ -107,7 +107,7 @@ export default function LockerAuction() {
         if (data) {
           setJersey((prevJersey) => ({
             ...prevJersey,
-            starting_bid: data.starting_bid, // Update the starting_bid
+            highest_bid: data.highest_bid, // Update the highest_bid
           }));        }
       } catch (err) {
         console.error('Unexpected error refreshing starting bid:', err);
@@ -198,7 +198,7 @@ export default function LockerAuction() {
       ...prevJersey,
       auctions: {
         ...prevJersey.auctions,
-        starting_bid: newBid,
+        highest_bid: newBid,
       },
     }));
   };
@@ -235,9 +235,9 @@ export default function LockerAuction() {
                 {timeLeft === 'Terminada' ? 'PUJA FINAL' : 'PUJA ACTUAL'}
               </div>
             )}
-            {jersey.starting_bid && (
+            {jersey.highest_bid && (
               <div className="auction-bid-container">
-                <div className="auction-bid">${jersey.starting_bid}</div>
+                <div className="auction-bid">${jersey.highest_bid}</div>
               </div>
             )}
             <div className="auction-attributes">

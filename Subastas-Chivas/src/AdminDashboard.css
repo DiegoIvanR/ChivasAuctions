@@ -1,12 +1,379 @@
-.admin-dashboard-container {
-    padding: 2rem;
-    color: white;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+.admin-dashboard-wrapper {
+  position: relative; /* Ensure the pseudo-element is positioned relative to this container */
+  background-image: url('/stadium-admin.png');
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: auto;
+  color: white;
+  z-index: 1; /* Ensure content is above the overlay */
+  overflow: hidden; /* Prevent content from overflowing */
+  padding: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.admin-dashboard-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Black overlay with 0.8 alpha */
+  z-index: -1; /* Place the overlay behind the content */
+}
+
+.dashboard-top-bar {
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 12px 12px;
+ 
+  display: flex;
+  gap: 12px;
+  margin-top: 60px;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.dashboard-button {
+  background-color: #2d2d2d;
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-button.red {
+  background-color: #e63946;
+}
+
+.dashboard-button.active {
+  background-color: #444;
+}
+
+.filter-group {
+  display: flex;
+  gap: 12px;
+}
+
+/* Updated filter buttons with MisPujas styling */
+.dashboard-tab {
+  padding: 6px 20px;
+  border-radius: 30px;
+  border: none;
+  background-color: #b0b0b0;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.dashboard-tab.active {
+  background-color: #0d3b4c;
+  color: white;
+}
+
+.no-auctions {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-top: 3rem;
+}
+
+.admin-dashboard-board {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+
+  /* Enable scrolling */
+  max-height: calc(100vh); /* Adjust height dynamically based on viewport */
+  overflow-y: auto; /* Add vertical scrolling */
+  scrollbar-width: thin; /* For Firefox: thin scrollbar */
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* For Firefox: scrollbar colors */
+}
+
+
+/* Custom scrollbar for WebKit browsers (Chrome, Edge, Safari) */
+.admin-dashboard-board::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.admin-dashboard-board::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2); /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+}
+
+.admin-dashboard-board::-webkit-scrollbar-track {
+  background-color: transparent; /* Transparent track */
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+}
+
+/* Updated auction card with MisPujas glass effect */
+.auction-card {
+  display: flex;
+  grid-template-columns: 150px 1fr 1fr;
   
-  .auction-card {
-    background-color: rgba(255, 255, 255, 0.08);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-  }
-  
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-around;
+
+  /* Updated with MisPujas glass effect */
+  background-color: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.jersey-image {
+  width: 100%;
+  max-width: 200px;
+}
+
+.bid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  min-width: 200px;
+  max-width: 260px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.bid-history-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow-y: auto;
+  max-height: 150px;
+  padding-right: 6px;
+  width: 100%;
+}
+
+.bid-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  font-size: 0.72rem;
+  color: white;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bid-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bid-row span:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.bid-history-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bid-history-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.auction-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.auction-info p {
+  margin: 0;
+}
+
+.auction-info strong {
+  font-weight: 600;
+}
+
+/* Corrige visualización del componente BidHistory solo en AdminDashboard */
+
+.bid-history-wrapper .bid-history-container {
+  position: static !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  justify-content: flex-start !important;
+  color: white !important;
+}
+
+.bid-history-wrapper .bid-list {
+  margin: 0 !important;
+  max-height: 150px !important;
+  overflow-y: auto !important;
+  padding-right: 6px;
+}
+
+.bid-history-wrapper .bid-row {
+  font-size: 0.72rem !important;
+  padding: 0.2rem 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1.5fr 1fr !important;
+  gap: 0.4rem !important;
+  color: white !important;
+  align-items: center !important;
+}
+
+.bid-history-wrapper .bidder,
+.bid-history-wrapper .timestamp,
+.bid-history-wrapper .amount {
+  font-size: 0.72rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.bid-history-wrapper .amount {
+  text-align: right !important;
+}
+
+/* Ocultar el título 'HISTORIAL DE PUJAS' solo en esta vista */
+.bid-history-wrapper .title {
+  display: none !important;
+}
+
+/* Mejorar manejo de texto largo en las pujas */
+.bid-history-wrapper .bidder,
+.bid-history-wrapper .timestamp,
+.bid-history-wrapper .amount {
+  font-size: 0.72rem !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.auction-dash-info{
+  display: flex;
+  flex-direction: column;
+}
+
+.auction-dash-player{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.auction-dash-name{
+  font-family: Rubik, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.auction-dash-jersey{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.auction-dash-id{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888;
+  position: relative;
+  top: -17px;
+}
+
+.auction-dash-match{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: -15px;  
+}
+
+.auction-dash-opponent{
+  font-family: Rubik, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.auction-dash-date{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.auction-dash-stbid{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888;
+  position: relative;
+  top: -30px;
+}
+
+.auction-dash-start{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  position: relative;
+  top: 10px;
+}
+
+.auction-dash-end{
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  position: relative;
+  top: -5px;
+}
+
+/* Target JerseyAttributes when inside admin-dashboard-board */
+.admin-dashboard-board .jersey-attributes {
+  display: flex;
+  flex-direction: row; /* Set to row */
+}
+
+.dashboard-buffer{
+  display: flex;
+}

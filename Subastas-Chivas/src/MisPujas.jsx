@@ -21,7 +21,7 @@ const MisPujas = () => {
               jersey_id,
               start_time,
               end_time,
-              starting_bid,
+              highest_bid,
               jerseys (
                 player_name,
                 jersey_number,
@@ -50,7 +50,7 @@ const MisPujas = () => {
                 jersey_id,
                 start_time,
                 end_time,
-                starting_bid,
+                highest_bid,
                 jerseys (
                   player_name,
                   jersey_number,

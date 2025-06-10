@@ -68,7 +68,7 @@ const JerseyCard = ({ jersey, filter }) => {
       <div className="jersey-info">
         <h3>{jersey.auctions.jerseys.player_name}</h3>
         <p>{filter === 'EN VIVO' ? 'PUJA ACTUAL' : filter === 'CERRADAS' ? 'PUJA FINALIZADA' : 'PUJA GANADA'}</p>
-        <p className="price">${jersey.auctions.starting_bid}</p>
+        <p className="price">${jersey.auctions.highest_bid}</p>
         <div className="tags">
           {jersey.auctions.jerseys.used && <span className="tag">USADA</span>}
           {jersey.auctions.jerseys.signed && <span className="tag">FIRMADA</span>}
