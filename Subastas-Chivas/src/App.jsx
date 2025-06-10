@@ -21,7 +21,7 @@ import PaymentMethodGuard from "./PaymentMethodGuard";
 import Ajustes from "./Ajustes";
 import { Provider } from 'react-redux';
 import store from './store';
-
+import NotFound from './NotFound';
 /*
 guard:
                   <PaymentMethodGuard requirePaymentMethod={true}>
@@ -75,6 +75,7 @@ const App = () => {
               {/* Form routes - optional payment method */}
               <Route path="/dashboardForm" element={<DashboardForm />} />
               <Route path="/dashboard" element={<DashboardForm />} />
+              <Route path='*' element={<NotFound />} />
             </Routes>
             <Footer />
           </Router>
