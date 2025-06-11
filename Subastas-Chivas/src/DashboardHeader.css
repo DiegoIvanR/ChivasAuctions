@@ -1,0 +1,23 @@
+.dashboard-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    margin-top: 3%;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .dhh-title--pujas {
+    font-family: Rubik, sans-serif;
+    font-size: 32px;
+    color: #FFFFFF; /* Adjust color as needed */
+    text-align: left;
+    align-self: flex-start;
+  }
+  
+  .dhh-divider {
+    width: 100%;
+    height: 2px;
+    background-color: #f2354e;
+    margin-top: 0.5rem;
+  }

@@ -6,7 +6,7 @@ import { logout } from "./authSlice";
 import StatCard from './StatCard'; // Import the StatCard component
 import { supabase } from './supabaseClient'; // Import Supabase client
 import DashboardAside from './DashboardAside';
-
+import DashboardHeader from './DashboardHeader';
 const DashboardUsuario = () => {
   const [articulosGanados, setArticulosGanados] = useState(0);
   const [pujasRealizadas, setPujasRealizadas] = useState(0);
@@ -71,11 +71,8 @@ const DashboardUsuario = () => {
       <div className="dashboard-overlay"></div>
 
       <div className="dashboard-content animate-fade-in">
-        <div className="dashboard-buffer" style={{ height: '80px' }}></div>
-
         <main className="dashboard-main">
-          <h1 className="dashboard-title dashboard-title--perfil">{user?.full_name}</h1>
-          <hr className="dashboard-divider" />
+          <DashboardHeader name={user.full_name}/>
           <div className="dashboard-body">
             <DashboardAside />
             <section className="dashboard-section">

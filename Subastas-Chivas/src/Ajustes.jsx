@@ -5,6 +5,7 @@ import DashboardAside from './DashboardAside';
 import JerseyCard from './JerseyCard'; // Import the JerseyCard component
 import { supabase } from './supabaseClient'; // Import Supabase client
 import AddCardForm from './AddCardForm'; // Import the AddCardForm component
+import DashboardHeader from './DashboardHeader'
 const Ajustes = () => {
   const user = useSelector((state) => state.auth.user); // Assuming user is stored in Redux state
 
@@ -12,12 +13,8 @@ const Ajustes = () => {
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
       <div className="dashboard-content animate-fade-in">
-
-        <div className="dashboard-buffer" style={{ height: '80px' }}></div>
-
         <main className="dashboard-main">
-          <h1 className="dashboard-title">{user.full_name}</h1>
-          <hr className="dashboard-divider" />
+          <DashboardHeader name={user.full_name}/>
           <div className="dashboard-body">
             <DashboardAside />
           <AddCardForm />

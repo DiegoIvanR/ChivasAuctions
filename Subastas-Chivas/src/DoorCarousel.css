@@ -259,6 +259,7 @@
 	font-size: 20px;
 	line-height: 100%;
 	letter-spacing: 3%;
+	text-decoration: none;
   }
   .menu-right-bar{
 	align-items: center;
@@ -320,6 +321,12 @@
 /* Hover effect for search icon */
 .search-icon:hover {
     opacity: 0.7; /* Slight fade effect */
+}
+
+.user-image{
+	width: 40px;
+	height: 40px;
+	filter: invert(1);
 }
 
 .footer{

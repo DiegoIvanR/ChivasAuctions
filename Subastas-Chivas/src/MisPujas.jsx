@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import DashboardAside from './DashboardAside';
 import JerseyCard from './JerseyCard'; // Import the JerseyCard component
 import { supabase } from './supabaseClient'; // Import Supabase client
-
+import DashboardHeader from './DashboardHeader';
 const MisPujas = () => {
   const user = useSelector((state) => state.auth.user); // Assuming user is stored in Redux state
   const [pujas, setPujas] = useState([]); // State to store fetched jerseys
@@ -92,48 +92,45 @@ const MisPujas = () => {
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
       <div className="dashboard-content animate-fade-in">
-
-        <div className="dashboard-buffer" style={{ height: '80px' }}></div>
-
+        
         <main className="dashboard-main">
-          <h1 className="dashboard-title--pujas">{user.full_name}</h1>
-          <hr className="dashboard-divider" />
-
-          <div className="mispujas-filters">
-            <button
-              className={filter === 'EN VIVO' ? 'active' : ''}
-              onClick={() => setFilter('EN VIVO')}
-            >
-              EN VIVO
-            </button>
-            <button
-              className={filter === 'CERRADAS' ? 'active' : ''}
-              onClick={() => setFilter('CERRADAS')}
-            >
-              CERRADAS
-            </button>
-            <button
-              className={filter === 'GANADAS' ? 'active' : ''}
-              onClick={() => setFilter('GANADAS')}
-            >
-              GANADAS
-            </button>
-          </div>
-
+        <DashboardHeader name={user.full_name}/>
           <div className="dashboard-body dashboard-body--pujas">
-            <DashboardAside />
+            <DashboardAside />  
+            <div className='mispujas-body-content'>
+              <div className="mispujas-filters">
+              <button
+                className={filter === 'EN VIVO' ? 'active' : ''}
+                onClick={() => setFilter('EN VIVO')}
+              >
+                EN VIVO
+              </button>
+              <button
+                className={filter === 'CERRADAS' ? 'active' : ''}
+                onClick={() => setFilter('CERRADAS')}
+              >
+                CERRADAS
+              </button>
+              <button
+                className={filter === 'GANADAS' ? 'active' : ''}
+                onClick={() => setFilter('GANADAS')}
+              >
+                GANADAS
+              </button>
+            </div>
 
-            <section className="dashboard-section dashboard-section--pujas">
-              {pujas.length === 0 ? (
-                <p>No hay pujas disponibles para este filtro.</p>
-              ) : (
-                <div className="dashboard-pujas">
-                  {pujas.map((jersey) => (
-                    <JerseyCard key={jersey.auction_id} jersey={jersey} filter={filter} />
-                  ))}
-                </div>
-              )}
-            </section>
+              <section className="dashboard-section dashboard-section--pujas">
+                {pujas.length === 0 ? (
+                  <p>No hay pujas disponibles para este filtro.</p>
+                ) : (
+                  <div className="dashboard-pujas">
+                    {pujas.map((jersey) => (
+                      <JerseyCard key={jersey.auction_id} jersey={jersey} filter={filter} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            </div>
           </div>
         </main>
       </div>

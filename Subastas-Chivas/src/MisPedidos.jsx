@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import DashboardAside from './DashboardAside';
 import JerseyCard from './JerseyCard';
 import { supabase } from './supabaseClient';
-
+import DashboardHeader from './DashboardHeader';
 const MisPedidos = () => {
   const user = useSelector((state) => state.auth.user);
   const [pedidosEnCamino, setPedidosEnCamino] = useState([]);
@@ -84,11 +84,8 @@ const MisPedidos = () => {
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
       <div className="dashboard-content animate-fade-in">
-        <div className="dashboard-buffer" style={{ height: '80px' }}></div>
-
         <main className="dashboard-main">
-          <h1 className="dashboard-title dashboard-title--pedidos">{user.full_name}</h1>
-          <hr className="dashboard-divider" />
+          <DashboardHeader name={user.full_name}/>
 
           <div className="mispedidos-filters">
             <button className={filter === 'EN CAMINO' ? 'active' : ''} onClick={() => setFilter('EN CAMINO')}>EN CAMINO</button>

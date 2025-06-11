@@ -125,6 +125,20 @@ export default function BidInput({ jersey, onBidUpdate }) {
       }
 
       console.log('Bid inserted successfully:', data);
+
+      const { error: updateError } = await supabase
+      .from('auctions')
+      .update({ highest_bid: bid }) // Update the highest_bid field
+      .eq('auction_id', jersey.auction_id); // Match the auction_id
+
+    if (updateError) {
+      console.error('Error updating highest bid:', updateError.message);
+      setWarning('Error al actualizar la puja más alta. Inténtalo de nuevo.');
+      setIsProcessingBid(false);
+      return;
+    }
+
+    console.log('Highest bid updated successfully.');
       onBidUpdate(bid); // Update the bid in the parent component
       setWarning('¡Puja exitosa! El pago se procesará al finalizar la subasta.');
       setTermsAccepted(false); // Reset the checkbox
