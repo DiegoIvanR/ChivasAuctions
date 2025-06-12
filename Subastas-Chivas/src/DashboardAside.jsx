@@ -1,9 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-const DashboardAside = ({ handleLogout }) => {
+import { useDispatch, useSelector } from "react-redux";
+import {logout} from "./authSlice"
+import { useNavigate } from "react-router-dom"; // Use useNavigate instead of Navigate
+
+const DashboardAside = () => {
 
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
+  
+  const handleLogout = () => {
+      dispatch(logout()); // Dispatch logout action
+      navigate("/"); // Navigate to the homepage after logout
+    };
+
   return (
     <aside className="dashboard-aside">
       <ul>
