@@ -347,7 +347,7 @@ const DashboardForm = () => {
       const { data: existingMatch, error: matchError } = await supabase
         .from('matches')
         .select('match_id')
-        .eq('opponent', formData.rival)
+        .eq('opponent', formData.rival.toUpperCase())
         .eq('match_date', formData.matchDate.toISOString().split('T')[0])
         .single();
 
@@ -364,7 +364,7 @@ const DashboardForm = () => {
         const { data: newMatch, error: insertMatchError } = await supabase
           .from('matches')
           .insert({
-            opponent: formData.rival,
+            opponent: formData.rival.toUpperCase(),
             match_date: formData.matchDate.toISOString().split('T')[0],
             venue: formData.venue,
             competition: formData.competition,
