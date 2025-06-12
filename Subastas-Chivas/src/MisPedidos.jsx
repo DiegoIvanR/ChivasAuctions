@@ -143,9 +143,8 @@ const MisPedidos = () => {
                                             Fin: {formatDate(jersey.auctions?.end_time)}
                                           </p>
                                         </div>
-                                      </div>
-                        
-                        <div className="resumen-envio">
+                                        <div className="resumen-envio">
+                                          <div className='resumen-info'>
                           <h4 className="resumen-title">RESUMEN DEL ENVÍO</h4>
                           <div className="resumen-line">
                             <span>SUBTOTAL: </span>
@@ -159,7 +158,14 @@ const MisPedidos = () => {
                             <span>TOTAL: </span>
                             <span>{formatCurrency(20 * 1.16)}</span>
                           </div>
+                          </div>
+                          <button className='proceed-button'>
+                            Proceder al Pago
+                          </button>
                         </div>
+                                      </div>
+                        
+                        
                       </div>
                     ))
                   )}

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const JerseyCard = ({ jersey, filter }) => {
   const [timeLeft, setTimeLeft] = useState('');
   const [status, setStatus] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const updateStatusAndTimeLeft = () => {
@@ -58,8 +60,13 @@ const JerseyCard = ({ jersey, filter }) => {
     return () => clearInterval(interval);
   }, [jersey.auctions?.start_time, jersey.auctions?.end_time]);
 
+  const handleClick = () => {
+    if (jersey.auction_id) {
+      navigate(`/auction/${jersey.auction_id}`);
+    }
+  };
   return (
-    <div className="stat-card jersey-card animate-pop-in">
+    <div className="stat-card jersey-card animate-pop-in" onClick={handleClick}>
       <img
         src={jersey.auctions.jerseys.image_url.replace('../public', '')}
         alt={jersey.auctions.jerseys.player_name}

@@ -76,6 +76,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
+  width: auto;
 }
 
 .dashboard-tab.active {
@@ -103,6 +104,7 @@
   overflow-y: auto; /* Add vertical scrolling */
   scrollbar-width: thin; /* For Firefox: thin scrollbar */
   scrollbar-color: rgba(255, 255, 255, 0.5) transparent; /* For Firefox: scrollbar colors */
+  align-self: flex-start;
 }
 
 
@@ -169,7 +171,7 @@
   margin: 0;
 }
 
-.bid-history-container {
+.bid-history-container.bid-history-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -179,7 +181,7 @@
   width: 100%;
 }
 
-.bid-row {
+.bid-row.bid-history-wrapper {
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr;
   font-size: 0.72rem;
@@ -193,13 +195,13 @@
   gap: 0.4rem;
 }
 
-.bid-row span {
+.bid-row.bid-history-wrapper span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.bid-row span:last-child {
+.bid-row.bid-history-wrapper span:last-child {
   text-align: right;
   white-space: nowrap;
 }

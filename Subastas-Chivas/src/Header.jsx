@@ -30,7 +30,6 @@ function Header() {
             </div>
             <div className="menu-right-bar">
                 <SearchBar />
-                <img src="../public/heart.png" className="heart" alt="Heart Icon" />
                 <div className="user-image-container">
                     <img
                         src="../public/profile-icon.png"

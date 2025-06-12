@@ -6,7 +6,7 @@ import JerseyAttributes from "./JerseyAttributes";
 import DashboardAside from "./DashboardAside";
 const AdminDashboard = () => {
   const [auctions, setAuctions] = useState([]);
-  const [filter, setFilter] = useState('HISTORIAL'); // State to track the active filter
+  const [filter, setFilter] = useState('EVENTOS ACTIVOS'); // State to track the active filter
 
   useEffect(() => {
     const fetchAuctions = async () => {
@@ -80,32 +80,8 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard-wrapper">
       <div className="dashboard-top-bar">
-        <div className="button-group">
-          <button className="dashboard-button">Analytics</button>
-          <button className="dashboard-button active">Subastas</button>
-          <button className="dashboard-button">Usuarios</button>
-          <button className="dashboard-button red">+ Nueva Subasta</button>
-        </div>
-        <div className="filter-group">
-          <button
-            className={`dashboard-tab ${filter === 'EVENTOS ACTIVOS' ? 'active' : ''}`}
-            onClick={() => {
-              console.log('Switching to EVENTOS ACTIVOS');
-              setFilter('EVENTOS ACTIVOS');
-            }}
-          >
-            EVENTOS ACTIVOS
-          </button>
-          <button
-            className={`dashboard-tab ${filter === 'HISTORIAL' ? 'active' : ''}`}
-            onClick={() => {
-              console.log('Switching to HISTORIAL');
-              setFilter('HISTORIAL');
-            }}
-          >
-            HISTORIAL
-          </button>
-        </div>
+        
+        
       </div>
       <div className="dashboard-buffer">
         <DashboardAside />
@@ -118,6 +94,27 @@ const AdminDashboard = () => {
           </p>
         ) : (
           <div className="admin-dashboard-board">
+            <div className="filter-group">
+          <button
+            className={`dashboard-tab ${filter === 'EVENTOS ACTIVOS' ? 'active' : ''}`}
+            onClick={() => {
+              console.log('Switching to EVENTOS ACTIVOS');
+              setFilter('EVENTOS ACTIVOS');
+            }}
+          >
+            EN VIVO
+          </button>
+          <button
+            className={`dashboard-tab ${filter === 'HISTORIAL' ? 'active' : ''}`}
+            onClick={() => {
+              console.log('Switching to HISTORIAL');
+              setFilter('HISTORIAL');
+            }}
+          >
+            HISTORIAL
+          </button>
+        </div>
+        
             {auctions.map((auction) => (
               <div className="auction-card" key={auction.jersey_id}>
                 <img
@@ -168,3 +165,12 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+/*
+<div className="button-group">
+          <button className="dashboard-button">Analytics</button>
+          <button className="dashboard-button active">Subastas</button>
+          <button className="dashboard-button">Usuarios</button>
+          <button className="dashboard-button red">+ Nueva Subasta</button>
+        </div>
+*/

@@ -88,6 +88,12 @@ const MisPujas = () => {
     fetchPujas();
   }, [filter, user]);
 
+  const handleClick = () => {
+    if (locker.auctions?.auction_id) {
+      navigate(`/auction/${locker.auctions.auction_id}`);
+    }
+  };
+
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
@@ -125,7 +131,7 @@ const MisPujas = () => {
                 ) : (
                   <div className="dashboard-pujas">
                     {pujas.map((jersey) => (
-                      <JerseyCard key={jersey.auction_id} jersey={jersey} filter={filter} />
+                      <JerseyCard key={jersey.auction_id} jersey={jersey} filter={filter}/>
                     ))}
                   </div>
                 )}
