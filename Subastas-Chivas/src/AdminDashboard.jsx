@@ -4,10 +4,25 @@ import "./AdminDashboard.css";
 import BidHistory from "./BidHistory";
 import JerseyAttributes from "./JerseyAttributes";
 import DashboardAside from "./DashboardAside";
+
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; // Use useNavigate instead of Navigate
+
 const AdminDashboard = () => {
   const [auctions, setAuctions] = useState([]);
   const [filter, setFilter] = useState('EVENTOS ACTIVOS'); // State to track the active filter
 
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate(); // Initialize useNavigate
+  useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  if (!user || user.role !== 'admin') {
+    return null; // Or a loading spinner if redirect is pending
+  }
   useEffect(() => {
     const fetchAuctions = async () => {
       try {

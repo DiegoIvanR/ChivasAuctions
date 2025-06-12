@@ -22,6 +22,8 @@ import Ajustes from "./Ajustes";
 import { Provider } from 'react-redux';
 import store from './store';
 import NotFound from './NotFound';
+
+import AuctionDelivery from './AuctionDelivery';
 /*
 guard:
                   <PaymentMethodGuard requirePaymentMethod={true}>
@@ -48,6 +50,7 @@ const App = () => {
               <Route path="/dashboardUsuario/ajustes" element={<Ajustes />} />
               {/* Payment setup route */}
               <Route path="/add-card" element={<AddCardForm />} />
+              <Route path="/delivery-payment/:paymentID" element={<AuctionDelivery/>} />
               
               {/* Protected routes - require payment method for bidding */}
               <Route 

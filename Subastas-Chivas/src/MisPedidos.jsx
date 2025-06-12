@@ -6,11 +6,13 @@ import JerseyCard from './JerseyCard';
 import { supabase } from './supabaseClient';
 import DashboardHeader from './DashboardHeader';
 import JerseyAttributes from './JerseyAttributes';
+import { useNavigate } from 'react-router-dom';
 const MisPedidos = () => {
   const user = useSelector((state) => state.auth.user);
   const [pedidosEnCamino, setPedidosEnCamino] = useState([]);
   const [pedidosEntregados, setPedidosEntregados] = useState([]);
   const [filter, setFilter] = useState('EN CAMINO');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPedidos = async () => {
@@ -93,6 +95,11 @@ const MisPedidos = () => {
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}/${month}/${day}`;
     };
+
+    const handlePaymentClick = (jersey) => {
+        navigate(`/delivery-payment/${jersey.payment_id}`);
+
+    };
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
@@ -159,7 +166,7 @@ const MisPedidos = () => {
                             <span>{formatCurrency(20 * 1.16)}</span>
                           </div>
                           </div>
-                          <button className='proceed-button'>
+                          <button className='proceed-button'onClick={() => handlePaymentClick(jersey)}>
                             Proceder al Pago
                           </button>
                         </div>

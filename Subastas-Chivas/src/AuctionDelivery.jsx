@@ -7,19 +7,13 @@ import DashboardAside from './DashboardAside';
 import DashboardHeader from './DashboardHeader';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-const DashboardForm = () => {
+import { useParams } from 'react-router-dom';
+const AuctionDelivery = () => {
     const { user } = useSelector((state) => state.auth);
     
+    const { paymentID } = useParams();
     const navigate = useNavigate(); // Initialize useNavigate
-    useEffect(() => {
-      if (!user || user.role !== 'admin') {
-        navigate('/');
-      }
-    }, [user, navigate]);
-  
-    if (!user || user.role !== 'admin') {
-      return null; // Or a loading spinner if redirect is pending
-    }
+    
   const [formData, setFormData] = useState({
     playerName: '',
     jerseyNumber: '',
@@ -38,7 +32,7 @@ const DashboardForm = () => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
   // Calendar state for each date picker
   const [calendarStates, setCalendarStates] = useState({
     matchDate: { currentMonth: new Date(), selectedDate: null },
@@ -81,168 +75,7 @@ const DashboardForm = () => {
     }
   };
 
-  const handleDateSelect = (calendarType, date) => {
-    setFormData(prev => ({
-      ...prev,
-      [calendarType]: date
-    }));
-    
-    setCalendarStates(prev => ({
-      ...prev,
-      [calendarType]: {
-        ...prev[calendarType],
-        selectedDate: date
-      }
-    }));
-  };
 
-  const changeMonth = (calendarType, direction) => {
-    setCalendarStates(prev => {
-      const current = prev[calendarType].currentMonth;
-      const newDate = new Date(current.getFullYear(), current.getMonth() + direction, 1);
-      return {
-        ...prev,
-        [calendarType]: {
-          ...prev[calendarType],
-          currentMonth: newDate
-        }
-      };
-    });
-  };
-
-  const formatSelectedDate = (date) => {
-    if (!date) return 'Seleccione una fecha';
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
-
-  const CustomCalendar = ({ title, calendarType, includeTime = false }) => {
-    const calendarState = calendarStates[calendarType];
-    const currentMonth = calendarState.currentMonth;
-    const selectedDate = calendarState.selectedDate;
-    
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    // Generate calendar days
-    const calendarDays = [];
-    
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < firstDay; i++) {
-      calendarDays.push(null);
-    }
-    
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      calendarDays.push(day);
-    }
-
-    const isSelected = (day) => {
-      if (!selectedDate || !day) return false;
-      return selectedDate.getDate() === day &&
-             selectedDate.getMonth() === month &&
-             selectedDate.getFullYear() === year;
-    };
-
-    const handleDayClick = (day) => {
-      if (!day) return;
-      
-      let newDate;
-      if (includeTime && selectedDate) {
-        // Preserve time if it's a datetime picker
-        newDate = new Date(year, month, day, selectedDate.getHours(), selectedDate.getMinutes());
-      } else {
-        newDate = new Date(year, month, day);
-      }
-      
-      handleDateSelect(calendarType, newDate);
-    };
-
-    const handleTimeChange = (e) => {
-      if (!selectedDate) return;
-      
-      const [hours, minutes] = e.target.value.split(':');
-      const newDate = new Date(selectedDate);
-      newDate.setHours(parseInt(hours), parseInt(minutes));
-      handleDateSelect(calendarType, newDate);
-    };
-
-    return (
-      <div className="custom-calendar">
-        <div className='calendar-title'>{title}</div>
-        <div className="calendar-header">
-          <div className="selected-date-display">
-            {formatSelectedDate(selectedDate)}
-          </div>
-        </div>
-        
-        <div className="calendar-body">
-          <div className="calendar-nav">
-            <span className="calendar-month-year">
-              {monthNames[month]} {year}
-            </span>
-            <div className="nav-arrows">
-              <button 
-                type="button"
-                onClick={() => changeMonth(calendarType, -1)} 
-                className="nav-arrow"
-              >
-                &#8249;
-              </button>
-              <button 
-                type="button"
-                onClick={() => changeMonth(calendarType, 1)} 
-                className="nav-arrow"
-              >
-                &#8250;
-              </button>
-            </div>
-          </div>
-          
-          <div className="calendar-grid">
-            <div className="day-headers">
-              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-                <div key={index} className="day-header">{day}</div>
-              ))}
-            </div>
-            
-            <div className="days-grid">
-              {calendarDays.map((day, index) => (
-                <div
-                  key={index}
-                  className={`calendar-day ${day ? 'clickable' : ''} ${isSelected(day) ? 'selected' : ''}`}
-                  onClick={() => handleDayClick(day)}
-                >
-                  {day}
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {includeTime && selectedDate && (
-            <div className="time-picker">
-              <input
-                type="time"
-                value={`${selectedDate.getHours().toString().padStart(2, '0')}:${selectedDate.getMinutes().toString().padStart(2, '0')}`}
-                onChange={handleTimeChange}
-                className="time-input"
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
 
   const validateForm = () => {
     if (!formData.playerName.trim()) {
@@ -316,14 +149,7 @@ const DashboardForm = () => {
     try {
       // Upload the image to Supabase storage
       const fileExtension = formData.image.name.split('.').pop();
-      const imageFileName = `${formData.playerName
-        .normalize("NFD")                      // descompone caracteres acentuados
-        .replace(/[\u0300-\u036f]/g, "")      // elimina los signos diacríticos (acentos)
-        .replace(/ñ/g, "n")                   // reemplaza ñ
-        .replace(/Ñ/g, "n")                   // reemplaza Ñ
-        .replace(/\s+/g, "-")                 // reemplaza espacios por guiones
-        .toLowerCase()}-${Date.now()}.${fileExtension}`;
-      
+      const imageFileName = `${formData.playerName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.${fileExtension}`;
       
       const { data: storageData, error: storageError } = await supabase.storage
         .from('jersey-images')
@@ -454,7 +280,7 @@ const DashboardForm = () => {
 
   return (
     <div className="dashboard-form-wrapper">
-      <DashboardHeader name={`${user.full_name}`}/>
+      <DashboardHeader name={`${paymentID}`}/>
       <div className="dashboard-body animate-fade-in">
         <DashboardAside />
         
@@ -504,7 +330,6 @@ const DashboardForm = () => {
           />
 
           <div className='form-2columns'>
-            <CustomCalendar title="Fecha del partido" calendarType="matchDate" />
 
             <div className='form-column'>
             <input 
@@ -573,11 +398,6 @@ const DashboardForm = () => {
           </div>
           </div>
 
-          {/* Custom Calendar Components */}
-          <div className='form-2columns'>
-            <CustomCalendar title="Inicio de la subasta" calendarType="auctionStart" includeTime={true} />
-            <CustomCalendar title="Fin de la subasta" calendarType="auctionEnd" includeTime={true} />
-          </div>
           <button 
             className="confirm-btn" 
             onClick={handleSubmit}
@@ -596,4 +416,4 @@ const DashboardForm = () => {
   );
 };
 
-export default DashboardForm;
+export default AuctionDelivery;
