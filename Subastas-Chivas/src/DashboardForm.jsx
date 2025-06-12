@@ -29,6 +29,7 @@ const DashboardForm = () => {
     auctionStart: null,
     auctionEnd: null,
     image: null, // Store the actual File object
+    image2: null,
     used: false, // New checkbox state
     signed: false, // New checkbox state
     description: '',
@@ -37,6 +38,7 @@ const DashboardForm = () => {
   });
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview2, setImagePreview2] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calendar state for each date picker
@@ -76,6 +78,33 @@ const DashboardForm = () => {
       const reader = new FileReader();
       reader.onload = () => {
         setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpload2 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido.');
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('El archivo es demasiado grande. Por favor selecciona una imagen menor a 5MB.');
+        return;
+      }
+
+      // Store the file object
+      setFormData(prev => ({ ...prev, image2: file }));
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview2(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -277,6 +306,10 @@ const DashboardForm = () => {
       alert('Por favor sube una imagen de la playera.');
       return false;
     }
+    if (!formData.image2) {
+      alert('Por favor sube una imagen del dorsal de la playera.');
+      return false;
+    }
     if (!formData.description.trim()) {
       alert('Por favor ingresa una descripción del partido.');
       return false;
@@ -338,11 +371,40 @@ const DashboardForm = () => {
         return;
       }
 
+
+      const fileExtension2 = formData.image2.name.split('.').pop();
+      const imageFileName2 = `${formData.playerName
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/ñ/g, "n")
+        .replace(/Ñ/g, "n")
+        .replace(/\s+/g, "-")
+        .toLowerCase()}-${Date.now()}-back.${fileExtension2}`;
+
+        const { data: storageData2, error: storageError2 } = await supabase.storage
+        .from('jersey-images')
+        .upload(`jerseys/${imageFileName2}`, formData.image2, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (storageError2) {
+        console.error('Error uploading image:', storageError2.message);
+        alert('Error al subir la imagen. Por favor intenta de nuevo.');
+        return;
+      }
+
       // Get the public URL for the image
-      const { data: { publicUrl } } = supabase.storage
+      const { data: {publicUrl} } = await supabase.storage
         .from('jersey-images')
         .getPublicUrl(`jerseys/${imageFileName}`);
 
+      const { data: {publicUrl: publicUrl2} } = await supabase.storage
+        .from('jersey-images')
+        .getPublicUrl(`jerseys/${imageFileName2}`); // <- Use imageFileName2 here
+      
+      console.log("data2:", publicUrl2);
+      
       // Check if the match already exists in the matches table
       const { data: existingMatch, error: matchError } = await supabase
         .from('matches')
@@ -389,6 +451,7 @@ const DashboardForm = () => {
           player_name: formData.playerName,
           jersey_number: parseInt(formData.jerseyNumber),
           image_url: publicUrl,
+          back_image_url: publicUrl2,
           used: formData.used, // Use checkbox value
           signed: formData.signed, // Use checkbox value
           description: formData.description,
@@ -434,10 +497,12 @@ const DashboardForm = () => {
         auctionStart: null,
         auctionEnd: null,
         image: null,
+        image2: null,
         used: false,
         signed: false,
       });
       setImagePreview(null);
+      setImagePreview2(null);
       setCalendarStates({
         matchDate: { currentMonth: new Date(), selectedDate: null },
         auctionStart: { currentMonth: new Date(), selectedDate: null },
@@ -460,7 +525,7 @@ const DashboardForm = () => {
         
         <div className='form-body'>
         <div className="image-upload">
-            <label htmlFor="imageUpload">Subir imagen de la playera:</label>
+            <label htmlFor="imageUpload">Subir imagen del dorsal de la playera:</label>
             <input 
               type="file" 
               id="imageUpload" 
@@ -475,6 +540,24 @@ const DashboardForm = () => {
                 style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
               />
             )}
+
+
+            <label htmlFor="imageUpload">Subir imagen del frontal de la playera:</label>
+            <input 
+              type="file" 
+              id="imageUpload2" 
+              accept="image/*" 
+              onChange={handleImageUpload2} 
+            />
+            {imagePreview2 && (
+              <img 
+                src={imagePreview2} 
+                alt="Vista previa" 
+                className="image-preview" 
+                style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+              />
+            )}
+
           </div>
         <div className="form-content">
           <input 

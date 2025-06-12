@@ -9,10 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 const AuctionDelivery = () => {
-    const { user } = useSelector((state) => state.auth);
-    
-    const { paymentID } = useParams();
-    const navigate = useNavigate(); // Initialize useNavigate
+  const { user } = useSelector((state) => state.auth);
+  const [payment, setPayment] = useState(null);  
+  const { paymentID } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate
     
   const [formData, setFormData] = useState({
     playerName: '',
@@ -278,136 +278,175 @@ const AuctionDelivery = () => {
     }
   };
 
+  useEffect(() => {
+      const fetchPaymentData = async () => {
+        try {
+          const { data: paymentData, error } = await supabase
+            .from('payments')
+            .select(`
+              payment_id,
+              auction_id,
+              bidder_id,
+              auctions (
+                jerseys(
+                  player_name,
+                  jersey_number,
+                  image_url
+                )
+              )
+              
+            `)
+            .eq('payment_id', paymentID); // Filter by auction ID
+    
+          if (error) {
+            console.error('Error fetching auction data:', error.message);
+            return;
+          }
+    
+          if (!paymentData || paymentData.length === 0) {
+            console.warn('No auctions found for this jersey.');
+            console.log('No auctions found for this jersey.');
+            setPayment(null);
+            return;
+          }
+  
+  
+          // Merge auction-level data with nested jersey data
+          const selectedAuction = paymentData[0];
+          setPayment(selectedAuction); // Set the merged data
+          console.log(payment);
+          console.debug('Merged Auction Data:', selectedAuction);
+        } catch (err) {
+          console.error('Unexpected error fetching auction data:', err);
+        }
+      };
+    
+      fetchPaymentData();
+    }, [paymentID]);
+
   return (
     <div className="dashboard-form-wrapper">
       <DashboardHeader name={`${paymentID}`}/>
       <div className="dashboard-body animate-fade-in">
         <DashboardAside />
         
-        <div className='form-body'>
-        <div className="image-upload">
-            <label htmlFor="imageUpload">Subir imagen de la playera:</label>
-            <input 
-              type="file" 
-              id="imageUpload" 
-              accept="image/*" 
-              onChange={handleImageUpload} 
-            />
-            {imagePreview && (
-              <img 
-                src={imagePreview} 
-                alt="Vista previa" 
-                className="image-preview" 
-                style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+        {payment && (
+          <div className='form-body'>
+            <div className="image-upload">
+                  <img 
+                    src={payment.auctions.jerseys.image_url} 
+                    alt="Vista previa" 
+                    className="image-preview" 
+                    style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                  />
+              </div>
+            <div className="form-content">
+              <input 
+                type="text" 
+                name="playerName" 
+                placeholder="Nombre del jugador" 
+                value={formData.playerName}
+                onChange={handleInputChange}
+                className='dashboard-input'
               />
-            )}
-          </div>
-        <div className="form-content">
-          <input 
-            type="text" 
-            name="playerName" 
-            placeholder="Nombre del jugador" 
-            value={formData.playerName}
-            onChange={handleInputChange}
-            className='dashboard-input'
-          />
-          <input 
-            type="number" 
-            name="jerseyNumber" 
-            placeholder="Número de la playera" 
-            value={formData.jerseyNumber}
-            onChange={handleInputChange}
-            className='dashboard-input'
-            min="0"
-          />
-          <input 
-            type="text" 
-            name="rival" 
-            placeholder="Equipo rival" 
-            value={formData.rival}
-            onChange={handleInputChange} 
-            className='dashboard-input'
-          />
-
-          <div className='form-2columns'>
-
-            <div className='form-column'>
-            <input 
-            type="number" 
-            name="amount" 
-            placeholder="Monto inicial" 
-            step="0.01"
-            value={formData.amount}
-            onChange={handleInputChange} 
-            className='dashboard-input'
-            min="0"
-          />
-          <input
-            type="text"
-            name="description" 
-            placeholder="Descripción del jersey" 
-            value={formData.description}
-            onChange={handleInputChange}
-            className='dashboard-input'
-          />
-          <input 
-            type="text" 
-            name="venue" 
-            placeholder="Lugar del partido" 
-            value={formData.venue}
-            onChange={handleInputChange} 
-            className='dashboard-input'
-          />
-          <input 
-            type="text" 
-            name="competition" 
-            placeholder="Competencia" 
-            value={formData.competition}
-            onChange={handleInputChange} 
-            className='dashboard-input'
-          />
-
-          {/* Checkbox section */}
-          <div className="checkbox-section">
-            <div className="checkbox-group">
-              <label className="checkbox-label">
+              <input 
+                type="number" 
+                name="jerseyNumber" 
+                placeholder="Número de la playera" 
+                value={formData.jerseyNumber}
+                onChange={handleInputChange}
+                className='dashboard-input'
+                min="0"
+              />
+              <input 
+                type="text" 
+                name="rival" 
+                placeholder="Equipo rival" 
+                value={formData.rival}
+                onChange={handleInputChange} 
+                className='dashboard-input'
+              />
+    
+              <div className='form-2columns'>
+    
+                <div className='form-column'>
                 <input 
-                  type="checkbox" 
-                  name="used" 
-                  checked={formData.used}
-                  onChange={handleInputChange}
-                  className="custom-checkbox"
-                />
-                <span className="checkbox-text">Playera usada</span>
-              </label>
-            </div>
-            <div className="checkbox-group">
-              <label className="checkbox-label">
-                <input 
-                  type="checkbox" 
-                  name="signed" 
-                  checked={formData.signed}
-                  onChange={handleInputChange}
-                  className="custom-checkbox"
-                />
-                <span className="checkbox-text">Playera firmada</span>
-              </label>
-            </div>
+                type="number" 
+                name="amount" 
+                placeholder="Monto inicial" 
+                step="0.01"
+                value={formData.amount}
+                onChange={handleInputChange} 
+                className='dashboard-input'
+                min="0"
+              />
+              <input
+                type="text"
+                name="description" 
+                placeholder="Descripción del jersey" 
+                value={formData.description}
+                onChange={handleInputChange}
+                className='dashboard-input'
+              />
+              <input 
+                type="text" 
+                name="venue" 
+                placeholder="Lugar del partido" 
+                value={formData.venue}
+                onChange={handleInputChange} 
+                className='dashboard-input'
+              />
+              <input 
+                type="text" 
+                name="competition" 
+                placeholder="Competencia" 
+                value={formData.competition}
+                onChange={handleInputChange} 
+                className='dashboard-input'
+              />
+    
+              {/* Checkbox section */}
+              <div className="checkbox-section">
+                <div className="checkbox-group">
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="used" 
+                      checked={formData.used}
+                      onChange={handleInputChange}
+                      className="custom-checkbox"
+                    />
+                    <span className="checkbox-text">Playera usada</span>
+                  </label>
+                </div>
+                <div className="checkbox-group">
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      name="signed" 
+                      checked={formData.signed}
+                      onChange={handleInputChange}
+                      className="custom-checkbox"
+                    />
+                    <span className="checkbox-text">Playera firmada</span>
+                  </label>
+                </div>
+                </div>
+                
+              </div>
+              </div>
+    
+              <button 
+                className="confirm-btn" 
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Creando subasta...' : 'Confirmar subasta'}
+              </button>
             </div>
             
-          </div>
-          </div>
-
-          <button 
-            className="confirm-btn" 
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Creando subasta...' : 'Confirmar subasta'}
-          </button>
-        </div>
-        
-        </div>
+            </div>
+        )}
           
 
           

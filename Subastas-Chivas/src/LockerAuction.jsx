@@ -87,8 +87,7 @@ export default function LockerAuction() {
           }
     
           if (!bids || bids.length === 0) {
-            console.warn('No auctions found for this jersey.');
-            return;
+            console.warn('No bids found for this jersey.');
           } else{
             console.log(bids)
             setHighestBidder(bids[0].bidder_id)

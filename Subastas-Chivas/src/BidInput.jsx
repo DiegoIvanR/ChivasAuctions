@@ -157,7 +157,7 @@ export default function BidInput({ jersey, onBidUpdate, highestBidder }) {
         {isProcessingBid ? 'PROCESANDO...' : 'PUJA'}
       </button>
       {warning !=='¡Puja exitosa! El pago se procesará al finalizar la subasta.' && <p className="bid-warning">{warning}</p>}
-      {(warning ==='¡Puja exitosa! El pago se procesará al finalizar la subasta.' || warning === '') && highestBidder===user.id && <p className="bid-warning">TIENES LA PUJA MÁS ALTA</p>}
+      {user && (warning ==='¡Puja exitosa! El pago se procesará al finalizar la subasta.' || warning === '') && highestBidder===user.id && <p className="bid-warning">TIENES LA PUJA MÁS ALTA</p>}
       {/* Popup for logged-in users with payment method */}
       {showPopup && user && hasPaymentMethod && (
         <ConfirmationPopup
