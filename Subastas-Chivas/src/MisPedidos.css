@@ -13,6 +13,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
+  width: auto;
 }
 
 .mispedidos-filters .active {
@@ -24,7 +25,6 @@
   display: flex;
   gap: 30px;
   align-items: center;
-  justify-content: start;
 }
 
 .resumen-envio {
@@ -74,10 +74,11 @@
 }
 
 .dashboard-section--pedidos {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  margin-top: 2%;
+  position: relative;
+  align-self: flex-start;
 }
 
 .dashboard-aside {
@@ -87,4 +88,26 @@
 .dashboard-title--pedidos {
   text-align: left;
   margin-left: 40px;
+}
+
+.dashboard-pedidos {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr); /* 3 cards wide */
+  gap: 20px; /* Space between cards */
+  max-height: 80vh; /* Limit the height to make it scrollable */
+  overflow-y: auto; /* Enable vertical scrolling */
+  align-self: flex-start;
+}
+
+.dashboard-pedidos::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.dashboard-pedidos::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2); /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded scrollbar */
+}
+
+.dashboard-pedidos::-webkit-scrollbar-track {
+  background-color: transparent; /* Transparent track */
 }

@@ -5,6 +5,7 @@ import DashboardAside from './DashboardAside';
 import JerseyCard from './JerseyCard';
 import { supabase } from './supabaseClient';
 import DashboardHeader from './DashboardHeader';
+import JerseyAttributes from './JerseyAttributes';
 const MisPedidos = () => {
   const user = useSelector((state) => state.auth.user);
   const [pedidosEnCamino, setPedidosEnCamino] = useState([]);
@@ -23,17 +24,21 @@ const MisPedidos = () => {
               auction_id,
               bidder_id,
               delivered,
+              amount_charged,
               auctions (
                 jersey_id,
                 start_time,
                 end_time,
-                highest_bid,
                 jerseys (
                   player_name,
                   jersey_number,
                   image_url,
                   used,
-                  signed
+                  signed,
+                  matches (
+                    opponent,
+                    match_date
+                  )
                 )
               ) 
             `)
@@ -75,11 +80,19 @@ const MisPedidos = () => {
   const formatCurrency = (amount) =>
     amount?.toLocaleString('es-MX', {
       style: 'currency',
-      currency: 'MXN',
+      currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
 
+    const formatDate = (isoString) => {
+      if (!isoString) return "N/A";
+      const date = new Date(isoString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}/${month}/${day}`;
+    };
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-overlay"></div>
@@ -87,40 +100,73 @@ const MisPedidos = () => {
         <main className="dashboard-main">
           <DashboardHeader name={user.full_name}/>
 
-          <div className="mispedidos-filters">
-            <button className={filter === 'EN CAMINO' ? 'active' : ''} onClick={() => setFilter('EN CAMINO')}>EN CAMINO</button>
-            <button className={filter === 'ENTREGADOS' ? 'active' : ''} onClick={() => setFilter('ENTREGADOS')}>ENTREGADOS</button>
-          </div>
+          
 
           <div className="dashboard-body dashboard-body--pedidos">
             <DashboardAside />
-
-            <section className="dashboard-section dashboard-section--pedidos">
-              {pedidosToDisplay.length === 0 ? (
-                <p>No hay subastas {filter.toLowerCase()} disponibles.</p>
-              ) : (
-                pedidosToDisplay.map((jersey) => (
-                  <div key={jersey.auction_id} className="pedido-card-horizontal">
-                    <JerseyCard jersey={jersey} filter="GANADAS" />
-                    <div className="resumen-envio">
-                      <h4 className="resumen-title">RESUMEN DEL ENVÍO</h4>
-                      <div className="resumen-line">
-                        <span>SUBTOTAL: </span>
-                        <span>{formatCurrency(jersey.auctions.highest_bid)}</span>
+            <div className='mispujas-body-content'>
+              <div className="mispedidos-filters">
+                <button className={filter === 'EN CAMINO' ? 'active' : ''} onClick={() => setFilter('EN CAMINO')}>EN CAMINO</button>
+                <button className={filter === 'ENTREGADOS' ? 'active' : ''} onClick={() => setFilter('ENTREGADOS')}>ENTREGADOS</button>
+            </div>
+              <section className="dashboard-section--pedidos">
+                <div className='dashboard-pedidos'>
+                  {pedidosToDisplay.length === 0 ? (
+                    <p>No hay subastas {filter.toLowerCase()} disponibles.</p>
+                  ) : (
+                    pedidosToDisplay.map((jersey) => (
+                      <div key={jersey.auction_id} className="pedido-card-horizontal">
+                        <div className="auction-card" key={jersey.auctions.jersey_id}>
+                                        <img
+                                          src={jersey.auctions?.jerseys?.image_url}
+                                          alt={`Jersey de ${jersey.player_name}`}
+                                          className="jersey-image"
+                                        />
+                                        <div className="auction-dash-info">
+                                          <div className="auction-dash-player">
+                                            <p className="auction-dash-name">{jersey.auctions.jerseys.player_name || "Desconocido"}</p>
+                                            <p className="auction-dash-jersey">#{jersey.auctions.jerseys.jersey_number || "N/A"}</p>
+                                          </div>
+                                          <p className="auction-dash-id">ID: {jersey.auction_id || "N/A"}</p>
+                                          <p className="auction-dash-stbid">Pago: {jersey.amount_charged ? `${jersey.amount_charged} USD` : "N/A"}</p>
+                        
+                                          <div className="auction-dash-match">
+                                            <p className="auction-dash-opponent">VS {jersey.auctions.jerseys.matches.opponent || "N/A"}</p>
+                                            <p className="auction-dash-date">{jersey.auctions.jerseys.matches?.match_date || "N/A"}</p>
+                                          </div>
+                                          <JerseyAttributes jersey={jersey.auctions?.jerseys} />
+                                          
+                                          <p className="auction-dash-start">
+                                            Inicio: {formatDate(jersey.auctions?.start_time)}
+                                          </p>
+                                          <p className="auction-dash-end">
+                                            Fin: {formatDate(jersey.auctions?.end_time)}
+                                          </p>
+                                        </div>
+                                      </div>
+                        
+                        <div className="resumen-envio">
+                          <h4 className="resumen-title">RESUMEN DEL ENVÍO</h4>
+                          <div className="resumen-line">
+                            <span>SUBTOTAL: </span>
+                            <span>{formatCurrency(20)}</span>
+                          </div>
+                          <div className="resumen-line">
+                            <span>IVA: </span>
+                            <span>{formatCurrency(20 * 0.16)}</span>
+                          </div>
+                          <div className="resumen-line total">
+                            <span>TOTAL: </span>
+                            <span>{formatCurrency(20 * 1.16)}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="resumen-line">
-                        <span>IVA: </span>
-                        <span>{formatCurrency(jersey.auctions.highest_bid * 0.16)}</span>
-                      </div>
-                      <div className="resumen-line total">
-                        <span>TOTAL: </span>
-                        <span>{formatCurrency(jersey.auctions.highest_bid * 1.16)}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </section>
+                    ))
+                  )}
+                </div>
+                
+              </section>
+            </div>
           </div>
         </main>
       </div>

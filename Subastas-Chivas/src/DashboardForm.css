@@ -100,7 +100,7 @@
 .custom-calendar {
   background: #ECE6F02E;
 
-  border-radius: 8px; /* Reduced border radius */
+  border-radius: 20px; /* Reduced border radius */
   padding: 0.8rem; /* Reduced padding */
   margin: 0.5rem 0; /* Reduced margin */
   backdrop-filter: blur(8px);

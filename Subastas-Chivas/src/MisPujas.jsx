@@ -119,7 +119,7 @@ const MisPujas = () => {
               </button>
             </div>
 
-              <section className="dashboard-section dashboard-section--pujas">
+              <section className="dashboard-section--pujas">
                 {pujas.length === 0 ? (
                   <p>No hay pujas disponibles para este filtro.</p>
                 ) : (

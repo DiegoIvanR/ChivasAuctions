@@ -14,8 +14,6 @@
   display: flex;
   gap: 12px;
   margin-bottom: 10px;
-  position: absolute;
-  left: 4%;
 }
 
 .mispujas-filters button {
@@ -110,7 +108,7 @@
   gap: 20px; /* Space between cards */
   max-height: 80vh; /* Limit the height to make it scrollable */
   overflow-y: auto; /* Enable vertical scrolling */
-  padding: 10px; /* Add padding for spacing */
+  align-self: flex-start;
 }
 
 .dashboard-pujas::-webkit-scrollbar {
@@ -131,13 +129,12 @@
 }
 
 .dashboard-section--pujas {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 5%;
+  margin-top: 2%;
   position: relative;
-  right: 10%;
+  align-self: flex-start;
+  
 }
 
 .dashboard-title--pujas {
@@ -149,6 +146,7 @@
   flex-direction: column;
   position: relative;
   width: 100%;
+  align-self: flex-start;
 }
 
 .dashboard-main {
