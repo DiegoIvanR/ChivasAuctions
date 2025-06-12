@@ -7,7 +7,7 @@ import { supabase } from './supabaseClient';
 import './bidInput.css';
 import PaymentMethodRequiredPopup from './PaymentMethodRequiredPopup';
 
-export default function BidInput({ jersey, onBidUpdate }) {
+export default function BidInput({ jersey, onBidUpdate, highestBidder }) {
   const [bid, setBid] = useState(jersey.highest_bid + 100);
   const [warning, setWarning] = useState('');
   const [showPopup, setShowPopup] = useState(false);
@@ -125,20 +125,6 @@ export default function BidInput({ jersey, onBidUpdate }) {
       }
 
       console.log('Bid inserted successfully:', data);
-
-      const { error: updateError } = await supabase
-      .from('auctions')
-      .update({ highest_bid: bid }) // Update the highest_bid field
-      .eq('auction_id', jersey.auction_id); // Match the auction_id
-
-    if (updateError) {
-      console.error('Error updating highest bid:', updateError.message);
-      setWarning('Error al actualizar la puja más alta. Inténtalo de nuevo.');
-      setIsProcessingBid(false);
-      return;
-    }
-
-    console.log('Highest bid updated successfully.');
       onBidUpdate(bid); // Update the bid in the parent component
       setWarning('¡Puja exitosa! El pago se procesará al finalizar la subasta.');
       setTermsAccepted(false); // Reset the checkbox
@@ -170,8 +156,8 @@ export default function BidInput({ jersey, onBidUpdate }) {
       >
         {isProcessingBid ? 'PROCESANDO...' : 'PUJA'}
       </button>
-      {warning && <p className="bid-warning">{warning}</p>}
-
+      {warning !=='¡Puja exitosa! El pago se procesará al finalizar la subasta.' && <p className="bid-warning">{warning}</p>}
+      {(warning ==='¡Puja exitosa! El pago se procesará al finalizar la subasta.' || warning === '') && highestBidder===user.id && <p className="bid-warning">TIENES LA PUJA MÁS ALTA</p>}
       {/* Popup for logged-in users with payment method */}
       {showPopup && user && hasPaymentMethod && (
         <ConfirmationPopup

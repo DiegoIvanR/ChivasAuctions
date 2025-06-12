@@ -91,6 +91,33 @@ return(
     left: 102%;
 
 }
+.mini-jerseys{
+  display: flex;
+  flex-direction: column;
+  top: 30.5%;
+  left: 37%;
+  position: absolute;
+  z-index: 1;
+  gap: 10px;
+}
+.locker-auction-jersey-img-mini{
+  width: 80%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.locker-auction-jersey-img-mini:hover {
+  border-color: #ffffff;
+  opacity: 0.8;
+}
+
+.locker-auction-jersey-img-mini.selected {
+  border-color: #ff0000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
 
 .locker-cabinet{
     position: absolute;
@@ -133,12 +160,22 @@ return(
 
 .auction-id{
     position: absolute;
-    top: 3%;
-	left: 10%;
+    top: 17%;
+	left: 11%;
     font-family: Montserrat, sans-serif;
 	font-weight: 600;
-	font-size: 18px;
-    color: #D3D3D3;
+	font-size: 14px;
+    color: #888;
+
+}
+.auction-opponent{
+  position: absolute;
+  top: 5%;
+left: 11%;
+  font-family: Montserrat, sans-serif;
+font-weight: 600;
+font-size: 18px;
+  color: #D3D3D3;
 
 }
 /* Text overlay styles */
@@ -236,11 +273,19 @@ return(
   .auction-static-info{
 
     position: absolute;
-    top: 63%;
+    top: 66%;
     margin: auto;
     font-family: Montserrat, sans-serif;
 	  font-weight: 200;
-	  font-size: 16px;
+	  font-size: 12px;
     color: #D3D3D3;
     max-width: 55%;
+  }
+
+  .line{
+    position: absolute;
+    z-index: 3;
+    width: 50%;
+    top: 52%;
+    color: #CAC4D0
   }

@@ -160,6 +160,8 @@
 	margin: auto;
 	display: block;
 	width: 100%;
+	position: relative;
+	z-index: 1;
   }
   .door-container {
 	position: relative;
@@ -323,11 +325,12 @@
     opacity: 0.7; /* Slight fade effect */
 }
 
-.user-image{
+.user-image {
 	width: 40px;
 	height: 40px;
-	filter: invert(1);
-}
+	filter: invert(1) brightness(200%);
+  }
+  
 
 .footer{
 	box-sizing: border-box;	
@@ -747,6 +750,26 @@
 	font-size: 11px;
   }
   
+  .no-results-banner {
+	position: absolute;
+	top: 17%; /* adjust based on header height */
+	left: 0;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	z-index: 101; 
+  }
+  
+  .no-results-text{
+	margin: auto;
+
+	font-family: Rajdhani, sans-serif;
+	font-weight: 700;
+	font-size: 40px;
+	color: #D3D3D3;
+	text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.7);
+	text-align: center;
+  }
 
   @media (max-width: 830px) {
 	.header {

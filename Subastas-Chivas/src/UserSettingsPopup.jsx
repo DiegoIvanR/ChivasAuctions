@@ -42,8 +42,19 @@ export default function UserSettingsPopup({ onClose }) {
 
   const handleAdminDashboard = () => {
     onClose(); // Close the popup
-    navigate("/dashboard"); // Navigate to the admin dashboard
+    navigate("/admin-dashboard"); // Navigate to the admin dashboard
   };
+
+  const handleNewAuction = () => {
+    onClose(); // Close the popup
+    navigate("/dashboard"); // Navigate to the admin dashboard
+  }
+
+  const handleSettings = () => {
+    onClose(); // Close the popup
+    navigate("/dashboardUsuario/ajustes"); // Navigate to the admin dashboard
+  }
+
 
   return (
     <div className="user-settings-popup">
@@ -56,9 +67,12 @@ export default function UserSettingsPopup({ onClose }) {
           <li className="popup-menu-item" onClick={handleMisPujas}>Mis Pujas</li>
           <li className="popup-menu-item" onClick={handleMisPedidos}>Mis Pedidos</li>
           {user.role === "admin" && (
-            <li className="popup-menu-item" onClick={handleAdminDashboard}>Admin Dashboard</li>
+            <div>
+              <li className="popup-menu-item" onClick={handleNewAuction}>Crear Subasta</li>
+              <li className="popup-menu-item" onClick={handleAdminDashboard}>Admin Dashboard</li>
+            </div>
           )}
-          <li className="popup-menu-item">Ajustes</li>
+          <li className="popup-menu-item" onClick={handleSettings}>Ajustes</li>
           <li className="popup-menu-item" onClick={handleLogout}>Cerrar Sesión</li>
         </ul>
       )}

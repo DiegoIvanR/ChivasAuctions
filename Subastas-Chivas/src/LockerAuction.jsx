@@ -5,13 +5,16 @@ import { supabase } from './supabaseClient';
 import JerseyAttributes from './JerseyAttributes';
 import BidInput from './BidInput';
 import BidHistory from './BidHistory';
+import JerseyInfo from './JerseyInfo';
 
 export default function LockerAuction() {
   const { auctionID } = useParams();
   const [jersey, setJersey] = useState(null);
   const [timeLeft, setTimeLeft] = useState('');
   const [status, setStatus] = useState('');
+  const [selectedImage, setSelectedImage] = useState('front'); // 'front' or 'back'
   const lockerImageRef = useRef(null);
+  const [highestBidder, setHighestBidder] = useState('')
 
   const updateJerseyPosition = () => {
     const lockerImage = lockerImageRef.current;
@@ -46,12 +49,15 @@ export default function LockerAuction() {
               jersey_number,
               size,
               image_url,
+              back_image_url,
               used,
               signed,
+              description,
               matches (
                 opponent,
                 venue,
-                competition
+                competition,
+                match_date
               )
             )
           `)
@@ -67,7 +73,27 @@ export default function LockerAuction() {
           setJersey(null);
           return;
         }
-  
+
+        const { data: bids, error: bids_error } = await supabase
+          .from('bids')
+          .select('bidder_id, amount, created_at')
+          .eq('auction_id', auctionID)
+          .order('created_at', { ascending: false }) // Sort descending
+          .limit(1); // Get only the top one
+
+          if (bids_error) {
+            console.error('Error fetching auction data:', error.message);
+            return;
+          }
+    
+          if (!bids || bids.length === 0) {
+            console.warn('No auctions found for this jersey.');
+            return;
+          } else{
+            console.log(bids)
+            setHighestBidder(bids[0].bidder_id)
+          }
+
         // Merge auction-level data with nested jersey data
         const selectedAuction = auctionData[0];
         const mergedData = {
@@ -77,6 +103,13 @@ export default function LockerAuction() {
           start_time: selectedAuction.start_time,
           end_time: selectedAuction.end_time,
           highest_bid: selectedAuction.highest_bid,
+          opponent: selectedAuction.jerseys.matches.opponent,
+          date: selectedAuction.jerseys.matches.match_date,
+
+          venue: selectedAuction.jerseys.matches.venue,
+          competition: selectedAuction.jerseys.matches.competition,
+          description: selectedAuction.jerseys.description,
+
         };
   
         setJersey(mergedData); // Set the merged data
@@ -203,9 +236,16 @@ export default function LockerAuction() {
     }));
   };
 
+  const handleImageSelection = (imageType) => {
+    setSelectedImage(imageType);
+  };
+
   if (!jersey) {
     return <div>Loading...</div>;
   }
+
+  // Determine which image to display based on selection
+  const displayImage = selectedImage === 'front' ? jersey.image_url : jersey.back_image_url;
 
   return (
     <div className="locker-auction">
@@ -221,8 +261,28 @@ export default function LockerAuction() {
       <div className="locker-auction-jersey">
         <img src="../public/locker.png" className="locker-auction-jersey-locker-img" alt="Locker" />
         <img src="../public/hanger.png" className="locker-auction-hanger" alt="Jersey Hanger" />
-        <img src={jersey.image_url} className="locker-auction-jersey-img" alt="Jersey" />
+        <img src={displayImage} className="locker-auction-jersey-img" alt="Jersey" />
+        <div className='mini-jerseys'>
+          <img 
+            src={jersey.image_url} 
+            className={`locker-auction-jersey-img-mini ${selectedImage === 'front' ? 'selected' : ''}`}
+            alt="Jersey Front" 
+            onClick={() => handleImageSelection('front')}
+          />
+          {jersey.back_image_url &&<img 
+            src={jersey.back_image_url} 
+            className={`locker-auction-jersey-img-mini ${selectedImage === 'back' ? 'selected' : ''}`}
+            alt="Jersey Back" 
+            onClick={() => handleImageSelection('back')}
+          /> }
+        </div>
         <img src="../public/locker-cabinet.png" className="locker-cabinet" alt="Locker Cabinet" />
+
+        <JerseyInfo
+          venue={jersey.venue} 
+          competition={jersey.competition}
+          description={jersey.description}
+        />
         <div className="locker-auction-auction">
           <img src="../public/locker.png" className="locker-auction-locker-img"/>
           <div className="auction-info">
@@ -230,6 +290,11 @@ export default function LockerAuction() {
             {jersey.player_name && (
               <div className="auction-label">{jersey.player_name}</div>
             )}
+            {jersey.opponent && jersey.date && 
+              <h1 className='auction-opponent'>
+                VS {jersey.opponent} {jersey.date}
+              </h1>
+            }
             {jersey.match_id && (
               <div className="auction-status">
                 {timeLeft === 'Terminada' ? 'PUJA FINAL' : 'PUJA ACTUAL'}
@@ -247,8 +312,9 @@ export default function LockerAuction() {
               <div className="auction-time-remaining">{timeLeft}</div>
             )}
             {timeLeft!=='Terminada'&& (
-              <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} />
+              <BidInput jersey={jersey} onBidUpdate={handleBidUpdate} highestBidder={highestBidder}/>
             )}
+            {timeLeft==='Terminada'&&<hr className='line'/>}
             <p className='auction-static-info'>Este producto fue recolectado directamente de la cancha. 
 Incluye un certificado digital personal que asegura y proteje
 la identidad del producto. Sólo debes de acercar el teléfono

@@ -436,7 +436,7 @@ const DashboardForm = () => {
   return (
     <div className="dashboard-form-wrapper">
       <DashboardHeader name={`${user.full_name}`}/>
-      <div className="dashboard-body">
+      <div className="dashboard-body animate-fade-in">
         <DashboardAside />
         
         <div className='form-body'>

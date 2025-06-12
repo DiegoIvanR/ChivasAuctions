@@ -22,7 +22,10 @@ const DashboardAside = () => {
         <li><Link to="/dashboardUsuario/MisPujas">Mis Pujas</Link></li>
         <li><Link to="/dashboardUsuario/MisPedidos">Mis Pedidos</Link></li>
         {user.role === "admin" && (
-            <li><Link to="/dashboard">Admin Dashboard</Link></li>
+          <ul>
+            <li><Link to="/dashboard">Crear Subasta</Link></li>
+            <li><Link to="/admin-dashboard">Admin Dashboard</Link></li>
+          </ul>
           )}
         <li><Link to="/dashboardUsuario/ajustes">Ajustes</Link></li>
         <li className="dashboard-logout" onClick={handleLogout}>Cerrar sesión</li>

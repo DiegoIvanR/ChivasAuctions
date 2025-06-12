@@ -216,13 +216,25 @@ export default function LockerRoomSearch() {
   };
 
   return (
-    <div className="locker-room-container">
-      <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top locker frame" />
-      {noResults ? (
-        <div className="no-results-banner">0 RESULTADOS PARA '{pattern}' </div>
-      ) : (
+    <div className="locker-room-container"> 
+      <div className='top-locker-frame-wrapper'>
+        <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top locker frame" />
+        <div className="no-results-banner">
+        <div className="no-results-text">
+          {noResults
+            ? `0 RESULTADOS PARA '${pattern}'`
+            : pattern
+              ? `Mostrando resultados para '${pattern}'`
+              : ''}
+        </div>
+
+          </div>
+      </div>
+      
         <div className="carousel-container">
           <div className="carousel-controls">
+          
+          
             <div
               className="locker-list"
               style={{
@@ -242,7 +254,7 @@ export default function LockerRoomSearch() {
             </div>
           </div>
         </div>
-      )}
+      
     </div>
   );
 }

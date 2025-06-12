@@ -77,8 +77,11 @@ return (
 }
 
 .bid-warning {
-  color: #ff0000;
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
+  font-family: Merriweather Sans;
+font-weight: 300;
+font-size: 18px;
+line-height: 100%;
+letter-spacing: 3%;
+color: white  ;
+
 }

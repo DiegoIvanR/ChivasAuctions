@@ -83,7 +83,7 @@ const AdminDashboard = () => {
         
         
       </div>
-      <div className="dashboard-buffer">
+      <div className="dashboard-buffer animate-fade-in">
         <DashboardAside />
         {auctions.length === 0 ? (
           <p className="no-auctions">
@@ -114,7 +114,7 @@ const AdminDashboard = () => {
             HISTORIAL
           </button>
         </div>
-        
+
             {auctions.map((auction) => (
               <div className="auction-card" key={auction.jersey_id}>
                 <img
