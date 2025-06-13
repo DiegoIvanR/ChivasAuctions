@@ -18,6 +18,7 @@ const AuctionDelivery = () => {
   const { paymentID } = useParams();
   const [delivery, setDelivery] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
     
   const [formData, setFormData] = useState({
     playerName: '',
@@ -153,142 +154,100 @@ const AuctionDelivery = () => {
     setDelivery(formDelivery);
   };
 
-  const handleSubmit = async () => {
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-
+  const processDeliveryPayment = async () => {
     try {
-      // Upload the image to Supabase storage
-      const fileExtension = formData.image.name.split('.').pop();
-      const imageFileName = `${formData.playerName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}.${fileExtension}`;
-      
-      const { data: storageData, error: storageError } = await supabase.storage
-        .from('jersey-images')
-        .upload(`jerseys/${imageFileName}`, formData.image, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (storageError) {
-        console.error('Error uploading image:', storageError.message);
-        alert('Error al subir la imagen. Por favor intenta de nuevo.');
-        return;
+      // Get current session token
+      const { data: session, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session?.session?.access_token) {
+        throw new Error('No se pudo autenticar. Por favor, inicia sesión nuevamente.');
       }
 
-      // Get the public URL for the image
-      const { data: { publicUrl } } = supabase.storage
-        .from('jersey-images')
-        .getPublicUrl(`jerseys/${imageFileName}`);
+      // Prepare delivery address string
+      const deliveryAddress = [
+        formDelivery.name,
+        formDelivery.address,
+        formDelivery.address2,
+        `${formDelivery.cp}, ${formDelivery.city}, ${formDelivery.state}`,
+        formDelivery.country,
+        `Tel: ${formDelivery.phoneNumber}`
+      ].filter(Boolean).join(', ');
 
-      // Check if the match already exists in the matches table
-      const { data: existingMatch, error: matchError } = await supabase
-        .from('matches')
-        .select('match_id')
-        .eq('opponent', formData.rival)
-        .eq('match_date', formData.matchDate.toISOString().split('T')[0])
-        .single();
-
-      if (matchError && matchError.code !== 'PGRST116') {
-        console.error('Error checking match:', matchError.message);
-        alert('Error al verificar el partido. Por favor intenta de nuevo.');
-        return;
-      }
-
-      let matchId = existingMatch?.match_id;
-      
-      if (!matchId) {
-        // Insert a new match if it doesn't exist
-        const { data: newMatch, error: insertMatchError } = await supabase
-          .from('matches')
-          .insert({
-            opponent: formData.rival,
-            match_date: formData.matchDate.toISOString().split('T')[0],
-            venue: formData.venue,
-            competition: formData.competition,
-          })
-          .select('match_id')
-          .single();
-
-        if (insertMatchError) {
-          console.error('Error inserting match:', insertMatchError.message);
-          alert('Error al crear el partido. Por favor intenta de nuevo.');
-          return;
+      // Call the edge function to process delivery payment
+      const response = await fetch(
+        "https://tlhejbmdwowbhcyviydm.functions.supabase.co/processDeliveryPayment", // Update this URL to your actual edge function URL
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.session.access_token}`,
+          },
+          body: JSON.stringify({
+            payment_id: paymentID,
+            delivery_address: deliveryAddress
+          }),
         }
+      );
 
-        matchId = newMatch.match_id;
+      const data = await response.json();
+      if (!response.ok) {
+        console.error("Edge function error:", data);
+        throw new Error(data.error || "Error al procesar el pago de envío");
       }
 
-      // Insert the jersey into the jerseys table
-      const { data: newJersey, error: jerseyError } = await supabase
-        .from('jerseys')
-        .insert({
-          match_id: matchId,
-          player_name: formData.playerName,
-          jersey_number: parseInt(formData.jerseyNumber),
-          image_url: publicUrl,
-          used: formData.used, // Use checkbox value
-          signed: formData.signed, // Use checkbox value
-          description: formData.description,
-        })
-        .select('jersey_id')
-        .single();
-
-      if (jerseyError) {
-        console.error('Error inserting jersey:', jerseyError.message);
-        alert('Error al crear la playera. Por favor intenta de nuevo.');
-        return;
-      }
-
-      const jerseyId = newJersey.jersey_id;
-
-      // Insert the auction
-      const { error: auctionError } = await supabase
-        .from('auctions')
-        .insert({
-          start_time: formData.auctionStart.toISOString(),
-          end_time: formData.auctionEnd.toISOString(),
-          highest_bid: parseFloat(formData.amount),
-          starting_bid: parseFloat(formData.amount),
-          jersey_id: jerseyId,
-          admin_id: user.id,
-        });
-
-      if (auctionError) {
-        console.error('Error inserting auction:', auctionError.message);
-        alert('Error al crear la subasta. Por favor intenta de nuevo.');
-        return;
-      }
-
-      alert('¡Subasta creada exitosamente!');
-      
-      // Reset form
-      setFormData({
-        playerName: '',
-        jerseyNumber: '',
-        rival: '',
-        amount: '',
-        matchDate: null,
-        auctionStart: null,
-        auctionEnd: null,
-        image: null,
-        used: false,
-        signed: false,
-      });
-      setImagePreview(null);
-      setCalendarStates({
-        matchDate: { currentMonth: new Date(), selectedDate: null },
-        auctionStart: { currentMonth: new Date(), selectedDate: null },
-        auctionEnd: { currentMonth: new Date(), selectedDate: null }
-      });
-
-    } catch (err) {
-      console.error('Unexpected error:', err.message);
-      alert('Error inesperado. Por favor intenta de nuevo.');
-    } finally {
-      setIsSubmitting(false);
+      return data;
+    } catch (error) {
+      console.error('Error processing delivery payment:', error);
+      throw error;
     }
   };
+
+  const handlePaymentSubmit = async () => {
+    // Validation 1: Check if delivery is set
+    if (!delivery) {
+      alert('Por favor completa y guarda la información de envío antes de proceder con el pago.');
+      return;
+    }
+
+    setIsProcessingPayment(true);
+
+    try {
+      // Validation 2: Check if user has a payment method
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('default_payment_method_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching user profile:', profileError);
+        alert('Error al verificar tu información de pago. Por favor intenta de nuevo.');
+        return;
+      }
+
+      if (!profile?.default_payment_method_id) {
+        alert('Necesitas registrar un método de pago antes de proceder. Por favor agrega una tarjeta de crédito.');
+        return;
+      }
+
+      // Process the delivery payment
+      const paymentResult = await processDeliveryPayment();
+      
+      if (paymentResult.success) {
+        alert('¡Pago de envío procesado exitosamente! Tu pedido será enviado pronto.');
+        // Optionally navigate to a success page or back to dashboard
+        // navigate('/dashboard');
+      } else {
+        throw new Error('Error en el procesamiento del pago');
+      }
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert(error.message || 'Error al procesar el pago. Por favor intenta de nuevo.');
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+
 
   useEffect(() => {
       const fetchPaymentData = async () => {
@@ -483,7 +442,13 @@ const AuctionDelivery = () => {
             </div>
             
             </div>
-            <button className='payment-button'>Realizar Pago</button>
+            <button 
+              className='payment-button'
+              onClick={handlePaymentSubmit}
+              disabled={isProcessingPayment}
+            >
+              {isProcessingPayment ? 'PROCESANDO PAGO...' : 'Realizar Pago'}
+            </button>
             </div>
         )}
           

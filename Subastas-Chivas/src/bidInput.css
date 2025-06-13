@@ -50,6 +50,20 @@ return (
   font-size: 22px;
   color: #000000;
 }
+.bid-currency{
+
+  height: 65px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  font-family: Montserrat, sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  color: #000000;
+  position: relative;
+  top: -32%;
+  left: 40%;
+}
 
 .bid-input:focus {
   outline: none;

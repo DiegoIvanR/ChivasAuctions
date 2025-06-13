@@ -127,6 +127,7 @@ input[type="number"] {
     top: -12%;
     margin:0%;
     width: 100%;
+    z-index: -1;
 }
 
 .payment-button {

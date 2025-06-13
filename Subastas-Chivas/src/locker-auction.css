@@ -216,6 +216,7 @@ font-size: 18px;
 	justify-content: center;
 	align-items: center;
 	text-align: left;
+  width: 100%;
   }
   .auction-bid{
 	position: absolute;

@@ -149,6 +149,7 @@ export default function BidInput({ jersey, onBidUpdate, highestBidder }) {
         min={jersey.highest_bid + 1}
         disabled={isProcessingBid}
       />
+      <p className="bid-currency">USD</p>
       <button 
         onClick={handleBidSubmit} 
         className="bid-button"

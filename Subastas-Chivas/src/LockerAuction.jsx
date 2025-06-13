@@ -301,7 +301,7 @@ export default function LockerAuction() {
             )}
             {jersey.highest_bid && (
               <div className="auction-bid-container">
-                <div className="auction-bid">${jersey.highest_bid}</div>
+                <div className="auction-bid">${jersey.highest_bid} USD</div>
               </div>
             )}
             <div className="auction-attributes">
