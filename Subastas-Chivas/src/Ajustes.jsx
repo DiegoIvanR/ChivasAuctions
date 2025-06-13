@@ -17,7 +17,7 @@ const Ajustes = () => {
           <DashboardHeader name={user.full_name}/>
           <div className="dashboard-body">
             <DashboardAside />
-          <AddCardForm />
+          <AddCardForm bidBanner={true}/>
           </div>
           
         </main>

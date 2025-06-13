@@ -4,7 +4,7 @@ import { supabase } from "./supabaseClient";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import "./add-card-form.css";
 
-export default function AddCardForm({ onPaymentMethodSaved }) {
+export default function AddCardForm({ onPaymentMethodSaved, bidBanner }) {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMsg, setErrorMsg] = useState(null);
@@ -176,7 +176,7 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
       <div className="stripe-add">
         <div className="payment-method-configured">
           <h3 className="binding-auctions-warning-title">Método de Pago Configurado</h3>
-          <p className="binding-auctions-warning-text success">Tu tarjeta está lista para participar en subastas vinculantes</p>
+          {bidBanner && <p className="binding-auctions-warning-text success">Tu tarjeta está lista para participar en subastas vinculantes</p>}
           <button onClick={handleChangePaymentMethod} className="change-button">
             Cambiar Método de Pago
           </button>
@@ -187,12 +187,12 @@ export default function AddCardForm({ onPaymentMethodSaved }) {
 
   return (
     <div className="stripe-add">
-      <div className="binding-auctions-warning">
+      {bidBanner && <div className="binding-auctions-warning">
         <h3 className="binding-auctions-warning-title">Subastas Vinculantes</h3>
         <p className="binding-auctions-warning-text">
           Al configurar tu método de pago, aceptas que todas tus pujas serán <strong>legalmente vinculantes</strong>. Si ganas una subasta, el pago se procesará automáticamente.
         </p>
-      </div>
+      </div>}
 
       <h2 className="stripe-text">Configurar Método de Pago</h2>
       <form onSubmit={handleSubmit}>

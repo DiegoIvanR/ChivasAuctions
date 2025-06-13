@@ -1,0 +1,162 @@
+.image-and-amount{
+    display: flex;
+    flex-direction: column;
+}
+
+.ammount-envio{
+
+  padding: 20px;
+  border-radius: 15px;
+  min-width: 250px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  margin-top: 10%;
+
+}
+.image-envio{
+    margin: auto;
+
+    background-color: rgba(255, 255, 255, 0.07);
+    padding: 10px;
+    border-radius: 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.payment{
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    width: 100%;
+}
+.delivery-header-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-body-payment{
+
+  display: flex;
+  align-self: flex-start;
+  justify-content: space-around;
+  width: 100%;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Remove number input spinner for Firefox */
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Remove number input spinner for Chrome, Safari, Edge */
+    margin: 0;
+  }
+
+  /* Botón final */
+.address-button {
+    margin-top: 2rem;
+    padding: 1rem;
+    font-size: 1.2rem;
+    background-color: #07161D;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 530px;
+    margin: auto;
+  
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 3%;
+  
+  }
+  
+  .address-button:hover {
+    background-color: #0F5977;
+  }
+  
+  .address-button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+  }
+
+  .delivery-info{
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .delivery-fact{
+    font-family: Rubik, sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    margin: 1%;
+  }
+  .delivery-title{
+    font-family: Rubik, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 1%;
+  }
+  .delivery-info-wrapper{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 15px;
+    backdrop-filter: blur(8px);
+    padding: 10px 40px;
+    align-items: center;
+    justify-content: space-between;  
+    margin-top: 10%;
+}
+  .delivery-update{
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+.form-content-wrapper .stripe-add{
+    position: relative;
+    top: -12%;
+    margin:0%;
+    width: 100%;
+}
+
+.payment-button {
+    padding: 1rem;
+    font-size: 1.2rem;
+    background-color: #E6272E;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 20%;
+    margin: auto;
+  
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 3%;
+    position: absolute;
+    bottom: 10%;
+    left: 64%;
+  
+  }
+  
+  .payment-button:hover {
+    background-color: #c2183d;
+  }
+  
+  .payment-button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+  }

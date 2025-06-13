@@ -8,10 +8,15 @@ import DashboardHeader from './DashboardHeader';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import AddCardForm from './AddCardForm'
+import JerseyAttributes from './JerseyAttributes';
+import './AuctionDelivery.css'
+
 const AuctionDelivery = () => {
   const { user } = useSelector((state) => state.auth);
   const [payment, setPayment] = useState(null);  
   const { paymentID } = useParams();
+  const [delivery, setDelivery] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
     
   const [formData, setFormData] = useState({
@@ -30,6 +35,18 @@ const AuctionDelivery = () => {
     competition: '',
   });
 
+  const [formDelivery, setFormDelivery] = useState({
+    country: '',
+    name: '',
+    address: '',
+    address2: '',
+    city: '',
+    cp: '',
+    state: '',
+    phoneNumber: '',
+
+  });
+
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -43,6 +60,14 @@ const AuctionDelivery = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
+  };
+
+  const handleInputDeliveryChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormDelivery(prev => ({ 
       ...prev, 
       [name]: type === 'checkbox' ? checked : value 
     }));
@@ -75,70 +100,57 @@ const AuctionDelivery = () => {
     }
   };
 
+  const validateDeliveryForm = () => {
+    if (!formDelivery.country.trim()) {
+      alert('Por favor ingresa el país.');
+      return false;
+    }
+    if (!formDelivery.name.trim()) {
+      alert('Por favor ingresa el nombre completo.');
+      return false;
+    }
+    if (!formDelivery.address.trim()) {
+      alert('Por favor ingresa la dirección.');
+      return false;
+    }
+    if (!formDelivery.city.trim()) {
+      alert('Por favor ingresa la ciudad.');
+      return false;
+    }
+    if (!formDelivery.cp.trim()) {
+      alert('Por favor ingresa el código postal.');
+      return false;
+    }
+    if (!formDelivery.state.trim()) {
+      alert('Por favor ingresa el estado.');
+      return false;
+    }
+    if (!formDelivery.phoneNumber.trim()) {
+      alert('Por favor ingresa el número de celular.');
+      return false;
+    }
 
+    // Validate phone number format (basic validation)
+    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+    if (!phoneRegex.test(formDelivery.phoneNumber)) {
+      alert('Por favor ingresa un número de celular válido.');
+      return false;
+    }
 
-  const validateForm = () => {
-    if (!formData.playerName.trim()) {
-      alert('Por favor ingresa el nombre del jugador.');
+    // Validate postal code (basic validation - should be numeric)
+    if (isNaN(formDelivery.cp) || formDelivery.cp.length < 3) {
+      alert('Por favor ingresa un código postal válido.');
       return false;
     }
-    if (!formData.jerseyNumber.trim()) {
-      alert('Por favor ingresa el número de la playera.');
-      return false;
-    }
-    if (!formData.rival.trim()) {
-      alert('Por favor ingresa el equipo rival.');
-      return false;
-    }
-    if (!formData.amount.trim() || isNaN(parseFloat(formData.amount))) {
-      alert('Por favor ingresa un monto inicial válido.');
-      return false;
-    }
-    if (!formData.matchDate) {
-      alert('Por favor selecciona la fecha del partido.');
-      return false;
-    }
-    if (!formData.auctionStart) {
-      alert('Por favor selecciona la fecha de inicio de la subasta.');
-      return false;
-    }
-    if (!formData.auctionEnd) {
-      alert('Por favor selecciona la fecha de fin de la subasta.');
-      return false;
-    }
-    if (!formData.image) {
-      alert('Por favor sube una imagen de la playera.');
-      return false;
-    }
-    if (!formData.description.trim()) {
-      alert('Por favor ingresa una descripción del partido.');
-      return false;
-    }
-    if (!formData.venue.trim()) {
-      alert('Por favor ingresa el lugar del partido.');
-      return false;
-    }
-    if (!formData.competition.trim()) {
-      alert('Por favor ingresa la competencia.');
-      return false;
-    }
-  
-    // Validate date logic
-    const auctionStart = formData.auctionStart;
-    const auctionEnd = formData.auctionEnd;
-    const matchDate = formData.matchDate;
-  
-    if (auctionStart >= auctionEnd) {
-      alert('La fecha de inicio de la subasta debe ser anterior a la fecha de fin.');
-      return false;
-    }
-  
-    if (auctionStart < matchDate) {
-      alert('La subasta debe iniciar después o el día del partido.');
-      return false;
-    }
-  
+
     return true;
+  };
+
+  const handleDeliverySubmit = () => {
+    if (!validateDeliveryForm()) return;
+    
+    console.log(formDelivery);
+    setDelivery(formDelivery);
   };
 
   const handleSubmit = async () => {
@@ -291,7 +303,9 @@ const AuctionDelivery = () => {
                 jerseys(
                   player_name,
                   jersey_number,
-                  image_url
+                  image_url,
+                  used,
+                  signed
                 )
               )
               
@@ -324,127 +338,152 @@ const AuctionDelivery = () => {
       fetchPaymentData();
     }, [paymentID]);
 
+
+    const formatCurrency = (amount) =>
+      amount?.toLocaleString('es-MX', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
   return (
     <div className="dashboard-form-wrapper">
-      <DashboardHeader name={`${paymentID}`}/>
+      <DashboardHeader name={`${user.full_name}`}/>
       <div className="dashboard-body animate-fade-in">
         <DashboardAside />
         
         {payment && (
-          <div className='form-body'>
-            <div className="image-upload">
+          <div className='payment'>
+          <div className='delivery-header'>
+          <div className='delivery-header-info'>
+            <h1 className='delivey-player-name'>{payment.auctions.jerseys.player_name}</h1>
+            <JerseyAttributes jersey={payment.auctions.jerseys}/>
+          </div>
+          <hr></hr>
+        </div>
+          <div className='form-body-payment'>
+            
+            <div className="image-and-ammount">
+            <div className="ammount-envio">
+                                          <div className='resumen-info'>
+                          <h4 className="resumen-title">RESUMEN DEL ENVÍO</h4>
+                          <div className="resumen-line">
+                            <span>SUBTOTAL: </span>
+                            <span>{formatCurrency(20)}</span>
+                          </div>
+                          <div className="resumen-line">
+                            <span>IVA: </span>
+                            <span>{formatCurrency(20 * 0.16)}</span>
+                          </div>
+                          <div className="resumen-line total">
+                            <span>TOTAL: </span>
+                            <span>{formatCurrency(20 * 1.16)}</span>
+                          </div>
+                          </div>
+                        </div>
                   <img 
                     src={payment.auctions.jerseys.image_url} 
                     alt="Vista previa" 
-                    className="image-preview" 
+                    className="image-envio" 
                     style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
                   />
+                  
               </div>
-            <div className="form-content">
-              <input 
-                type="text" 
-                name="playerName" 
-                placeholder="Nombre del jugador" 
-                value={formData.playerName}
-                onChange={handleInputChange}
-                className='dashboard-input'
-              />
-              <input 
-                type="number" 
-                name="jerseyNumber" 
-                placeholder="Número de la playera" 
-                value={formData.jerseyNumber}
-                onChange={handleInputChange}
-                className='dashboard-input'
-                min="0"
-              />
-              <input 
-                type="text" 
-                name="rival" 
-                placeholder="Equipo rival" 
-                value={formData.rival}
-                onChange={handleInputChange} 
-                className='dashboard-input'
-              />
-    
-              <div className='form-2columns'>
-    
-                <div className='form-column'>
+            <div className="form-content-wrapper">
+                {!delivery &&( 
+
+              <div className='form-content'>
                 <input 
-                type="number" 
-                name="amount" 
-                placeholder="Monto inicial" 
-                step="0.01"
-                value={formData.amount}
-                onChange={handleInputChange} 
-                className='dashboard-input'
-                min="0"
-              />
-              <input
-                type="text"
-                name="description" 
-                placeholder="Descripción del jersey" 
-                value={formData.description}
-                onChange={handleInputChange}
-                className='dashboard-input'
-              />
-              <input 
-                type="text" 
-                name="venue" 
-                placeholder="Lugar del partido" 
-                value={formData.venue}
-                onChange={handleInputChange} 
-                className='dashboard-input'
-              />
-              <input 
-                type="text" 
-                name="competition" 
-                placeholder="Competencia" 
-                value={formData.competition}
-                onChange={handleInputChange} 
-                className='dashboard-input'
-              />
-    
-              {/* Checkbox section */}
-              <div className="checkbox-section">
-                <div className="checkbox-group">
-                  <label className="checkbox-label">
-                    <input 
-                      type="checkbox" 
-                      name="used" 
-                      checked={formData.used}
-                      onChange={handleInputChange}
-                      className="custom-checkbox"
-                    />
-                    <span className="checkbox-text">Playera usada</span>
-                  </label>
-                </div>
-                <div className="checkbox-group">
-                  <label className="checkbox-label">
-                    <input 
-                      type="checkbox" 
-                      name="signed" 
-                      checked={formData.signed}
-                      onChange={handleInputChange}
-                      className="custom-checkbox"
-                    />
-                    <span className="checkbox-text">Playera firmada</span>
-                  </label>
-                </div>
+                  type="text" 
+                  name="country" 
+                  placeholder="País*" 
+                  value={formDelivery.country}
+                  onChange={handleInputDeliveryChange}
+                  className='dashboard-input'
+                />
+
+                <input 
+                  type="text" 
+                  name="name" 
+                  placeholder="Nombre completo*" 
+                  value={formDelivery.name}
+                  onChange={handleInputDeliveryChange}
+                  className='dashboard-input'
+                />
+
+                <input 
+                  type="text" 
+                  name="address" 
+                  placeholder="Dirección*" 
+                  value={formDelivery.address}
+                  onChange={handleInputDeliveryChange}
+                  className='dashboard-input'
+                />
+                <input 
+                  type="text" 
+                  name="address2" 
+                  placeholder="Dirección 2" 
+                  value={formDelivery.address2}
+                  onChange={handleInputDeliveryChange}
+                  className='dashboard-input'
+                />
+                <div className='form-2columns'>
+                  <input 
+                    type="text" 
+                    name="city" 
+                    placeholder="Ciudad*" 
+                    value={formDelivery.city}
+                    onChange={handleInputDeliveryChange}
+                    className='dashboard-input'
+                  />
+                  <input 
+                    type="number" 
+                    name="cp" 
+                    placeholder="Código Postal*" 
+                    value={formDelivery.cp}
+                    onChange={handleInputDeliveryChange}
+                    className='dashboard-input'
+                  />
                 </div>
                 
-              </div>
-              </div>
-    
-              <button 
-                className="confirm-btn" 
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Creando subasta...' : 'Confirmar subasta'}
-              </button>
+                <input 
+                  type="text" 
+                  name="state" 
+                  placeholder="Estado*" 
+                  value={formDelivery.state}
+                  onChange={handleInputDeliveryChange}
+                  className='dashboard-input'
+                />
+                <input 
+                  type="number" 
+                  name="phoneNumber" 
+                  placeholder="Número de celular*" 
+                  value={formDelivery.phoneNumber}
+                  onChange={handleInputDeliveryChange}
+                  className='dashboard-input'
+                />
+                <button className='address-button' 
+                onClick={handleDeliverySubmit}>Guardar Dirección</button>
+                </div>)}
+                {delivery && (
+                  <div className='delivery-info-wrapper'>
+                  <div className='delivery-info'>
+                    <p className='delivery-title'>{formDelivery.name}</p>
+                    <p className='delivery-fact'>{formDelivery.address}</p>
+                    <p className='delivery-fact'>{formDelivery.cp}, {formDelivery.city}, {formDelivery.country}</p>
+                    <p className='delivery-fact'>{formDelivery.phoneNumber}</p>
+                  </div>
+                  <p className='delivery-update' onClick={()=>{setDelivery(null)}}>Actualizar</p>
+                  </div>
+                )}
+
+              <AddCardForm bidBanner={false}/>
+            
+              
             </div>
             
+            </div>
+            <button className='payment-button'>Realizar Pago</button>
             </div>
         )}
           

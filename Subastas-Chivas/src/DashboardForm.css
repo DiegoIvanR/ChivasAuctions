@@ -306,7 +306,6 @@
 
 .dashboard-body{
   display: flex;
-  justify-content: space-between;
 }
 
 .form-body{
