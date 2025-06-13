@@ -154,7 +154,7 @@ const MisPedidos = () => {
               <section className="dashboard-section--pedidos">
                 <div className='dashboard-pedidos'>
                   {pedidosToDisplay.length === 0 ? (
-                    <p>No hay subastas {filter.toLowerCase()} disponibles.</p>
+                    <p>No hay jerseys {filter.toLowerCase()} disponibles.</p>
                   ) : (
                     pedidosToDisplay.map((jersey) => (
                       <div key={jersey.auction_id} className="pedido-card-horizontal">
@@ -208,12 +208,12 @@ const MisPedidos = () => {
                           )}
                           {filter === 'EN CAMINO' && (
                             <div className="status-indicator">
-                              <span className="status-text">En camino</span>
+                              <span className="resumen-line">PAGADO: EN CAMINO</span>
                             </div>
                           )}
                           {filter === 'ENTREGADOS' && (
                             <div className="status-indicator delivered">
-                              <span className="status-text">Entregado</span>
+                              <span className="resumen-line">PAGADO: ENTREGADO</span>
                             </div>
                           )}
                         </div>
