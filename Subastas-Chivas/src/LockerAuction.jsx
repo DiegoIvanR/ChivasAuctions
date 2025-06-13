@@ -74,24 +74,7 @@ export default function LockerAuction() {
           return;
         }
 
-        const { data: bids, error: bids_error } = await supabase
-          .from('bids')
-          .select('bidder_id, amount, created_at')
-          .eq('auction_id', auctionID)
-          .order('created_at', { ascending: false }) // Sort descending
-          .limit(1); // Get only the top one
-
-          if (bids_error) {
-            console.error('Error fetching auction data:', error.message);
-            return;
-          }
-    
-          if (!bids || bids.length === 0) {
-            console.warn('No bids found for this jersey.');
-          } else{
-            console.log(bids)
-            setHighestBidder(bids[0].bidder_id)
-          }
+        
 
         // Merge auction-level data with nested jersey data
         const selectedAuction = auctionData[0];
@@ -141,6 +124,25 @@ export default function LockerAuction() {
             ...prevJersey,
             highest_bid: data.highest_bid, // Update the highest_bid
           }));        }
+
+          const { data: bids, error: bids_error } = await supabase
+          .from('bids')
+          .select('bidder_id, amount, created_at')
+          .eq('auction_id', auctionID)
+          .order('created_at', { ascending: false }) // Sort descending
+          .limit(1); // Get only the top one
+
+          if (bids_error) {
+            console.error('Error fetching auction data:', error.message);
+            return;
+          }
+    
+          if (!bids || bids.length === 0) {
+            console.warn('No bids found for this jersey.');
+          } else{
+            console.log(bids)
+            setHighestBidder(bids[0].bidder_id)
+          }
       } catch (err) {
         console.error('Unexpected error refreshing starting bid:', err);
       }
