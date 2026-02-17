@@ -10,7 +10,7 @@
         "highest_bid": 1005,
         "starting_date": "2025-05-12T00:00:00Z",
         "end_date": "2025-05-13T00:09:00Z",
-        "img_src": "../public/javier-hernandez.png"
+        "img_src": "../javier-hernandez.png"
       },
       {
         "id": 2,
@@ -22,7 +22,7 @@
         "highest_bid": 1005,
         "starting_date": "2025-05-15T00:00:00Z",
         "end_date": "2025-05-20T00:00:00Z",
-        "img_src": "../public/mateo-chavez.png"
+        "img_src": "../mateo-chavez.png"
       },
       {
         "id": 3,
@@ -34,7 +34,7 @@
         "highest_bid": 1005,
         "starting_date": "2025-05-15T00:00:00Z",
         "end_date": "2025-05-20T00:00:00Z",
-        "img_src": "../public/fernando-gonzalez.png"
+        "img_src": "../fernando-gonzalez.png"
       },
       {
         "id": 4,
@@ -46,7 +46,7 @@
         "highest_bid": 1005,
         "starting_date": "2025-05-15T00:00:00Z",
         "end_date": "2025-05-20T00:00:00Z",
-        "img_src": "../public/fernando-beltran.png"
+        "img_src": "../fernando-beltran.png"
       },
       {
         "id": 5,
@@ -58,7 +58,7 @@
         "highest_bid": 1005,
         "starting_date": "2025-05-15T00:00:00Z",
         "end_date": "2025-05-20T00:00:00Z",
-        "img_src": "../public/roberto-alvarado.png"
+        "img_src": "../roberto-alvarado.png"
       }
     ]
   }

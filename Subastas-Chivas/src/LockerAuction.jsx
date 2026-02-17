@@ -253,15 +253,15 @@ export default function LockerAuction() {
       <div className="locker-auction-overlay"/>
       <img
         ref={lockerImageRef}
-        src="../public/locker-complete.png"
+        src="../locker-complete.png"
         className="locker-complete"
         alt="Locker Complete"
         onLoad={updateJerseyPosition}
       />
   
       <div className="locker-auction-jersey">
-        <img src="../public/locker.png" className="locker-auction-jersey-locker-img" alt="Locker" />
-        <img src="../public/hanger.png" className="locker-auction-hanger" alt="Jersey Hanger" />
+        <img src="../locker.png" className="locker-auction-jersey-locker-img" alt="Locker" />
+        <img src="../hanger.png" className="locker-auction-hanger" alt="Jersey Hanger" />
         <img src={displayImage} className="locker-auction-jersey-img" alt="Jersey" />
         <div className='mini-jerseys'>
           <img 
@@ -277,7 +277,7 @@ export default function LockerAuction() {
             onClick={() => handleImageSelection('back')}
           /> }
         </div>
-        <img src="../public/locker-cabinet.png" className="locker-cabinet" alt="Locker Cabinet" />
+        <img src="../locker-cabinet.png" className="locker-cabinet" alt="Locker Cabinet" />
 
         <JerseyInfo
           venue={jersey.venue} 
@@ -285,7 +285,7 @@ export default function LockerAuction() {
           description={jersey.description}
         />
         <div className="locker-auction-auction">
-          <img src="../public/locker.png" className="locker-auction-locker-img"/>
+          <img src="../locker.png" className="locker-auction-locker-img"/>
           <div className="auction-info">
             <p className="auction-id">ID: {jersey.auction_id}</p>
             {jersey.player_name && (

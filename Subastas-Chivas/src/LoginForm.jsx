@@ -12,7 +12,7 @@ export default function LoginForm({
 }) {
   return (
     <div className='login-container-wrapper'>
-      <img src='../public/stadium-image.png' className='stadium-image' />
+      <img src='../stadium-image.png' className='stadium-image' />
       <div className="login-form-container">
         <h2 className="login-title">SUBASTAS CHIVAS</h2>
 

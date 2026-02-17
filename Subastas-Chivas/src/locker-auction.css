@@ -1,12 +1,12 @@
 /*
 return(
         <div className='locker-auction'>
-            <img src="../public/locker-complete.png" className='locker-complete'/>
+            <img src="../locker-complete.png" className='locker-complete'/>
             
             <div className='locker-auction-jersey'>
-                <img src="../public/locker.png" className='locker-auction-jersey-locker-img'/>
-                <img src="../public/javier-hernandez.png" className='locker-auction-jersey-img'/>
-                <img src="../public/locker-cabinet.png" className='locker-cabinet'/>
+                <img src="../locker.png" className='locker-auction-jersey-locker-img'/>
+                <img src="../javier-hernandez.png" className='locker-auction-jersey-img'/>
+                <img src="../locker-cabinet.png" className='locker-cabinet'/>
                 <div className='locker-auction-auction'>
                     <div className='auction-info'>
                         <p className='auction-id'>ID: {jersey.id}</p>
@@ -36,7 +36,7 @@ return(
                               </div>
                             )}
                     </div>
-                    <img src="../public/locker.png" className='locker-auction-locker-img'/>
+                    <img src="../locker.png" className='locker-auction-locker-img'/>
                 </div>
             </div>
         </div>

@@ -36,7 +36,7 @@ function SearchBar() {
         onKeyDown={handleKeyPress} // Listen for Enter key press
       />
       <img
-        src="../public/search-logo.png"
+        src="../search-logo.png"
         className="search-icon"
         alt="Search"
         onClick={handleSearch} // Trigger search when the search icon is clicked

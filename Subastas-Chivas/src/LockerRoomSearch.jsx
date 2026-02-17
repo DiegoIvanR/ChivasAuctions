@@ -218,7 +218,7 @@ export default function LockerRoomSearch() {
   return (
     <div className="locker-room-container"> 
       <div className='top-locker-frame-wrapper'>
-        <img src="../public/top-locker-frame.png" className="top-door-frame" alt="Top locker frame" />
+        <img src="../top-locker-frame.png" className="top-door-frame" alt="Top locker frame" />
         <div className="no-results-banner">
         <div className="no-results-text">
           {noResults

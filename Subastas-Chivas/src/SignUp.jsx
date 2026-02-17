@@ -54,7 +54,7 @@ export default function SignUp() {
     return (
         <div className="login-container">
         <div className="login-container-wrapper">
-            <img src="../public/stadium-image.png" className="stadium-image" />
+            <img src="../stadium-image.png" className="stadium-image" />
             <div className="login-form-container">
                 <h2 className="login-title">SUBASTAS CHIVAS</h2>
                 <form onSubmit={handleSignUp} className="login-form">

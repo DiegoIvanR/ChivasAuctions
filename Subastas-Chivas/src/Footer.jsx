@@ -28,7 +28,7 @@ function Footer() {
     {
       title: "SÍGUENOS",
       isSocial: true,
-      image: "../public/Social.png",
+      image: "../Social.png",
     },
   ];
 
@@ -36,9 +36,9 @@ function Footer() {
     <footer className="footer">
       <div className="footer-bullshit">
         <div className="drop-down-language">
-          <img src="../public/globe.png" className="globe" alt="globe" />
+          <img src="../globe.png" className="globe" alt="globe" />
           <h3 className="language">Español</h3>
-          <img src="../public/drop-down.png" className="drop-down" alt="dropdown" />
+          <img src="../drop-down.png" className="drop-down" alt="dropdown" />
         </div>
 
         {sections.map((section, index) => (

@@ -22,7 +22,7 @@ function Header() {
         <div className="header">
             <div className="menu-selections">
                 <a href="https://www.chivasdecorazon.com.mx/es">
-                    <img src="../public/logo.png" className="logo" alt="Logo" />
+                    <img src="../logo.png" className="logo" alt="Logo" />
                 </a>
                 <Link to='/'className="menu-selections-item">Home</Link>
                 <a  href="https://chivastv.mx/" className="menu-selections-item">ChivasTV</a>
@@ -32,7 +32,7 @@ function Header() {
                 <SearchBar />
                 <div className="user-image-container">
                     <img
-                        src="../public/profile-icon.png"
+                        src="../profile-icon.png"
                         className="user-image"
                         alt="User"
                         onClick={togglePopup}

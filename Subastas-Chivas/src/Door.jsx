@@ -9,7 +9,7 @@ const Door = ({ door, onClick, isSelected }) => {
       onClick={() => onClick(door.id)}
     >
       <img 
-        src="../public/locker-door.png" 
+        src="../locker-door.png" 
         className="door-image" 
         alt={`Door ${door.id}`} 
       />

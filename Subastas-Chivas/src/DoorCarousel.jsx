@@ -117,7 +117,7 @@ useEffect(() => {
   return (
     <div className="carousel-container">
       <img
-        src="../public/top-door-frame.png"
+        src="../top-door-frame.png"
         className="top-door-frame"
         alt="Top door frame"
       />
